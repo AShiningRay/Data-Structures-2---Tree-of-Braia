@@ -1,10 +1,14 @@
+#ifdef _WIN32
 #include <windows.h>
+#endif
 
 void SetColor(int ForgC);
-void ClearConsoleToColors(int ForgC, int BackC);
 
 void SetColor(int ForgC)
- {
+{
+#ifdef __linux__
+    printf("%s", colorCodes[ForgC]);
+#elif _WIN32
      WORD wColor;
      HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
      CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -15,22 +19,5 @@ void SetColor(int ForgC)
           SetConsoleTextAttribute(hStdOut, wColor);
      }
      return;
- }
-
-void ClearConsoleToColors(int ForgC, int BackC)
- {
- WORD wColor = ((BackC & 0x0F) << 4) + (ForgC & 0x0F);
- HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
- COORD coord = {0, 0};
- DWORD count;
- CONSOLE_SCREEN_BUFFER_INFO csbi;
-
- SetConsoleTextAttribute(hStdOut, wColor);
- if(GetConsoleScreenBufferInfo(hStdOut, &csbi))
- {
-    FillConsoleOutputCharacter(hStdOut, (TCHAR) 32, csbi.dwSize.X * csbi.dwSize.Y, coord, &count);
-    FillConsoleOutputAttribute(hStdOut, csbi.wAttributes, csbi.dwSize.X * csbi.dwSize.Y, coord, &count );
-    SetConsoleCursorPosition(hStdOut, coord);
- }
- return;
+#endif
 }

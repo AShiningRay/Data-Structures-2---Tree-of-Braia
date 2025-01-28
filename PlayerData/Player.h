@@ -34,19 +34,39 @@ void createPlayer(char playerName[25]);
 
 void insertPlayerName()
 {
-    char name[25];
+    char ch;
+    char name[26];
+    int index = 0;
+#ifdef __linux__
+    system("clear");
+#elif _WIN32
     system("cls");
-
+#endif
+    
     printf("\n\n\n\t\t\t|      BEFORE STARTING THE GAME...       |");
     printf("\n\t\t\t|  PLEASE INSERT YOUR CHARACTER'S NAME:  |");
     printf("\n\t\t\t\t|------------------------|");
     printf("\n\t\t\t\t|                        |");
     printf("\n\t\t\t\t|------------------------|");
-    Sleep(50);
+    limitFPS(50);
     printf("\033[1A");
     printf("\033[25D");
 
-    fgets(name, sizeof(name), stdin);
+    // Read input character by character
+    while (index < sizeof(name) - 1) {
+        ch = getchar(); // Read one character
+        printf("%c", ch);
+        
+        // Check if we read a newline or EOF
+        if (ch == '\n' || ch == EOF) {
+            break; // Exit the loop on newline or EOF
+        }
+
+        // Store the character in the buffer if not a newline
+        name[index++] = ch;
+    }
+
+    name[index] = '\0'; // Null-terminate the string
     createPlayer(name);
 }
 

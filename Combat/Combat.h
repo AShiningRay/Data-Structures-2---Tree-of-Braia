@@ -1,5 +1,4 @@
 #include "../EnemyData/Enemies.h"
-#include "../Game/Audio Engine/audio.h"
 
 char combat_anim1[30][130] =
 {
@@ -438,64 +437,108 @@ short int thread;
 
 void combat(int randEnemy)
 {
+#ifdef __linux__
+
+#elif _WIN32
     system("taskkill /F /T /IM wmplayer.exe");
+#endif  
 
     if(randEnemy > 0 && randEnemy < 5)
         {
+#ifdef __linux__
+
+#elif _WIN32
             ShellExecute(NULL,"open","C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe" ,"/play \"C:\\Users\\paulo\\Desktop\\ED2 Project\\Game\\Audio Engine\\Samples\\MusicWar.ogg\",",NULL,SW_HIDE);
+#endif  
             fightYBlob();
         }
 
     else if(randEnemy >= 5 && randEnemy < 10)
         {
+#ifdef __linux__
+
+#elif _WIN32
             ShellExecute(NULL,"open","C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe" ,"/play \"C:\\Users\\paulo\\Desktop\\ED2 Project\\Game\\Audio Engine\\Samples\\MusicWar.ogg\",",NULL,SW_HIDE);
+#endif  
             fightRBlob();
         }
 
     else if(randEnemy == 10)
         {
+#ifdef __linux__
+
+#elif _WIN32
             ShellExecute(NULL,"open","C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe" ,"/play \"C:\\Users\\paulo\\Desktop\\ED2 Project\\Game\\Audio Engine\\Samples\\BossMusic.ogg\",",NULL,SW_HIDE);
+#endif  
             fightCursArmor();
         }
 
     else if(randEnemy > 10 && randEnemy <= 15)
         {
+#ifdef __linux__
+
+#elif _WIN32
             ShellExecute(NULL,"open","C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe" ,"/play \"C:\\Users\\paulo\\Desktop\\ED2 Project\\Game\\Audio Engine\\Samples\\MusicWar.ogg\",",NULL,SW_HIDE);
+#endif  
             fightCGuy();
         }
 
     else if(randEnemy > 15 && randEnemy < 20)
         {
+#ifdef __linux__
+
+#elif _WIN32
             ShellExecute(NULL,"open","C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe" ,"/play \"C:\\Users\\paulo\\Desktop\\ED2 Project\\Game\\Audio Engine\\Samples\\MusicWar.ogg\",",NULL,SW_HIDE);
+#endif  
             fightBChicken();
         }
 
     else if(randEnemy == 20)
         {
+#ifdef __linux__
+
+#elif _WIN32
             ShellExecute(NULL,"open","C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe" ,"/play \"C:\\Users\\paulo\\Desktop\\ED2 Project\\Game\\Audio Engine\\Samples\\BossMusic.ogg\",",NULL,SW_HIDE);
+#endif  
             fightCyclops();
         }
 
     else if(randEnemy > 20 && randEnemy <= 25)
         {
+#ifdef __linux__
+
+#elif _WIN32
             ShellExecute(NULL,"open","C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe" ,"/play \"C:\\Users\\paulo\\Desktop\\ED2 Project\\Game\\Audio Engine\\Samples\\MusicWar.ogg\",",NULL,SW_HIDE);
+#endif  
             fightAlienV();
         }
 
     else if(randEnemy > 25 && randEnemy < 30)
         {
+#ifdef __linux__
+
+#elif _WIN32
             ShellExecute(NULL,"open","C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe" ,"/play \"C:\\Users\\paulo\\Desktop\\ED2 Project\\Game\\Audio Engine\\Samples\\MusicWar.ogg\",",NULL,SW_HIDE);
+#endif  
             fightBigO();
         }
 
     else if (randEnemy == 30)
         {
+#ifdef __linux__
+
+#elif _WIN32
             ShellExecute(NULL,"open","C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe" ,"/play \"C:\\Users\\paulo\\Desktop\\ED2 Project\\Game\\Audio Engine\\Samples\\BossMusic.ogg\",",NULL,SW_HIDE);
+#endif  
             fightNoname();
         }
 
     checkPlayerXP();
+#ifdef __linux__
+
+#elif _WIN32
     system("taskkill /F /T /IM wmplayer.exe");
+#endif  
 }
 
 void checkPlayerXP()
@@ -598,7 +641,7 @@ void checkPlayerXP()
                     playerChar.inte *= 1.25;
                     SetColor(15);
                 }
-            Sleep(2000);
+            limitFPS(700);
         }
     else if(playerChar.Level == 10) playerChar.current_XP = (playerChar.next_XP) - 1;
 }
@@ -607,8 +650,11 @@ void checkPlayerXP()
 void renderCombatStartAnim()
 {
     renderBGFrame1();
+    limitFPS(0);
     renderBGFrame2();
+    limitFPS(0);
     renderBGFrame3();
+    limitFPS(0);
     renderBGFrame4();
 }
 
@@ -717,10 +763,14 @@ void setAnimColors(char check)
 }
 
 
-// Animations below are the actual combat animations (X starts at 2 to enable damage animations "dislocation, similar to older pokémon games")
+// Animations below are the actual combat animations (X starts at 2 to enable damage animations "dislocation, similar to older pokï¿½mon games")
 void renderBGFrame1()
 {
+#ifdef __linux__
+    system("clear");
+#elif _WIN32
     system("cls");
+#endif
         for(short int y = 0; y <30; y++)
         {
             int xmax = strlen(combat_anim1[y]);
@@ -739,7 +789,11 @@ void renderBGFrame1()
 
 void renderBGFrame2()
 {
+#ifdef __linux__
+    system("clear");
+#elif _WIN32
     system("cls");
+#endif
         for(short int y = 0; y <30; y++)
         {
             int xmax = strlen(combat_anim2[y]);
@@ -758,7 +812,11 @@ void renderBGFrame2()
 
 void renderBGFrame3()
 {
+#ifdef __linux__
+    system("clear");
+#elif _WIN32
     system("cls");
+#endif
         for(short int y = 0; y <30; y++)
         {
             int xmax = strlen(combat_anim3[y]);
@@ -777,7 +835,11 @@ void renderBGFrame3()
 
 void renderBGFrame4()
 {
+#ifdef __linux__
+    system("clear");
+#elif _WIN32
     system("cls");
+#endif
         for(short int y = 0; y <30; y++)
         {
             int xmax = strlen(combat_anim4[y]);
@@ -799,7 +861,11 @@ void renderBGCurs()
 {
     do
     {
+#ifdef __linux__
+    system("clear");
+#elif _WIN32
     system("cls");
+#endif
     renderEnemyCombatStat();
         for(short int y = 0; y <30; y++)
         {
@@ -832,7 +898,7 @@ void renderBGCurs()
             printf("\n\t\t%s died...", playerChar.name);
         }
 
-    Sleep(700);
+    limitFPS(700);
 }
 
 
@@ -840,7 +906,11 @@ void renderBGYBlob()
 {
     do
     {
+#ifdef __linux__
+    system("clear");
+#elif _WIN32
     system("cls");
+#endif
     renderEnemyCombatStat();
 
         for(short int y = 0; y <30; y++)
@@ -874,7 +944,7 @@ void renderBGYBlob()
             printf("\n\t\t%s died...", playerChar.name);
         }
 
-    Sleep(700);
+    limitFPS(700);
 }
 
 
@@ -882,7 +952,11 @@ void renderBGRBlob()
 {
     do
     {
+#ifdef __linux__
+    system("clear");
+#elif _WIN32
     system("cls");
+#endif
     renderEnemyCombatStat();
         for(short int y = 0; y <30; y++)
         {
@@ -915,14 +989,18 @@ void renderBGRBlob()
             printf("\n\t\t%s died...", playerChar.name);
         }
 
-    Sleep(700);
+    limitFPS(700);
 }
 
 void renderCGuy()
 {
     do
     {
+#ifdef __linux__
+    system("clear");
+#elif _WIN32
     system("cls");
+#endif
     renderEnemyCombatStat();
 
         for(short int y = 0; y <30; y++)
@@ -956,14 +1034,18 @@ void renderCGuy()
             printf("\n\t\t%s died...", playerChar.name);
         }
 
-    Sleep(700);
+    limitFPS(700);
 }
 
 void renderBChicken()
 {
     do
     {
+#ifdef __linux__
+    system("clear");
+#elif _WIN32
     system("cls");
+#endif
     renderEnemyCombatStat();
 
         for(short int y = 0; y <30; y++)
@@ -997,14 +1079,18 @@ void renderBChicken()
             printf("\n\t\t%s died...", playerChar.name);
         }
 
-    Sleep(700);
+    limitFPS(700);
 }
 
 void renderCyclops()
 {
     do
     {
+#ifdef __linux__
+    system("clear");
+#elif _WIN32
     system("cls");
+#endif
     renderEnemyCombatStat();
 
         for(short int y = 0; y <30; y++)
@@ -1038,14 +1124,18 @@ void renderCyclops()
             printf("\n\t\t%s died...", playerChar.name);
         }
 
-    Sleep(700);
+    limitFPS(700);
 }
 
 void renderAlienV()
 {
     do
     {
+#ifdef __linux__
+    system("clear");
+#elif _WIN32
     system("cls");
+#endif
     renderEnemyCombatStat();
 
         for(short int y = 0; y <30; y++)
@@ -1079,14 +1169,18 @@ void renderAlienV()
             printf("\n\t\t%s died...", playerChar.name);
         }
 
-    Sleep(700);
+    limitFPS(700);
 }
 
 void renderBigO()
 {
     do
     {
+#ifdef __linux__
+    system("clear");
+#elif _WIN32
     system("cls");
+#endif
     renderEnemyCombatStat();
 
         for(short int y = 0; y <30; y++)
@@ -1120,14 +1214,18 @@ void renderBigO()
             printf("\n\t\t%s died...", playerChar.name);
         }
 
-    Sleep(700);
+    limitFPS(700);
 }
 
 void renderNoname()
 {
     do
     {
+#ifdef __linux__
+    system("clear");
+#elif _WIN32
     system("cls");
+#endif
     renderEnemyCombatStat();
 
         for(short int y = 0; y <30; y++)
@@ -1161,7 +1259,7 @@ void renderNoname()
             printf("\n\t\t%s died...", playerChar.name);
         }
 
-    Sleep(700);
+    limitFPS(700);
 }
 
 
@@ -1262,10 +1360,14 @@ void renderPlayerSkillMenu()
 {
     bool moved = false;
     moved = false;
-    Sleep(250);
+    limitFPS(250);
     while (1)
         {
+#ifdef __linux__
+            system("clear");
+#elif _WIN32
             system("cls");
+#endif
             printf("\t|___________________________________________________|\n");
             printf("\t|  Player:");
             SetColor(3);
@@ -1284,7 +1386,7 @@ void renderPlayerSkillMenu()
                     {
                         moved = true;
                         printf("\n\tCLOSING THE MENU...");
-                        Sleep(300);
+                        limitFPS(300);
                         return;
                     }
             }
@@ -1299,83 +1401,94 @@ void renderPlayerCombatEnemyMenu()
     bool magicused = false;
 
     while (1)
+    {
+        moved = false;
+        renderPlayerCombatStat();
+
+        if(atksel)
         {
-            moved = false;
-            renderPlayerCombatStat();
+            printf("\t|====ACTION====/\n");
+            printf("\t| ");
+            SetColor(12);
+            printf(">>");
+            SetColor(15);
+            printf(" ATTACK   |\n");
+            printf("\t|-------------|\n");
+            printf("\t|    SKILL    |\n");
+        }
 
-            if(atksel)
+        else if(skisel)
+        {
+            printf("\t|====ACTION====/\n");
+            printf("\t|    ATTACK   |\n");
+            printf("\t|-------------|\n");
+            printf("\t| ");
+            SetColor(12);
+            printf(">>");
+            SetColor(15);
+            printf(" SKILL    |\n");
+        }
+
+        printf("\033[11A");
+        while(!moved)
+        {
+            if(GetAsyncKeyState (VK_UP) != 0)
             {
-                printf("\t|====ACTION====/\n");
-                printf("\t| ");
-                SetColor(12);
-                printf(">>");
-                SetColor(15);
-                printf(" ATTACK   |\n");
-                printf("\t|-------------|\n");
-                printf("\t|    SKILL    |\n");
-            }
+                moved = true;
+#ifdef __linux__
 
-            else if(skisel)
-            {
-                printf("\t|====ACTION====/\n");
-                printf("\t|    ATTACK   |\n");
-                printf("\t|-------------|\n");
-                printf("\t| ");
-                SetColor(12);
-                printf(">>");
-                SetColor(15);
-                printf(" SKILL    |\n");
-            }
-
-            Sleep(125);
-            printf("\033[11A");
-            while(!moved)
-            {
-                 if(GetAsyncKeyState (VK_UP) != 0)
+#elif _WIN32
+                _beginthread(moveCombatCursor, 0, &thread);
+#endif
+                if(skisel)
                     {
-                        moved = true;
-                        _beginthread(moveCombatCursor, 0, &thread);
-                        if(skisel)
-                            {
-                                skisel = false;
-                                atksel = true;
-                                break;
-                            }
-                    }
-
-                if(GetAsyncKeyState (VK_DOWN) != 0)
-                    {
-                        moved = true;
-                        _beginthread(moveCombatCursor, 0, &thread);
-                        if(atksel)
-                            {
-                                atksel = false;
-                                skisel = true;
-                                break;
-                            }
-                    }
-
-                if(GetAsyncKeyState (VK_LCONTROL) != 0)
-                    {
-                        moved = true;
-                        _beginthread(selectCombatAction, 0, &thread);
-                        if(atksel)
-                            {
-                                playerAttackEnemy();
-                                return;
-                            }
-
-                        else
-                            {
-                                magicused = renderPlayerMagicEnemyMenu();
-                                if(magicused) return;
-                            }
-                        Sleep(250);
+                        skisel = false;
+                        atksel = true;
                         break;
                     }
-
             }
+
+            if(GetAsyncKeyState (VK_DOWN) != 0)
+            {
+                moved = true;
+#ifdef __linux__
+
+#elif _WIN32
+                _beginthread(moveCombatCursor, 0, &thread);
+#endif
+                if(atksel)
+                    {
+                        atksel = false;
+                        skisel = true;
+                        break;
+                    }
+            }
+
+            if(GetAsyncKeyState (VK_LCONTROL) != 0)
+            {
+                moved = true;
+#ifdef __linux__
+
+#elif _WIN32
+                _beginthread(moveCombatCursor, 0, &thread);
+#endif
+                if(atksel)
+                    {
+                        playerAttackEnemy();
+                        return;
+                    }
+
+                else
+                    {
+                        magicused = renderPlayerMagicEnemyMenu();
+                        if(magicused) return;
+                    }
+                limitFPS(250);
+                break;
+            }
+            limitFPS(0);
         }
+    }
 }
 
 // Player UI in combat
@@ -1416,7 +1529,7 @@ bool renderPlayerMagicEnemyMenu()
             printf("\033[14A");
             printf("\033[32D");
 
-            Sleep(1000);
+            limitFPS(1000);
             return false;
         }
 
@@ -1524,14 +1637,18 @@ bool renderPlayerMagicEnemyMenu()
                 printf("                |\n");
             }
 
-            Sleep(150);
+            limitFPS(150);
             printf("\033[14A");
             while(!moved)
             {
                  if(GetAsyncKeyState (VK_UP) != 0)
                     {
                         moved = true;
+#ifdef __linux__
+
+#elif _WIN32
                         _beginthread(moveCombatCursor, 0, &thread);
+#endif
                         if(skisel == 3) skisel = 0;
                         if(skisel == 4) skisel = 1;
                     }
@@ -1539,7 +1656,11 @@ bool renderPlayerMagicEnemyMenu()
                 if(GetAsyncKeyState (VK_DOWN) != 0)
                     {
                         moved = true;
+#ifdef __linux__
+
+#elif _WIN32
                         _beginthread(moveCombatCursor, 0, &thread);
+#endif
                         if(skisel == 0 && findSkill(playerChar.magtree, "BLIZZARD", false) == true) skisel = 3;
                         else if(skisel == 1 && findSkill(playerChar.magtree, "EARTH SMASH", false) == true) skisel = 4;
                     }
@@ -1547,7 +1668,11 @@ bool renderPlayerMagicEnemyMenu()
                 if(GetAsyncKeyState (VK_LEFT) != 0)
                     {
                         moved = true;
+#ifdef __linux__
+
+#elif _WIN32
                         _beginthread(moveCombatCursor, 0, &thread);
+#endif
                         if(skisel == 1) skisel = 0;
                         else if(skisel == 2) skisel = 1;
                         else if(skisel == 3) skisel = 2;
@@ -1557,7 +1682,11 @@ bool renderPlayerMagicEnemyMenu()
                 if(GetAsyncKeyState (VK_RIGHT) != 0)
                     {
                         moved = true;
+#ifdef __linux__
+
+#elif _WIN32
                         _beginthread(moveCombatCursor, 0, &thread);
+#endif
                         if(skisel == 0 && findSkill(playerChar.magtree, "WIND GUST", false) == true) skisel = 1;
                         else if(skisel == 1 && findSkill(playerChar.magtree, "SCORCH FLAME", false) == true) skisel = 2;
                         else if(skisel == 2 && findSkill(playerChar.magtree, "BLIZZARD", false) == true) skisel = 3;
@@ -1567,7 +1696,11 @@ bool renderPlayerMagicEnemyMenu()
                 if(GetAsyncKeyState (VK_LCONTROL) != 0)
                     {
                         moved = true;
+#ifdef __linux__
+
+#elif _WIN32
                         _beginthread(selectCombatAction, 0, &thread);
+#endif
                         if(skisel == 0)
                             {
                                 magicused = playerUseAqua();
@@ -1597,13 +1730,17 @@ bool renderPlayerMagicEnemyMenu()
                                 magicused = playerUseEarth();
                                 return magicused;
                             }
-                        Sleep(250);
+                        limitFPS(250);
                         break;
                     }
 
                 if(GetAsyncKeyState (VK_LSHIFT) != 0)
                     {
+#ifdef __linux__
+
+#elif _WIN32
                         _beginthread(returnFromSkills, 0, &thread);
+#endif
                         moved = true;
                         printf("\033[11B");
                         printf("                                                                                    \n");
@@ -1630,7 +1767,7 @@ void playerAttackEnemy()
             printf("\033[11B");
             printf("\n\t%s attacks... and causes %d damage to the enemy.", playerChar.name, damage);
             printf("\033[14A");
-            Sleep(700);
+            limitFPS(700);
         }
 }
 
@@ -1648,7 +1785,7 @@ bool playerUseAqua()
             Enemy.current_HP -= damage;
             printf("\033[14B");
             printf("\n\t%s used aqua storm... and causes %d damage to the enemy.", playerChar.name, damage);
-            Sleep(700);
+            limitFPS(700);
             printf("\033[5A");
             printf("                                                                                    \n");
             printf("                                                                                    \n");
@@ -1677,7 +1814,7 @@ bool playerUseWind()
             Enemy.current_HP -= damage;
             printf("\033[14B");
             printf("\n\t%s used wind gust... and causes %d damage to the enemy.", playerChar.name, damage);
-            Sleep(700);
+            limitFPS(700);
             printf("\033[5A");
             printf("                                                                                    \n");
             printf("                                                                                    \n");
@@ -1706,7 +1843,7 @@ bool playerUseFlame()
             Enemy.current_HP -= damage;
             printf("\033[14B");
             printf("\n\t%s used scorch flame... and causes %d damage to the enemy.", playerChar.name, damage);
-            Sleep(700);
+            limitFPS(700);
             printf("\033[5A");
             printf("                                                                                    \n");
             printf("                                                                                    \n");
@@ -1735,7 +1872,7 @@ bool playerUseBlizzard()
             Enemy.current_HP -= damage;
             printf("\033[14B");
             printf("\n\t%s used blizzard... and causes %d damage to the enemy.", playerChar.name, damage);
-            Sleep(700);
+            limitFPS(700);
             printf("\033[5A");
             printf("                                                                                    \n");
             printf("                                                                                    \n");
@@ -1764,7 +1901,7 @@ bool playerUseEarth()
             Enemy.current_HP -= damage;
             printf("\033[14B");
             printf("\n\t%s used earth smash... and causes %d damage to the enemy.", playerChar.name, damage);
-            Sleep(700);
+            limitFPS(700);
             printf("\033[5A");
             printf("                                                                                    \n");
             printf("                                                                                    \n");
@@ -1788,7 +1925,7 @@ void enemyAttackPlayer()
             playerChar.current_HP -= damage;
             printf("\033[16B");
             printf("\n\tThe enemy attacks... it caused %d damage to %s.", damage, playerChar.name);
-            Sleep(700);
+            limitFPS(700);
         }
 }
 
@@ -1796,7 +1933,7 @@ void enemyDozesOff()
 {
             printf("\033[16B");
             printf("\n\tThe enemy dozed off...");
-            Sleep(700);
+            limitFPS(700);
 }
 
 void enemyAction()

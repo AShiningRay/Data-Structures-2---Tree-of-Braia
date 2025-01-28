@@ -19,8 +19,8 @@ void insertPhysSkills(BinTree* tree);
 int insert_Node(BinTree* root, char skillname[]);
 void free_BinTree(BinTree *root);
 int insert_BinTree(BinTree* root, char skillname[]);
-void learnSkill(BinTree *root, char skilltolearn[20]);
-bool findSkill(BinTree *root, char skilltofind[20], bool check);
+void learnSkill(BinTree *root, char* skilltolearn);
+bool findSkill(BinTree *root, char* skilltofind, bool check);
 void print_skillTree(BinTree* root, int spacing);
 
 BinTree* generate_BinTree()
@@ -114,7 +114,7 @@ void free_BinTree(BinTree* root)
     printf("\nThe tree has been freed\n");
 }
 
-void learnSkill(BinTree *root, char skilltolearn[20])
+void learnSkill(BinTree *root, char* skilltolearn)
 {
     if(root == NULL)
         return;
@@ -129,7 +129,7 @@ void learnSkill(BinTree *root, char skilltolearn[20])
         }
 }
 
-bool findSkill(BinTree *root, char skilltofind[20], bool check)
+bool findSkill(BinTree *root, char* skilltofind, bool check)
 {
 
     if(check) return true;

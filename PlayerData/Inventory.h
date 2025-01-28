@@ -1,11 +1,11 @@
 #include "Player.h"
-#include "../Game/Audio Engine/menuaudio.h"
+
 void openInventory();
 void showPlayerStats_Map();
 
 void openInventory()
 {
-    bool starting = true;
+    bool openingInventory = true;
     bool moved = false;
     bool HPpotsel = true;
     bool HPincsel = false;
@@ -18,7 +18,11 @@ void openInventory()
     while (1)
         {
             moved = false;
+#ifdef __linux__
+            system("clear");
+#elif _WIN32
             system("cls");
+#endif
             showPlayerStats_Map();
 
             if(HPpotsel)
@@ -119,17 +123,21 @@ void openInventory()
                 printf("\t|_________________________________________________|\n");
             }
 
-            if(starting)
-                {
-                    starting = false;
-                    Sleep(350);
-                }
+            if(openingInventory)
+            {
+                openingInventory = false;
+                limitFPS(1000);
+            }
 
             while(!moved)
             {
                  if(GetAsyncKeyState (VK_UP) != 0)
                     {
+#ifdef __linux__
+
+#elif _WIN32
                         _beginthread(moveCursor, 0, &thread);
+#endif
                         moved = true;
                         if(MPpotsel)
                             {
@@ -147,7 +155,11 @@ void openInventory()
 
                 if(GetAsyncKeyState (VK_DOWN) != 0)
                     {
+#ifdef __linux__
+
+#elif _WIN32
                         _beginthread(moveCursor, 0, &thread);
+#endif
                         moved = true;
                         if(HPpotsel)
                             {
@@ -165,7 +177,11 @@ void openInventory()
 
                 if(GetAsyncKeyState (VK_LEFT) != 0)
                     {
+#ifdef __linux__
+
+#elif _WIN32
                         _beginthread(moveCursor, 0, &thread);
+#endif
                         moved = true;
                         if(MPincsel)
                             {
@@ -184,7 +200,11 @@ void openInventory()
 
                 if(GetAsyncKeyState (VK_RIGHT) != 0)
                     {
+#ifdef __linux__
+
+#elif _WIN32
                         _beginthread(moveCursor, 0, &thread);
+#endif
                         moved = true;
                         if(MPpotsel)
                             {
@@ -203,10 +223,14 @@ void openInventory()
 
                 if(GetAsyncKeyState (VK_LCONTROL) != 0)
                     {
+#ifdef __linux__
+
+#elif _WIN32
                         _beginthread(closeMenu, 0, &thread);
+#endif
                         moved = true;
                         printf("\n\t\tClosing Inventory...");
-                        Sleep(250);
+                        limitFPS(1000);
                         return;
                     }
 
@@ -215,7 +239,11 @@ void openInventory()
                         if(HPpotsel)
                             if(playerChar.it.HPpotion > 0 && playerChar.current_HP < playerChar.max_HP)
                             {
-                                _beginthread(useItem, 0, &thread);
+#ifdef __linux__
+
+#elif _WIN32
+                        _beginthread(useItem, 0, &thread);
+#endif
                                 moved = true;
                                 int recov_hp = (playerChar.max_HP * 0.2);
                                 playerChar.current_HP += recov_hp;
@@ -228,13 +256,17 @@ void openInventory()
                                     }
                                 printf("\n%s recovered %d HP.", playerChar.name, recov_hp);
                                 playerChar.it.HPpotion -= 1;
-                                Sleep(800);
+                                limitFPS(800);
                             }
 
                         if(MPpotsel)
                             if(playerChar.it.MPpotion > 0 && playerChar.current_MP < playerChar.max_MP)
                             {
-                                _beginthread(useItem, 0, &thread);
+#ifdef __linux__
+
+#elif _WIN32
+                        _beginthread(useItem, 0, &thread);
+#endif
                                 moved = true;
                                 int recov_mp = (playerChar.max_MP * 0.2);
                                 playerChar.current_MP += recov_mp;
@@ -247,46 +279,62 @@ void openInventory()
                                     }
                                 printf("\n%s recovered %d MP.", playerChar.name, recov_mp);
                                 playerChar.it.MPpotion -= 1;
-                                Sleep(800);
+                                limitFPS(800);
                             }
 
                         if(HPincsel)
                             if(playerChar.it.HPinc > 0)
                             {
-                                _beginthread(useItem, 0, &thread);
+#ifdef __linux__
+
+#elif _WIN32
+                        _beginthread(useItem, 0, &thread);
+#endif
                                 moved = true;
                                 int increase_hp = (playerChar.max_HP * 1.05) - playerChar.max_HP;
                                 printf("\n%s's max HP increased by %d points..", playerChar.name, increase_hp);
                                 playerChar.max_HP *= 1.05;
                                 playerChar.current_HP += increase_hp;
                                 playerChar.it.HPinc -= 1;
-                                Sleep(800);
+                                limitFPS(800);
                             }
 
                         if(MPincsel)
                             if(playerChar.it.MPinc > 0)
                             {
-                                _beginthread(useItem, 0, &thread);
+#ifdef __linux__
+
+#elif _WIN32
+                        _beginthread(useItem, 0, &thread);
+#endif
                                 moved = true;
                                 int increase_mp = (playerChar.max_MP * 1.05) - playerChar.max_MP;
                                 printf("\n%s's max MP increased by %d points.", playerChar.name, increase_mp);
                                 playerChar.max_MP *= 1.05;
                                 playerChar.current_MP += increase_mp;
                                 playerChar.it.MPinc -= 1;
-                                Sleep(800);
+                                limitFPS(800);
                             }
 
                     }
 
                 if(GetAsyncKeyState (VK_LMENU) != 0)
                 {
-                    _beginthread(endGame, 0, &thread);
+#ifdef __linux__
+
+#elif _WIN32
+                        _beginthread(endGame, 0, &thread);
+#endif             
                     printf("\n\tTERMINATING THE GAME...");
-                    Sleep(1000);
-                    system("taskkill /F /T /IM wmplayer.exe");
+                    limitFPS(1000);
+#ifdef __linux__
+
+#elif _WIN32
+    system("taskkill /F /T /IM wmplayer.exe");
+#endif  
                     exit(0);
                 }
-
+                limitFPS(0);
             }
         }
 }

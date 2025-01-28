@@ -17,9 +17,9 @@ struct Enemy
     char resists[20];
 }Enemy;
 
-void generateEnemy(char enemy[40]);
+void generateEnemy(char* enemy);
 
-void generateEnemy(char enemy[40])
+void generateEnemy(char* enemy)
 {
     if(strcmp(enemy, "YELLOW BLOB") == 0)
         {
