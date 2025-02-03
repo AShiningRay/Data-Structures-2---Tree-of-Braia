@@ -4,6 +4,28 @@
 #include <string.h>
 #include "../Game/Console_Colors/Colors.h"
 
+#define NUM_SPELLS 9
+#define NUM_SKILLS 9
+
+char availableSpells[NUM_SPELLS][15] = 
+{
+    "AQUA STORM",
+    "BLIZZARD",
+    "WIND GUST",
+    "EARTH SMASH",
+    "SCORCH FLAME",
+    "NULL",
+    "NULL",
+    "NULL",
+    "NULL" // This one shall always be null
+};
+
+/* char availableSkills[][15] = 
+{
+    TODO
+}; */
+
+
 struct Node
 {
     char skillName[20];
@@ -30,6 +52,15 @@ BinTree* generate_BinTree()
         *root = NULL;
 
     return root;
+}
+
+int returnSpellIndex(char *spellName) 
+{
+    for(int i = 0; i < NUM_SPELLS-1; i++) 
+    {
+        if(strcmp(availableSpells[i], spellName) == 0) { return i; }
+    }
+    return -1; // Shouldn't happen
 }
 
 void insertMagSkills(BinTree* tree)

@@ -1,731 +1,419 @@
 #include "../EnemyData/Enemies.h"
+#include "../Maps/Combat_BGs.h"
 
-char combat_anim1[30][130] =
-{
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"                                                          BBBB",
-"                                                          BBBB",
-"",
-"",
-"",
-"",
-"",
-"",
-};
+#define MAGIC_SPELLS_PER_LINE 4
+#define CLASS_SKILLS_PER_LINE 4
+#define COMBAT_TEXT_MAXLEN 79
 
-char combat_anim2[30][130] =
-{
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"                                                      BBBBBBBBBBBB",
-"                                                      BBBBBBBBBBBB",
-"                                                       BBBBBBBBBBB",
-"",
-"",
-"",
-"",
-"",
-};
-
-char combat_anim3[30][130] =
-{
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"                                                    BBBBBBBBBBBBBBBBB",
-"                                            BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-"                                          BBBBBBBBB                   BBBBBBBB",
-"                                          BB                                BB",
-"                                          BBBBBBBBBBB             BBBBBBBBBBBB",
-"                                            BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-"                                                  BBBBBBBBBBBBBBBBBB",
-"",
-"",
-"",
-};
-
-char combat_anim4[30][130] =
-{
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"                                       BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-"                               BBBBBBBBBBBBBBBBB                     BBBBBBBBBBBBBBBBB",
-"                           BBBBBBBBBB                                               BBBBBBBB",
-"                         BBBBBB                                                           BBBBBB",
-"                        BBB                                                                   BB",
-"                        BB                                                                    BB",
-"                        BBBBB                                                             BBBBBB",
-"                         BBBBBBBBBBB                                               BBBBBBBBBBBB",
-"                            BBBBBBBBBBBBBBBBBBBBB                BBBBBBBBBBBBBBBBBBBBBBBB",
-"                                 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-"                                          BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-};
-
-char combat_yellowBlob[30][130] =
-{
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"                                                        KKKKKKKK",
-"                                                   KKKKKKRRRRRRKKKK",
-"                                               KKKKKKKRRRRRRRRRRRKKKKK",
-"                                           KKKKKKKKRRRRRRRRLLRRRLKKKKKKKKK",
-"                                        KKKKKKKKKKLRRRRRRRRRRRRRLLLLLKKKKKKKK",
-"                                      KKKKKKKKKKKKKLRRRRRRRRRRRRRLLLLLLLLKKKKK",
-"                                     KKKKKKKKKKKKKKRRRRRRRRRRRRRRLLLLLLLLKKKKKK",
-"                                    KKKKKKKKKKKKKKKKRRRRRRRRRRRRRRLLLLLLLLKKKKKKK",
-"                                   KKKKKKKKKKKKKKKKKKKKKKLLRRRRRRRRRRRRLLLKKKKKKKK",
-"                                   KKKKKKKKKKKKKKKKKKKKKKKKKRRRRRRRRRRRRRKKKKKKKKK",
-"                                   KKKKKKKKKKKKKKKKKKKKKKKKKKRRRRRRRRRRRKKKKKKKKK",
-"                               BBBB KKKKKKKKKKKKKKKKKKKKKKKKKKKKRRRRRKKKKKKKKKKK BBBBB",
-"                           BBBBBBBBBB KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK      BBBBBBBB",
-"                         BBBBBB        KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK             BBBBBB",
-"                        BBB          KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK              BB",
-"                        BB       KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK          BB",
-"                        BBBBB                                                             BBBBBB",
-"                         BBBBBBBBBBB                                               BBBBBBBBBBBB",
-"                            BBBBBBBBBBBBBBBBBBBBB                BBBBBBBBBBBBBBBBBBBBBBBB",
-"                                 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-"                                          BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-};
-
-char combat_redBlob[30][130] =
-{
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"                                                        RRRRRRR",
-"                                                   RRRRRRTTTTTTRRRR",
-"                                               RRRRRRRTTTTTTTTTTTRRRRR",
-"                                           RRRRRRRRRRRRRRRRIITTTIRRRRRRRR",
-"                                        RRRRRRRRRRITTTTTTTTTTTTTIIIIRRRRRRRR",
-"                                      RRRRRRRRRRRRRITTTTTTTTTTTTTIIIIIIIIRRRRR",
-"                                     RRRRRRRRRRRRRRTTTTTTTTTTTTTTIIIIIIIIIRRRRRR",
-"                                    RRRRRRRRRRRRRRRRTTTTTTTTTTTTTTIIIIIIIIRRRRRRR",
-"                                   RRRRRRRRRRRRRRRRRRRRRRIITTTTTTTTTTTTIIIRRRRRRRR",
-"                                   RRRRRRRRRRRRRRRRRRRRRRRRRTTTTTTTTTTTTTRRRRRRRRR",
-"                                   RRRRRRRRRRRRRRRRRRRRRRRRRRTTTTTTTTTTTRRRRRRRRR",
-"                               BBBB RRRRRRRRRRRRRRRRRRRRRRRRRRRRTTTTTRRRRRRRRRRR BBBBB",
-"                           BBBBBBBBBB RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR      BBBBBBBB",
-"                         BBBBBB        RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR             BBBBBB",
-"                        BBB          RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR              BB",
-"                        BB       RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR          BB",
-"                        BBBBB                                                             BBBBBB",
-"                         BBBBBBBBBBB                                               BBBBBBBBBBBB",
-"                            BBBBBBBBBBBBBBBBBBBBB                BBBBBBBBBBBBBBBBBBBBBBBB",
-"                                 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-"                                          BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-};
-
-char combat_cursArmor[30][130] =
-{
-"                                          		 WWWWWWWG",
-"                                                       WWWGLGWWWWG",
-"                                                       WWGRWRGWWWG",
-"                                                       WWGRWRGWWWG",
-"                                                       WWGRWRGWWG",
-"                                                       WWGRRRGWW",
-"",
-"                                               WWWWWWWWWWWWWWWWWWWGGWGWWWG",
-"                                          W  DWWWWWWWWWWWWWWWWWWWWWWWWWWWD   GG",
-"                                        DWWWDD   WWWWWWWWWWWWWWWWWWWWWW D  D WRGG",
-"                                      GWWWWWWWW WWWWWWWWWWWWWWWWWWWWWWRWDDWWWWWWRGG",
-"                                    DWWWWWWWWW WWWWWWWWWWWWWWWWWWWWWWWWWG  DWWWWWWRGG",
-"                                   WWWWWWWWW    WWWWWWWWWWWWWWWWWWWWWWG      DWWWWWWRGG",
-"                                 WWWWWWWWW         WWWWWWWWWWWWWWWWWG          DWWWWWWWWWWGG",
-"                                DWWWWWWWD          WWWWWWWWWWWWWWWWWG            DWWWWWD LWW",
-"                             WWWWWGWWWD  WG        DWWWWWWWWWWWWWWWWG              GWWWWG",
-"                            WWW  WWWWWW W          RDWWWWWWWWWWWWWWWG              GWG  WW",
-"                               GWWG WWWWWWWW BBBBB WWWWWWWWWWWWWWWWGG BBBBBBBBBBBB    WWW",
-"                              BBBBBB  W WWWWRRRL    LLRRRRRRRRRRGGG  BBBBBBBBBBBBBBBBB",
-"                           BBBBBBBBBB D      LRRRRRL      L  R   R                  BBBBBBBB",
-"                         BBBBBB                    LRRRRL      L                          BBBBBB",
-"                        BBB                            LRRRL    R                             BB",
-"                        BB                                                                    BB",
-"                        BBBBB                                                             BBBBBB",
-"                         BBBBBBBBBBB                                               BBBBBBBBBBBB",
-"                            BBBBBBBBBBBBBBBBBBBBB                BBBBBBBBBBBBBBBBBBBBBBBB",
-"                                 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-"                                          BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-};
-
-char combat_CGuy[30][130] =
-{
-"  	                                            WWWWWWWWWWWWWWW",
-"                                             WW###WWWWWWWWW###WW",
-"                                            W######WWWWWWW######WW",
-"                                           W########WWWWW########WW",
-"                                          WW########WWW###########WW",
-"                                         #####   *###WW####*  #####W",
-"                                         ######_  ###WWW##   _#####W",
-"                                         W##########WWWWW##########WW",
-"                                         WW########WWWWWWW########WWW",
-"                                          WWWW#####WWWWWWWWW#####WWWW",
-"                                          WWWWWWWWWWWWWWWWWWWWWWWWWWW",
-"                                          WWWWW=##############=WWWWW",
-"                                            WWW#################WWW",
-"                                             WW###***********###WW",
-"                               BBBBBBBBBBBBBB  W*WWWWWWWWWWWWWWW*WBBBBBBBBBBBBBBBB",
-"                          BBBBBBBBBBB            WWWWWWWWWWWWWWW           BBBBBBBBBBBB",
-"                        BBBBB                      WWWWWWWWWWW                     BBBBBBB",
-"                        BBBBB                        WWWWWW                             BBBBBB",
-"                         BBBBBBBBBBB                                               BBBBBBBBBBBB",
-"                            BBBBBBBBBBBBBBBBBBBBB                BBBBBBBBBBBBBBBBBBBBBBBB",
-"                                 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-"                                          BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-};
-
-char combat_BChicken[30][130] =
-{
-"                                           #WWWWWWWWWWWWWWWWWWWWWWWWWWWWWW#",
-"                                          #WWWWWW_##_WWWWWWWWWWWWW_##_WWWWW#",
-"                             ####         #WWWWWW*##*WWWWWWWWWWWWW*##*WWWWWW#       ####",
-"                          ###   ###      ##WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW#       ###  ###",
-"                        ###       ###     ##WWWWWWWW#####***#####WWWWWWW##      ###      ###",
-"                      ###          ###     ##WWWWWW##WWWWWWWWWWW##WWWWWW#     ###           ###",
-"                                     ###     ##WWWWWWWWWWWWWWWWWWWWWWW##    ###",
-"                                       ####### *#######################*######",
-"                                               @@@@@@@@@@@@@@@@@@@@@@@@@",
-"                                               @@@@                 @@@@",
-"                                               @@@@                 @@@@",
-"                                               @@@@                 @@@@",
-"                                               @@@@                 @@@@",
-"                                               @@@@                 @@@@",
-"                                               @@@@                 @@@@",
-"                                               @@@@                 @@@@",
-"                                               @@@@                 @@@@",
-"                               BBBBBBBBBBBBBBBB@@@@BBBBBBBBBBBBBBBBB@@@@*BBBBBBBBBBBBBBBBBB",
-"                          BBBBBBBBBBBBBBBBB   @@@@                 @@@@         BBBBBBBBBBBBBBB",
-"                        BBBBB              @@@@    @@@@         @@@@    @@@@                BBBBBBB",
-"                        BBBBB                  @@@@                 @@@@                     BBBBBB",
-"                         BBBBBBBBBBB                                                  BBBBBBBBBBBB",
-"                            BBBBBBBBBBBBBBBBBBBBB                BBBBBBBBBBBBBBBBBBBBBBBB",
-"                                 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-"                                          BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-};
-
-char combat_Cyclops[30][130] =
-{
-"                                                     #############",
-"                                                   ##################",
-"                                                 ######################",
-"                                                #######################",
-"                                                ########.......########",
-"                                                #######...(%)...########",
-"                                                #######.........#######",
-"                                                 #######.......#######",
-"                                                &&&&&&&&&&&&&&&&&&&&&&&&&&",
-"                                                 &&&&&&&&&     &&&&&&&&&",
-"                                                &&&&&&&&&&&&&&&&&&&&&&&&&&",
-"                                                       WWWWWWWWWWWW",
-"                                                      WWWWWWWWWWWWWW",
-"                                                    WWWWWWWWWWWWWWWWWW",
-"                                                    WWWW          WWWW",
-"                                                    WWWW          WWWW",
-"                                                    WWWWWWWWWWWWWWWWWW",
-"                                                    WWWWWWWWWWWWWWWWWW",
-"                               BBBBBBBBBBBBBBBBBBBBBWWWWBBBBBBBBBWWWWWBBBBBBBBBBBBBBBBBB",
-"                          BBBBBBBBBBBBBBBBBBBBB     WWWW         WWWW      BBBBBBBBBBBBBBBBB",
-"                        BBBBB                       WWWW         WWWW                   BBBBBBB",
-"                        BBBBB                       WWWW          WWWW                     BBBBBB",
-"                         BBBBBBBBBBB                                               BBBBBBBBBBBB",
-"                            BBBBBBBBBBBBBBBBBBBBB                BBBBBBBBBBBBBBBBBBBBBBBB",
-"                                 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-"                                          BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-};
-
-char combat_Noname[30][130] =
-{
-"                                                     WWWWWNNNWWWWWWW",
-"                                                   WWWWOOOOOOOOOOOWWWW",
-"                                                 WWWWOOOOOOOOOOOOOOOOWWWW",
-"                                               WWWWOOOOOOOOOOOOOOOOOOOWWWW",
-"                                              WWWWOOOOOOOOOOOOOOOOOOOOOOWWWW",
-"                                             WWWWOOOOOOOOOOOOOOOOOOOOOOOOWWWW",
-"                                             WWWWOOOOOOOOOOOOOOOOOOOOOOOOWWWW",
-"                                              WWWWWWOOOOOOOOOOOOOOOOOOOWWWWW",
-"                                                WWWW  ################ WWWW",
-"                                              WWWWWWWW   WWWWWWWW  WWWWWWWWWW",
-"                                             WWWW000000000000000000000000NNWWW",
-"                                            WWWWW0000000:........:000000WWWWWWW",
-"                                            WWWWNNNNNNN::________::NNNNNNNWWWWW",
-"                                         WWWW*******************************WWWW",
-"                                          WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
-"                               BBBBBBBBBBBBBBBBBBBBBWWWWBBBBBBBBBWWWWBBBBBBBBBBBBBBBBBB",
-"                          BBBBBBBBBBBBBBBBBBBB      WWWW         WWWW        BBBBBBBBBBBBBBB",
-"                        BBBBB                       WWWW         WWWW                   BBBBBBB",
-"                        BBBBB                       WWWW          WWWW                     BBBBBB",
-"                         BBBBBBBBBBB                                               BBBBBBBBBBBB",
-"                            BBBBBBBBBBBBBBBBBBBBB                BBBBBBBBBBBBBBBBBBBBBBBB",
-"                                 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-"                                          BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-};
-
-char combat_AlienV[30][130] =
-{
-"                 ##########                                                                ##########",
-"                   ##########                         ##########                        ##########",
-"                      ##########                   ####################              ##########",
-"                         ##########           ##########          ##########       ##########",
-"                           ##########      ##########                ##########  ##########",
-"                              ##########   ##########  LLLLLLLLLLL  ########## ##########",
-"                                 ##########             LLLLLLLLL            ##########",
-"                                   ##########            LLLLLL           ##########",
-"                                     ##########            LL           ##########",
-"                                       ##########                     ##########",
-"                                          ##########                ##########",
-"                               BBBBBBBBBBBB##########BBBBBBBBBBBBB##########BBBBBBBBBBBBBB",
-"                          BBBBBBBBBBBBBBBBBBB #########        ##########       BBBBBBBBBBBBBBB",
-"                        BBBBB                   #######################                   BBBBBBB",
-"                        BBBBB                     ####################                     BBBBBB",
-"                         BBBBBBBBBBB                                               BBBBBBBBBBBB",
-"                            BBBBBBBBBBBBBBBBBBBBB                BBBBBBBBBBBBBBBBBBBBBBBB",
-"                                 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-"                                          BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-};
-
-char combat_BigO[30][130] =
-{
-"                                     ||                   ######                  ||",
-"                                      ||            ##############               ||",
-"                                       ||         ######################        ||",
-"                                        ||    ##########          #########    ||",
-"                                         ##########                ############",
-"                                       #########                      ##########",
-"                                       #########                       ##########",
-"                                                &&&&&&&&&&&&&&&&&&&&&&&",
-"                                      ##########                       ##########",
-"                                       ##########                     ##########",
-"                                         ##########                ##########",
-"                               BBBBBBBBBBBB##########BBBBBBBBBBBBB##########BBBBBBBBBBBBBB",
-"                          BBBBBBBBBBBBBBBBBBB #########        ##########       BBBBBBBBBBBBBBB",
-"                        BBBBB                   #######################                   BBBBBBB",
-"                        BBBBB                     ####################                     BBBBBB",
-"                         BBBBBBBBBBB                                               BBBBBBBBBBBB",
-"                            BBBBBBBBBBBBBBBBBBBBB                BBBBBBBBBBBBBBBBBBBBBBBB",
-"                                 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-"                                          BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-};
-
-
-void combat(int randEnemy);
+void enemyEncounter(int baseLevel, int levelCap);
 void checkPlayerXP();
+void characterLeveledUp(char charIndex, int leftOver_XP);
 
 void renderCombatStartAnim();
-void setAnimColors(char check);
+void applyColorPalette(char check);
 
-void fightYBlob();
-void fightRBlob();
-void fightCursArmor();
-void fightCGuy();
-void fightBChicken();
-void fightCyclops();
-void fightAlienV();
-void fightBigO();
-void fightNoname();
-
-void renderBGFrame1();
-void renderBGFrame2();
-void renderBGFrame3();
-void renderBGFrame4();
-
-void renderBGCurs();
-void renderBGYBlob();
-void renderBGRBlob();
-void renderCGuy();
-void renderBChicken();
-void renderCyclops();
-void renderAlienV();
-void renderBigO();
-void renderNoname();
+void renderArea1BG();
+void renderEnemyCharacters(int charIndex[3], bool isBoss[3]);
 
 void renderPlayerSkillMenu();
-void renderPlayerCombatEnemyMenu();
-bool renderPlayerMagicEnemyMenu();
-void renderPlayerCombatStat();
+int renderPlayerCombatEnemyMenu();
+int renderPlayerMagicSpellMenu();
+void renderMainPartyStats(bool showCombatActions, char *combatText);
 void renderPlayerSkillMenu();
 void renderEnemyCombatStat();
 
-void playerAttackEnemy();
-bool playerUseAqua();
-bool playerUseWind();
-bool playerUseFlame();
-bool playerUseBlizzard();
-bool playerUseEarth();
+int selectEnemy();
+int playerAttackEnemy(char enemyIndex);
+bool calculateCriticalHitChance(int luck);
+bool playerUseSpell(char *spell, char enemyIndex);
 
-void enemyAttackPlayer();
-void enemyDozesOff();
+void enemyAttackPlayer(char enemyIndex, char charIndex);
+void enemyDozesOff(char enemyIndex);
 
 void enemyAction();
 
 short int thread;
 
-void combat(int randEnemy)
+void enemyEncounter(int baseLevel, int levelCap)
 {
-#ifdef __linux__
+    stopBGM("Area1");
+    stopBGM("Area2");
+    stopBGM("Area3");
+    stopBGM("HubWorld");
 
-#elif _WIN32
-    system("taskkill /F /T /IM wmplayer.exe");
-#endif  
+    playBGM("EnemyFight1");
 
-    if(randEnemy > 0 && randEnemy < 5)
+    int enemiesToRender[3] = {-1, -1, -1}; // Sprite table indices
+    bool enemyIsBoss[3] = {false, false, false}; // If the enemy is a boss UNUSED YET
+    int spawnedEnemies = rand();
+    
+    if(spawnedEnemies % 3 == 0)      { enemiesInEncounter = 3; }
+    else if(spawnedEnemies % 2 == 0) { enemiesInEncounter = 2; }
+    else                             { enemiesInEncounter = 1; }
+
+    for(char enemyIndex = 0; enemyIndex < enemiesInEncounter; enemyIndex++) 
+    {
+        int enemyLevel = baseLevel + 1 + (rand() % (levelCap-1)); // Enemy Level always goes from "baseLevel+1" to "levelCap"
+
+        if(enemyLevel > 0 && enemyLevel < 5)
         {
-#ifdef __linux__
-
-#elif _WIN32
-            ShellExecute(NULL,"open","C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe" ,"/play \"C:\\Users\\paulo\\Desktop\\ED2 Project\\Game\\Audio Engine\\Samples\\MusicWar.ogg\",",NULL,SW_HIDE);
-#endif  
-            fightYBlob();
+            generateEnemy(enemyIndex, "YELLOW BLOB", enemyLevel);
+            enemiesToRender[enemyIndex] = 0;
         }
 
-    else if(randEnemy >= 5 && randEnemy < 10)
+        else if(enemyLevel >= 5 && enemyLevel < 10)
         {
-#ifdef __linux__
-
-#elif _WIN32
-            ShellExecute(NULL,"open","C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe" ,"/play \"C:\\Users\\paulo\\Desktop\\ED2 Project\\Game\\Audio Engine\\Samples\\MusicWar.ogg\",",NULL,SW_HIDE);
-#endif  
-            fightRBlob();
+            generateEnemy(enemyIndex, "RED BLOB", enemyLevel);
+            enemiesToRender[enemyIndex] = 1;
         }
 
-    else if(randEnemy == 10)
+        else if(enemyLevel > 10 && enemyLevel <= 15)
         {
-#ifdef __linux__
-
-#elif _WIN32
-            ShellExecute(NULL,"open","C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe" ,"/play \"C:\\Users\\paulo\\Desktop\\ED2 Project\\Game\\Audio Engine\\Samples\\BossMusic.ogg\",",NULL,SW_HIDE);
-#endif  
-            fightCursArmor();
+            generateEnemy(enemyIndex, "C-GUY", enemyLevel);
+            enemiesToRender[enemyIndex] = 2;
         }
 
-    else if(randEnemy > 10 && randEnemy <= 15)
+        else if(enemyLevel > 15 && enemyLevel < 20)
         {
-#ifdef __linux__
-
-#elif _WIN32
-            ShellExecute(NULL,"open","C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe" ,"/play \"C:\\Users\\paulo\\Desktop\\ED2 Project\\Game\\Audio Engine\\Samples\\MusicWar.ogg\",",NULL,SW_HIDE);
-#endif  
-            fightCGuy();
+            generateEnemy(enemyIndex, "BIG CHICKEN", enemyLevel);
+            enemiesToRender[enemyIndex] = 3;
         }
 
-    else if(randEnemy > 15 && randEnemy < 20)
+        else if(enemyLevel > 20 && enemyLevel <= 25)
         {
-#ifdef __linux__
-
-#elif _WIN32
-            ShellExecute(NULL,"open","C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe" ,"/play \"C:\\Users\\paulo\\Desktop\\ED2 Project\\Game\\Audio Engine\\Samples\\MusicWar.ogg\",",NULL,SW_HIDE);
-#endif  
-            fightBChicken();
+            generateEnemy(enemyIndex, "ALIEN-V", enemyLevel);
+            enemiesToRender[enemyIndex] = 4;
         }
 
-    else if(randEnemy == 20)
+        else if(enemyLevel > 25 && enemyLevel < 30)
         {
-#ifdef __linux__
-
-#elif _WIN32
-            ShellExecute(NULL,"open","C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe" ,"/play \"C:\\Users\\paulo\\Desktop\\ED2 Project\\Game\\Audio Engine\\Samples\\BossMusic.ogg\",",NULL,SW_HIDE);
-#endif  
-            fightCyclops();
+            generateEnemy(enemyIndex, "BIG-O", enemyLevel);
+            enemiesToRender[enemyIndex] = 5;
         }
-
-    else if(randEnemy > 20 && randEnemy <= 25)
-        {
-#ifdef __linux__
-
-#elif _WIN32
-            ShellExecute(NULL,"open","C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe" ,"/play \"C:\\Users\\paulo\\Desktop\\ED2 Project\\Game\\Audio Engine\\Samples\\MusicWar.ogg\",",NULL,SW_HIDE);
-#endif  
-            fightAlienV();
-        }
-
-    else if(randEnemy > 25 && randEnemy < 30)
-        {
-#ifdef __linux__
-
-#elif _WIN32
-            ShellExecute(NULL,"open","C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe" ,"/play \"C:\\Users\\paulo\\Desktop\\ED2 Project\\Game\\Audio Engine\\Samples\\MusicWar.ogg\",",NULL,SW_HIDE);
-#endif  
-            fightBigO();
-        }
-
-    else if (randEnemy == 30)
-        {
-#ifdef __linux__
-
-#elif _WIN32
-            ShellExecute(NULL,"open","C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe" ,"/play \"C:\\Users\\paulo\\Desktop\\ED2 Project\\Game\\Audio Engine\\Samples\\BossMusic.ogg\",",NULL,SW_HIDE);
-#endif  
-            fightNoname();
-        }
+    }
+    renderEnemyCharacters(enemiesToRender, enemyIsBoss);
 
     checkPlayerXP();
-#ifdef __linux__
+    stopBGM("EnemyFight1");
+}
 
+void fightBoss(int enemyLevel)
+{
+    stopBGM("Area1");
+    stopBGM("Area2");
+    stopBGM("Area3");
+    stopBGM("HubWorld");
+
+
+
+    playBGM("BossFight1");
+
+    int enemiesToRender[3] = {-1, 0, 0};
+    bool enemyIsBoss[3] = {true, false, false};
+
+    if(enemyLevel == 10)
+    {
+        generateEnemy(0, "CURSED ARMOR", enemyLevel);
+        enemiesToRender[0] = 0;
+    }
+
+    else if(enemyLevel == 20)
+    {
+        generateEnemy(0, "CYCLOPS", enemyLevel);
+        enemiesToRender[0] = 1;
+    }
+
+    else if (enemyLevel == 30)
+    {
+        generateEnemy(0, "NONAME", enemyLevel);
+        enemiesToRender[0] = 2;
+    }
+
+    renderEnemyCharacters(enemiesToRender, enemyIsBoss);
+    checkPlayerXP();
+    stopBGM("BossFight1");
+}
+
+void renderEnemyCharacters(int charIndex[3], bool isBoss[3]) 
+{
+    int attackedEnemy = 0;
+    bool allEnemiesKilled = false;
+    do
+    {
+#ifdef __linux__
+        system("clear");
 #elif _WIN32
-    system("taskkill /F /T /IM wmplayer.exe");
-#endif  
+        system("cls");
+#endif
+        renderEnemyCombatStat();
+
+        renderArea1BG();
+        int enemyIndex = 0;
+        for(enemyIndex = 0; enemyIndex < enemiesInEncounter; enemyIndex++) 
+        { 
+            if(isBoss[enemyIndex]) { charIndex[enemyIndex] += NUM_ENEMIES; }
+        }
+
+        char enemyHeight = 0;
+        for(short int y = 0; y < BG_YSIZE-FIGHTSCREEN_Y_PADDING; y++)
+        {
+            // On the enemy sprite data, bosses are addressed after all normal enemies
+            int charToRender = charIndex[0];
+
+            int maxX = (enemiesInEncounter*ENEMY_X_SEPARATOR);
+            int enemyXArea = maxX + FIGHTSCREEN_X_PADDING - 1;
+            
+            for(int x = 0; x < enemyXArea; x++) 
+            {
+                if(x-FIGHTSCREEN_X_PADDING >= 0)
+                {
+                    enemyIndex = floor((x-FIGHTSCREEN_X_PADDING)/ENEMY_X_SEPARATOR);
+                    charToRender = charIndex[enemyIndex];
+                    char pixelToDraw = enemySprites[charToRender][y][x-FIGHTSCREEN_X_PADDING-(ENEMY_X_SEPARATOR*enemyIndex)];
+                    if(pixelToDraw != ' ' && Enemy[enemyIndex].current_HP > 0) 
+                    {
+                        applyColorPalette(pixelToDraw);
+                        putchar(pixelToDraw); 
+                    }
+                    else // if the pixel is out of bounds, OR it's empty/transparent
+                    {
+                        if(enemyIndex > 0) // We might have to draw the previous enemy data instead, if there is one
+                        {
+                            char BGPixelToDraw = enemySprites[enemyIndex-1][y][x-FIGHTSCREEN_X_PADDING-(ENEMY_X_SEPARATOR*(enemyIndex))];
+                            if(BGPixelToDraw != ' ' && Enemy[enemyIndex-1].current_HP > 0) 
+                            {
+                                applyColorPalette(BGPixelToDraw);
+                                putchar(BGPixelToDraw); 
+                            }
+                            else // IF the previous enemy also has a transparent pixel here, draw the BG instead
+                            {
+                                applyColorPalette(Area1_BG[y+FIGHTSCREEN_Y_PADDING][x-FIGHTSCREEN_X_PADDING]);
+                                putchar(Area1_BG[y+FIGHTSCREEN_Y_PADDING][x-FIGHTSCREEN_X_PADDING]);
+                            }
+                        }
+                        else // Or the background
+                        {
+                            applyColorPalette(Area1_BG[y+FIGHTSCREEN_Y_PADDING][x-FIGHTSCREEN_X_PADDING]);
+                            putchar(Area1_BG[y+FIGHTSCREEN_Y_PADDING][x-FIGHTSCREEN_X_PADDING]);
+                        }
+                        
+                    }
+                }
+                else
+                {
+                    applyColorPalette(Area1_BG[y+FIGHTSCREEN_Y_PADDING][x]);
+                    putchar(Area1_BG[y+FIGHTSCREEN_Y_PADDING][x]);
+                }
+                
+                textcolor(WHITE);
+                textbackground(BLACK);
+            }
+            putchar('\n');
+            enemyHeight += 1;
+        }
+        
+        for(int y = 0; y < BG_YSIZE - FIGHTSCREEN_Y_PADDING - enemySpriteRows[charIndex[enemiesInEncounter-1]]; y++) { putchar('\n'); }
+        SetColor(15);
+        attackedEnemy = renderPlayerCombatEnemyMenu();
+
+        if(Enemy[attackedEnemy].current_HP <= 0)
+        {
+            char combatText[COMBAT_TEXT_MAXLEN];
+            if(isBoss[attackedEnemy]) { playSFX("BossDefeated");}
+            else { playSFX("EnemyDefeated"); }
+            
+            snprintf(combatText, COMBAT_TEXT_MAXLEN, " '%s' was defeated! Party gained %d XP points and +%d gold!", Enemy[attackedEnemy].name, Enemy[attackedEnemy].XP_given, Enemy[attackedEnemy].gold_given);
+            renderMainPartyStats(true, combatText);
+            printf("\x1B[10A");
+            character[0].current_XP += Enemy[attackedEnemy].XP_given;
+            character[0].gold += Enemy[attackedEnemy].gold_given;
+            limitFPS(1000);
+        }
+        else if(character[0].current_HP <= 0)
+        {
+            char combatText[COMBAT_TEXT_MAXLEN];
+            snprintf(combatText, COMBAT_TEXT_MAXLEN, "%s died...", character[0].name);
+            renderMainPartyStats(true, combatText);
+            printf("\x1B[10A");
+            break;
+        }
+
+        enemyAction();
+
+        allEnemiesKilled = true;
+        for(char enemyIndex = 0; enemyIndex < enemiesInEncounter; enemyIndex++) 
+        {
+            if(Enemy[enemyIndex].current_HP > 0) { allEnemiesKilled = false; }
+        }
+
+        // Clear all player actions from the UI, as this turn is over
+        for(int i = 0; i < partySize; i++) {strcpy(character[i].action,""); }
+    } 
+    while (!allEnemiesKilled && character[0].current_HP > 0);
+
+    limitFPS(1000);
 }
 
 void checkPlayerXP()
 {
     bool leveledUp = false;
-    int extra_XP = 0;
+    int leftOver_XP = 0;
 
-    if(playerChar.current_XP >= playerChar.next_XP)
-        {
-            leveledUp = true;
-            extra_XP = (playerChar.current_XP - playerChar.next_XP);
-        }
+    if(character[0].current_XP >= character[0].next_XP)
+    {
+        leveledUp = true;
+        leftOver_XP = (character[0].current_XP - character[0].next_XP);
+    }
 
-
-    if(leveledUp == true && playerChar.Level < 10)
-        {
-            SetColor(14);
-            printf("\n\t\t%s Leveled UP\n", playerChar.name);
-            SetColor(15);
-            playerChar.Level += 1;
-            playerChar.max_HP += 250;
-            playerChar.current_HP = playerChar.max_HP;
-            playerChar.max_MP += 80;
-            playerChar.current_MP = playerChar.max_MP;
-            playerChar.atk += 16;
-            playerChar.def += 12;
-            playerChar.inte += 10;
-            playerChar.luck += 3;
-            playerChar.next_XP *= 2;
-            playerChar.current_XP = 0;
-            playerChar.current_XP += extra_XP;
-
-            if(playerChar.Level == 2)
-                {
-                    SetColor(10);
-                    learnSkill(playerChar.magtree, "AQUA STORM");
-                    printf("\t\t%s LEARNED AQUA STORM!\n", playerChar.name);
-                    SetColor(15);
-                }
-
-            else if(playerChar.Level == 4)
-                {
-                    SetColor(10);
-                    learnSkill(playerChar.phystree, "STR BOOST");
-                    printf("\t\t%s LEARNED STR BOOST!\n", playerChar.name);
-                    playerChar.atk *= 1.20;
-                    SetColor(15);
-                }
-
-            else if(playerChar.Level == 3)
-                {
-                    SetColor(10);
-                    learnSkill(playerChar.magtree, "WIND GUST");
-                    printf("\t\t%s LEARNED WIND GUST!\n", playerChar.name);
-                    playerChar.luck *= 1.05;
-                    SetColor(15);
-                }
-
-            else if(playerChar.Level == 6)
-                {
-                    SetColor(10);
-                    learnSkill(playerChar.magtree, "SCORCH FLAME");
-                    printf("\t\t%s LEARNED SCORCH FLAME!\n", playerChar.name);
-                    playerChar.inte *= 1.05;
-                    SetColor(15);
-                }
-
-            else if(playerChar.Level == 7)
-                {
-                    SetColor(10);
-                    learnSkill(playerChar.phystree, "DEF BOOST");
-                    printf("\t\t%s LEARNED DEF BOOST!\n", playerChar.name);
-                    playerChar.def *= 1.20;
-                    SetColor(15);
-                }
-
-            else if(playerChar.Level == 8)
-                {
-                    SetColor(10);
-                    learnSkill(playerChar.magtree, "BLIZZARD");
-                    printf("\t\t%s LEARNED BLIZZARD!\n", playerChar.name);
-                    playerChar.atk *= 1.03;
-                    SetColor(15);
-                }
-
-            else if(playerChar.Level == 9)
-                {
-                    SetColor(10);
-                    learnSkill(playerChar.magtree, "EARTH SMASH");
-                    printf("\t\t%s LEARNED EARTH SMASH!\n", playerChar.name);
-                    playerChar.def *= 1.03;
-                    SetColor(15);
-                }
-
-            else if(playerChar.Level == 10)
-                {
-                    SetColor(10);
-                    learnSkill(playerChar.phystree, "INT BOOST");
-                    printf("\t\t%s LEARNED INT BOOST!\n", playerChar.name);
-                    playerChar.inte *= 1.25;
-                    SetColor(15);
-                }
-            limitFPS(700);
-        }
-    else if(playerChar.Level == 10) playerChar.current_XP = (playerChar.next_XP) - 1;
+    if(leveledUp == true && character[0].Level < 10)
+    {
+        characterLeveledUp(0, leftOver_XP);
+    }
+    else if(character[0].Level == 10) character[0].current_XP = (character[0].next_XP) - 1;
 }
 
-
-void renderCombatStartAnim()
+void characterLeveledUp(char charIndex, int leftOver_XP) 
 {
-    renderBGFrame1();
-    limitFPS(0);
-    renderBGFrame2();
-    limitFPS(0);
-    renderBGFrame3();
-    limitFPS(0);
-    renderBGFrame4();
+    char combatText[COMBAT_TEXT_MAXLEN];
+    playSFX("LevelUp");
+    character[charIndex].Level += 1;
+    character[charIndex].max_HP += 250;
+    character[charIndex].current_HP = character[charIndex].max_HP;
+    character[charIndex].max_MP += 80;
+    character[charIndex].current_MP = character[charIndex].max_MP;
+    character[charIndex].atk += 16;
+    character[charIndex].def += 12;
+    character[charIndex].inte += 10;
+    character[charIndex].luck += 3;
+    character[charIndex].next_XP *= 2;
+    character[charIndex].current_XP = 0;
+    character[charIndex].current_XP += leftOver_XP;
+
+    snprintf(combatText, COMBAT_TEXT_MAXLEN, "%s Leveled UP to Level %d!!! ", character[charIndex].name, character[charIndex].Level);
+
+    if(character[charIndex].Level == 2)
+    {
+        learnSkill(character[charIndex].magtree, "AQUA STORM");
+        strcat(combatText, " LEARNED AQUA STORM!");
+        character[charIndex].learnedSpells += 1;
+        character[charIndex].spellIndices[character[charIndex].learnedSpells-1] = returnSpellIndex("AQUA STORM");
+    }
+
+    else if(character[charIndex].Level == 4)
+    {
+        learnSkill(character[charIndex].phystree, "STR BOOST");
+        strcat(combatText, " LEARNED STR BOOST!");
+        character[charIndex].atk *= 1.20;
+        character[charIndex].learnedSkills += 1;
+    }
+
+    else if(character[charIndex].Level == 3)
+    {
+        learnSkill(character[charIndex].magtree, "WIND GUST");
+        strcat(combatText, " LEARNED WIND GUST!");
+        character[charIndex].luck *= 1.05;
+        character[charIndex].learnedSpells += 1;
+        character[charIndex].spellIndices[character[charIndex].learnedSpells-1] = returnSpellIndex("WIND GUST");
+    }
+
+    else if(character[charIndex].Level == 6)
+    {
+        learnSkill(character[charIndex].magtree, "SCORCH FLAME");
+        strcat(combatText, " LEARNED SCORCH FLAME!");
+        character[charIndex].inte *= 1.05;
+        character[charIndex].learnedSpells += 1;
+        character[charIndex].spellIndices[character[charIndex].learnedSpells-1] = returnSpellIndex("SCORCH FLAME");
+    }
+
+    else if(character[charIndex].Level == 7)
+    {
+        learnSkill(character[charIndex].phystree, "DEF BOOST");
+        strcat(combatText, " LEARNED DEF BOOST!");
+        character[charIndex].def *= 1.20;
+        character[charIndex].learnedSkills += 1;
+    }
+
+    else if(character[charIndex].Level == 8)
+    {
+        learnSkill(character[charIndex].magtree, "BLIZZARD");
+        strcat(combatText, " LEARNED BLIZZARD!");
+        character[charIndex].atk *= 1.03;
+        character[charIndex].learnedSpells += 1;
+        character[charIndex].spellIndices[character[charIndex].learnedSpells-1] = returnSpellIndex("BLIZZARD");
+    }
+
+    else if(character[charIndex].Level == 9)
+    {
+        learnSkill(character[charIndex].magtree, "EARTH SMASH");
+        strcat(combatText, " LEARNED EARTH SMASH!");
+        character[charIndex].def *= 1.03;
+        character[charIndex].learnedSpells += 1;
+        character[charIndex].spellIndices[character[charIndex].learnedSpells-1] = returnSpellIndex("EARTH SMASH");
+    }
+
+    else if(character[charIndex].Level == 10)
+    {
+        learnSkill(character[charIndex].phystree, "INT BOOST");
+        strcat(combatText, " LEARNED INT BOOST!");
+        character[charIndex].inte *= 1.25;
+        character[charIndex].learnedSkills += 1;
+    }
+
+    renderMainPartyStats(true, combatText);
+    printf("\x1B[10A");
+    limitFPS(1500);
 }
 
-void setAnimColors(char check)
+void applyColorPalette(char check)
 {
-    if(check == '*')
+
+    // Same color Background and text
+    if(check == '&')
     {
         textcolor(LIGHTGREEN);
         textbackground(LIGHTGREEN);
-    }
-    else if(check == '(' || check == ')')
-    {
-        textcolor(GREEN);
-        textbackground(GREEN);
-    }
-    else if(check == ')')
-    {
-        textcolor(GREEN);
-        textbackground(GREEN);
-    }
-    else if(check == '&')
-    {
-        textcolor(LIGHTGREEN);
-        textbackground(LIGHTGREEN);
-    }
-    else if(check == '%')
-    {
-        textcolor(DARKGRAY);
-        textbackground(DARKGRAY);
     }
     else if(check == '@')
     {
         textcolor(BROWN);
         textbackground(BROWN);
     }
-    else if(check == ',') SetColor(0);
-    else if(check == '#' || check == '=')
-        {
-        textcolor(BROWN);
-        textbackground(BROWN);
-        }
-    else if(check == '/')
+    else if(check == '#')
     {
         textcolor(GREEN);
         textbackground(GREEN);
     }
     else if(check == '.')
     {
+        textbackground(BLACK);
         textcolor(BLACK);
     }
-    else if(check == 'W' || check == ':')
+    else if(check == 'W')
     {
         textcolor(WHITE);
         textbackground(WHITE);
     }
-    else if(check == 'G' || check == 'O' || check == '0')
+    else if(check == '0')
     {
         textcolor(DARKGRAY);
         textbackground(DARKGRAY);
     }
-    else if(check == 'D')
+    else if(check == 'M')
     {
         textcolor(MAGENTA);
         textbackground(MAGENTA);
+    }
+    else if(check == 'P')
+    {
+        textcolor(LIGHTMAGENTA);
+        textbackground(LIGHTMAGENTA);
     }
     else if(check == 'L')
     {
         textcolor(LIGHTRED);
         textbackground(LIGHTRED);
     }
-    else if(check == 'R' || check == 'N' || check == '\'')
+    else if(check == 'R')
     {
         textcolor(RED);
         textbackground(RED);
@@ -735,1212 +423,770 @@ void setAnimColors(char check)
         textcolor(BLUE);
         textbackground(BLUE);
     }
-    else if(check == 'K' || check == '_')
+    else if(check == 'K')
     {
         textcolor(YELLOW);
         textbackground(YELLOW);
     }
-    else if(check == 'T' || check == '@')
+    else if (check == 'V')
     {
-        textcolor(GREEN);
-        textbackground(GREEN);
+        textcolor(LIGHTBLUE);
+        textbackground(LIGHTBLUE);
     }
-    else if(check == 'I')
+    else if (check == '$')
     {
-        textcolor(LIGHTGREEN);
-        textbackground(LIGHTGREEN);
+        textcolor(LIGHTCYAN);
+        textbackground(LIGHTCYAN);
     }
-    else if(check == '%')
+    if(check == 'C')
     {
-        textcolor(LIGHTRED);
-        textbackground(LIGHTRED);
+        textcolor(CYAN);
+        textbackground(CYAN);
     }
+    if(check == '+')
+    {
+        textcolor(LIGHTGRAY);
+        textbackground(LIGHTGRAY);
+    }
+
+    // Different color background and text
     else if(check == '|')
     {
-        textcolor(LIGHTRED);
-        textbackground(LIGHTRED);
+        textcolor(RED);
+        textbackground(BLACK);
     }
-}
-
-
-// Animations below are the actual combat animations (X starts at 2 to enable damage animations "dislocation, similar to older pok�mon games")
-void renderBGFrame1()
-{
-#ifdef __linux__
-    system("clear");
-#elif _WIN32
-    system("cls");
-#endif
-        for(short int y = 0; y <30; y++)
-        {
-            int xmax = strlen(combat_anim1[y]);
-
-            for(int x = 2; x < xmax; x++)
-                {
-                    setAnimColors(combat_anim1[y][x]);
-
-                    putchar(combat_anim1[y][x]);
-                    textcolor(WHITE);
-                    textbackground(BLACK);
-                }
-                putchar('\n');
-        }
-}
-
-void renderBGFrame2()
-{
-#ifdef __linux__
-    system("clear");
-#elif _WIN32
-    system("cls");
-#endif
-        for(short int y = 0; y <30; y++)
-        {
-            int xmax = strlen(combat_anim2[y]);
-
-            for(int x = 2; x < xmax; x++)
-                {
-                    setAnimColors(combat_anim2[y][x]);
-
-                    putchar(combat_anim2[y][x]);
-                    textcolor(WHITE);
-                    textbackground(BLACK);
-                }
-                putchar('\n');
-        }
-}
-
-void renderBGFrame3()
-{
-#ifdef __linux__
-    system("clear");
-#elif _WIN32
-    system("cls");
-#endif
-        for(short int y = 0; y <30; y++)
-        {
-            int xmax = strlen(combat_anim3[y]);
-
-            for(int x = 2; x < xmax; x++)
-                {
-                    setAnimColors(combat_anim3[y][x]);
-
-                    putchar(combat_anim3[y][x]);
-                    textcolor(WHITE);
-                    textbackground(BLACK);
-                }
-                putchar('\n');
-        }
-}
-
-void renderBGFrame4()
-{
-#ifdef __linux__
-    system("clear");
-#elif _WIN32
-    system("cls");
-#endif
-        for(short int y = 0; y <30; y++)
-        {
-            int xmax = strlen(combat_anim4[y]);
-
-            for(int x = 2; x < xmax; x++)
-                {
-                    setAnimColors(combat_anim4[y][x]);
-
-                    putchar(combat_anim4[y][x]);
-                    textcolor(WHITE);
-                    textbackground(BLACK);
-                }
-                putchar('\n');
-        }
-}
-
-
-void renderBGCurs()
-{
-    do
+    else if (check == '`')
     {
-#ifdef __linux__
-    system("clear");
-#elif _WIN32
-    system("cls");
-#endif
-    renderEnemyCombatStat();
-        for(short int y = 0; y <30; y++)
-        {
-            int xmax = strlen(combat_cursArmor[y]);
-
-            for(int x = 2; x < xmax; x++)
-                {
-                    setAnimColors(combat_cursArmor[y][x]);
-
-                    putchar(combat_cursArmor[y][x]);
-                    textcolor(WHITE);
-                    textbackground(BLACK);
-                }
-                putchar('\n');
-        }
-    renderPlayerCombatEnemyMenu();
-    enemyAction();
-    } while (Enemy.current_HP > 0 && playerChar.current_HP > 0);
-
-    if(Enemy.current_HP <= 0)
-        {
-            printf("\033[2B");
-            printf("\n\t\t%s defeated the Boss and gained %d XP points!", playerChar.name, Enemy.XP_given);
-            playerChar.current_XP += Enemy.XP_given;
-            playerChar.gold += Enemy.gold_given;
-        }
-    else if(playerChar.current_HP <= 0)
-        {
-            printf("\033[2B");
-            printf("\n\t\t%s died...", playerChar.name);
-        }
-
-    limitFPS(700);
-}
-
-
-void renderBGYBlob()
-{
-    do
+        textcolor(BLACK);
+        textbackground(BROWN);
+    }
+    else if (check == ':')
     {
-#ifdef __linux__
-    system("clear");
-#elif _WIN32
-    system("cls");
-#endif
-    renderEnemyCombatStat();
-
-        for(short int y = 0; y <30; y++)
-        {
-            int xmax = strlen(combat_yellowBlob[y]);
-
-            for(int x = 2; x < xmax; x++)
-                {
-                    setAnimColors(combat_yellowBlob[y][x]);
-
-                    putchar(combat_yellowBlob[y][x]);
-                    textcolor(WHITE);
-                    textbackground(BLACK);
-                }
-                putchar('\n');
-        }
-    renderPlayerCombatEnemyMenu();
-    enemyAction();
-    } while (Enemy.current_HP > 0 && playerChar.current_HP > 0);
-
-    if(Enemy.current_HP <= 0)
-        {
-            printf("\033[2B");
-            printf("\n\t\t%s gained %d XP points!", playerChar.name, Enemy.XP_given);
-            playerChar.current_XP += Enemy.XP_given;
-            playerChar.gold += Enemy.gold_given;
-        }
-    else if(playerChar.current_HP <= 0)
-        {
-            printf("\033[2B");
-            printf("\n\t\t%s died...", playerChar.name);
-        }
-
-    limitFPS(700);
-}
-
-
-void renderBGRBlob()
-{
-    do
+        textcolor(BROWN);
+        textbackground(GREEN);
+    }
+    else if (check == ';')
     {
-#ifdef __linux__
-    system("clear");
-#elif _WIN32
-    system("cls");
-#endif
-    renderEnemyCombatStat();
-        for(short int y = 0; y <30; y++)
+        textcolor(GREEN);
+        textbackground(BROWN);
+    }
+    
+}
+
+
+// TODO: Also make this commonize all area BGs later on
+void renderArea1BG() 
+{
+    for(short int y = 0; y <37; y++)
         {
-            int xmax = strlen(combat_redBlob[y]);
+            int xmax = strlen(Area1_BG[y]);
 
-            for(int x = 2; x < xmax; x++)
+            for(int x = 0; x < xmax; x++)
                 {
-                    setAnimColors(combat_redBlob[y][x]);
+                    applyColorPalette(Area1_BG[y][x]);
 
-                    putchar(combat_redBlob[y][x]);
+                    putchar(Area1_BG[y][x]);
                     textcolor(WHITE);
                     textbackground(BLACK);
                 }
                 putchar('\n');
         }
-    renderPlayerCombatEnemyMenu();
-    enemyAction();
-    } while (Enemy.current_HP > 0 && playerChar.current_HP > 0);
-
-    if(Enemy.current_HP <= 0)
-        {
-            printf("\033[2B");
-            printf("\n\t\t%s gained %d XP points!", playerChar.name, Enemy.XP_given);
-            playerChar.current_XP += Enemy.XP_given;
-            playerChar.gold += Enemy.gold_given;
-        }
-    else if(playerChar.current_HP <= 0)
-        {
-            printf("\033[2B");
-            printf("\n\t\t%s died...", playerChar.name);
-        }
-
-    limitFPS(700);
-}
-
-void renderCGuy()
-{
-    do
-    {
-#ifdef __linux__
-    system("clear");
-#elif _WIN32
-    system("cls");
-#endif
-    renderEnemyCombatStat();
-
-        for(short int y = 0; y <30; y++)
-        {
-            int xmax = strlen(combat_CGuy[y]);
-
-            for(int x = 2; x < xmax; x++)
-                {
-                    setAnimColors(combat_CGuy[y][x]);
-
-                    putchar(combat_CGuy[y][x]);
-                    textcolor(WHITE);
-                    textbackground(BLACK);
-                }
-                putchar('\n');
-        }
-    renderPlayerCombatEnemyMenu();
-    enemyAction();
-    } while (Enemy.current_HP > 0 && playerChar.current_HP > 0);
-
-    if(Enemy.current_HP <= 0)
-        {
-            printf("\033[2B");
-            printf("\n\t\t%s gained %d XP points!", playerChar.name, Enemy.XP_given);
-            playerChar.current_XP += Enemy.XP_given;
-            playerChar.gold += Enemy.gold_given;
-        }
-    else if(playerChar.current_HP <= 0)
-        {
-            printf("\033[2B");
-            printf("\n\t\t%s died...", playerChar.name);
-        }
-
-    limitFPS(700);
-}
-
-void renderBChicken()
-{
-    do
-    {
-#ifdef __linux__
-    system("clear");
-#elif _WIN32
-    system("cls");
-#endif
-    renderEnemyCombatStat();
-
-        for(short int y = 0; y <30; y++)
-        {
-            int xmax = strlen(combat_BChicken[y]);
-
-            for(int x = 2; x < xmax; x++)
-                {
-                    setAnimColors(combat_BChicken[y][x]);
-
-                    putchar(combat_BChicken[y][x]);
-                    textcolor(WHITE);
-                    textbackground(BLACK);
-                }
-                putchar('\n');
-        }
-    renderPlayerCombatEnemyMenu();
-    enemyAction();
-    } while (Enemy.current_HP > 0 && playerChar.current_HP > 0);
-
-    if(Enemy.current_HP <= 0)
-        {
-            printf("\033[2B");
-            printf("\n\t\t%s gained %d XP points!", playerChar.name, Enemy.XP_given);
-            playerChar.current_XP += Enemy.XP_given;
-            playerChar.gold += Enemy.gold_given;
-        }
-    else if(playerChar.current_HP <= 0)
-        {
-            printf("\033[2B");
-            printf("\n\t\t%s died...", playerChar.name);
-        }
-
-    limitFPS(700);
-}
-
-void renderCyclops()
-{
-    do
-    {
-#ifdef __linux__
-    system("clear");
-#elif _WIN32
-    system("cls");
-#endif
-    renderEnemyCombatStat();
-
-        for(short int y = 0; y <30; y++)
-        {
-            int xmax = strlen(combat_Cyclops[y]);
-
-            for(int x = 2; x < xmax; x++)
-                {
-                    setAnimColors(combat_Cyclops[y][x]);
-
-                    putchar(combat_Cyclops[y][x]);
-                    textcolor(WHITE);
-                    textbackground(BLACK);
-                }
-                putchar('\n');
-        }
-    renderPlayerCombatEnemyMenu();
-    enemyAction();
-    } while (Enemy.current_HP > 0 && playerChar.current_HP > 0);
-
-    if(Enemy.current_HP <= 0)
-        {
-            printf("\033[2B");
-            printf("\n\t\t%s defeated the boss and gained %d XP points!", playerChar.name, Enemy.XP_given);
-            playerChar.current_XP += Enemy.XP_given;
-            playerChar.gold += Enemy.gold_given;
-        }
-    else if(playerChar.current_HP <= 0)
-        {
-            printf("\033[2B");
-            printf("\n\t\t%s died...", playerChar.name);
-        }
-
-    limitFPS(700);
-}
-
-void renderAlienV()
-{
-    do
-    {
-#ifdef __linux__
-    system("clear");
-#elif _WIN32
-    system("cls");
-#endif
-    renderEnemyCombatStat();
-
-        for(short int y = 0; y <30; y++)
-        {
-            int xmax = strlen(combat_AlienV[y]);
-
-            for(int x = 2; x < xmax; x++)
-                {
-                    setAnimColors(combat_AlienV[y][x]);
-
-                    putchar(combat_AlienV[y][x]);
-                    textcolor(WHITE);
-                    textbackground(BLACK);
-                }
-                putchar('\n');
-        }
-    renderPlayerCombatEnemyMenu();
-    enemyAction();
-    } while (Enemy.current_HP > 0 && playerChar.current_HP > 0);
-
-    if(Enemy.current_HP <= 0)
-        {
-            printf("\033[2B");
-            printf("\n\t\t%s gained %d XP points!", playerChar.name, Enemy.XP_given);
-            playerChar.current_XP += Enemy.XP_given;
-            playerChar.gold += Enemy.gold_given;
-        }
-    else if(playerChar.current_HP <= 0)
-        {
-            printf("\033[2B");
-            printf("\n\t\t%s died...", playerChar.name);
-        }
-
-    limitFPS(700);
-}
-
-void renderBigO()
-{
-    do
-    {
-#ifdef __linux__
-    system("clear");
-#elif _WIN32
-    system("cls");
-#endif
-    renderEnemyCombatStat();
-
-        for(short int y = 0; y <30; y++)
-        {
-            int xmax = strlen(combat_BigO[y]);
-
-            for(int x = 2; x < xmax; x++)
-                {
-                    setAnimColors(combat_BigO[y][x]);
-
-                    putchar(combat_BigO[y][x]);
-                    textcolor(WHITE);
-                    textbackground(BLACK);
-                }
-                putchar('\n');
-        }
-    renderPlayerCombatEnemyMenu();
-    enemyAction();
-    } while (Enemy.current_HP > 0 && playerChar.current_HP > 0);
-
-    if(Enemy.current_HP <= 0)
-        {
-            printf("\033[2B");
-            printf("\n\t\t%s gained %d XP points!", playerChar.name, Enemy.XP_given);
-            playerChar.current_XP += Enemy.XP_given;
-            playerChar.gold += Enemy.gold_given;
-        }
-    else if(playerChar.current_HP <= 0)
-        {
-            printf("\033[2B");
-            printf("\n\t\t%s died...", playerChar.name);
-        }
-
-    limitFPS(700);
-}
-
-void renderNoname()
-{
-    do
-    {
-#ifdef __linux__
-    system("clear");
-#elif _WIN32
-    system("cls");
-#endif
-    renderEnemyCombatStat();
-
-        for(short int y = 0; y <30; y++)
-        {
-            int xmax = strlen(combat_Noname[y]);
-
-            for(int x = 2; x < xmax; x++)
-                {
-                    setAnimColors(combat_Noname[y][x]);
-
-                    putchar(combat_Noname[y][x]);
-                    textcolor(WHITE);
-                    textbackground(BLACK);
-                }
-                putchar('\n');
-        }
-    renderPlayerCombatEnemyMenu();
-    enemyAction();
-    } while (Enemy.current_HP > 0 && playerChar.current_HP > 0);
-
-    if(Enemy.current_HP <= 0)
-        {
-            printf("\033[2B");
-            printf("\n\t\t%s gained %d XP points!", playerChar.name, Enemy.XP_given);
-            playerChar.current_XP += Enemy.XP_given;
-            playerChar.gold += Enemy.gold_given;
-        }
-    else if(playerChar.current_HP <= 0)
-        {
-            printf("\033[2B");
-            printf("\n\t\t%s died...", playerChar.name);
-        }
-
-    limitFPS(700);
-}
-
-
-void fightRBlob()
-{
-    generateEnemy("RED BLOB");
-    renderCombatStartAnim();
-    renderBGRBlob();
-}
-
-void fightYBlob()
-{
-    generateEnemy("YELLOW BLOB");
-    renderCombatStartAnim();
-    renderBGYBlob();
-}
-
-void fightCursArmor()
-{
-    generateEnemy("CURSED ARMOR");
-    renderCombatStartAnim();
-    renderBGCurs();
-}
-
-void fightCGuy()
-{
-    generateEnemy("C-GUY");
-    renderCombatStartAnim();
-    renderCGuy();
-}
-
-void fightBChicken()
-{
-    generateEnemy("BIG CHICKEN");
-    renderCombatStartAnim();
-    renderBChicken();
-}
-
-void fightCyclops()
-{
-    generateEnemy("CYCLOPS");
-    renderCombatStartAnim();
-    renderCyclops();
-}
-
-void fightAlienV()
-{
-    generateEnemy("ALIEN-V");
-    renderCombatStartAnim();
-    renderAlienV();
-}
-
-void fightBigO()
-{
-    generateEnemy("BIG-O");
-    renderCombatStartAnim();
-    renderBigO();
-}
-
-void fightNoname()
-{
-    generateEnemy("NONAME");
-    renderCombatStartAnim();
-    renderNoname();
+    printf("\x1B[%dA", BG_YSIZE-FIGHTSCREEN_Y_PADDING);
 }
 
 void renderEnemyCombatStat()
 {
-    printf("\t\t\t/____________________________________________________________________\n");
-    printf("\t\t\t|\t\t  Enemy:");
-    SetColor(14);
-    printf("%s\n", Enemy.name);
-    SetColor(15);
-    printf("\t\t\t|   HP:(");
     short int lifepercent; // enemy life bar percentage calculus.
+    SetColor(15);
+    printf("\x1B[1m");
+    printf("\t\t\t┌────────────────────────────────────────────────────────────────────────────────┐\n");
 
-        lifepercent = (int) (((float)Enemy.current_HP / (float)Enemy.max_HP) * 60);
+    // Enemy Names
+    for(char enemyIndex = 0; enemyIndex < enemiesInEncounter; enemyIndex++) 
+    {
+        if(enemyIndex == 0) { printf("\t\t\t│"); }
+        // If there's only one enemy, show its name and lifebar on the center
+        if(enemiesInEncounter == 1) 
+        { 
+            for(char j = 0; j < 26; j++) { putchar(' '); }
+            printf("│");
+        } 
 
+        SetColor(14);
+        for(char j = 0; j < (26 - strlen(Enemy[enemyIndex].name))/2; j++) { putchar(' '); }
+        printf("%s", Enemy[enemyIndex].name);
+
+        for(char j = 0; j < (26 - strlen(Enemy[enemyIndex].name))/2; j++) { putchar(' '); }
+        if(strlen(Enemy[enemyIndex].name) % 2 == 1) { putchar(' '); } // Correction for when names aren't even in length
+        SetColor(15);
+        printf("│");
+
+        // If we have two enemies, the center area of the life bars has to be empty (there's only a left and right enemy)
+        // Additionally, if there's only one enemy, its stats will be shown on the center, so pad the right area as well.
+        if(enemiesInEncounter % 2 == 0 && enemyIndex == 0 || enemiesInEncounter == 1) 
+        { 
+            for(char j = 0; j < 26; j++) { putchar(' '); } 
+            printf("│");
+        }
+    }
+    printf("\n");
+
+    // Enemy HP Bars
+    for(char enemyIndex = 0; enemyIndex < enemiesInEncounter; enemyIndex++) 
+    {
+        if(enemyIndex == 0) { printf("\t\t\t│"); }
+
+        if(enemiesInEncounter == 1) 
+        { 
+            for(char j = 0; j < 26; j++) { putchar(' '); }
+            printf("│");
+        } 
+        printf(" HP:(");
+        lifepercent = (int) (((float)Enemy[enemyIndex].current_HP / (float)Enemy[enemyIndex].max_HP) * 18);
+        if(lifepercent < 0) { lifepercent = 0; } 
+
+        printf("\x1B[0m");
         textbackground(RED);
         textcolor(RED);
-    for(unsigned short int i = 0; i < lifepercent; i++) printf("+");
+        for(unsigned short int i = 0; i < lifepercent; i++) { printf("+"); }
+        printf("\x1B[1m");
+        textbackground(BLACK);
+        textcolor(WHITE);
 
-      textbackground(BLACK);
-      textcolor(WHITE);
+        for(short int i = 20 - lifepercent - 2; i > 0; i--) { printf(" "); }
 
-
-    for(short int i = 60 - lifepercent - 2; i > 0; i--)
-    printf(" ");
-
-    printf(")|\n");
-    printf("\t\t\t|____________________________________________________________________|\n\n");
-}
-
-// Player UI in the map
-
-
-void renderPlayerSkillMenu()
-{
-    bool moved = false;
-    moved = false;
-    limitFPS(250);
-    while (1)
-        {
-#ifdef __linux__
-            system("clear");
-#elif _WIN32
-            system("cls");
-#endif
-            printf("\t|___________________________________________________|\n");
-            printf("\t|  Player:");
-            SetColor(3);
-            printf("%s\n", playerChar.name);
-            SetColor(15);
-            printf("\t|___________________________________________________\n\n");
-            print_skillTree((playerChar.magtree), 20);
-            printf("\n\t(Skills)\n\n");
-            print_skillTree((playerChar.phystree), 20);
-            printf("\t|\tPRESS LSHIFT TO CLOSE THE MENU");
-            printf("\n\t|___________________________________________________\n");
-
-            while(!moved)
-            {
-                 if(GetAsyncKeyState (VK_LSHIFT) != 0)
-                    {
-                        moved = true;
-                        printf("\n\tCLOSING THE MENU...");
-                        limitFPS(300);
-                        return;
-                    }
-            }
+        printf(")  │");
+        if(enemiesInEncounter % 2 == 0 && enemyIndex == 0 || enemiesInEncounter == 1) 
+        { 
+            for(char j = 0; j < 26; j++) { putchar(' '); } 
+            printf("│");
         }
+    }
+    printf("\n");
+
+    
+    printf("\t\t\t└────────────────────────────────────────────────────────────────────────────────┘\n");
+    printf("\x1B[0m");
 }
 
-void renderPlayerCombatEnemyMenu()
+int selectEnemy() 
 {
-    bool moved = false;
-    bool atksel = true;
-    bool skisel = false;
-    bool magicused = false;
+    int selIndex = 0;
 
-    while (1)
+    bool enemyIsSelectable[3] = { false, false, false };
+
+    // Start by having all generated enemies be selectable. If any have their HP below zero, they'll be ruled out below
+    for(char enemyIndex = 0; enemyIndex < enemiesInEncounter; enemyIndex++) { enemyIsSelectable[enemyIndex] = true; }
+
+    while(true) 
     {
-        moved = false;
-        renderPlayerCombatStat();
+        renderMainPartyStats(true, "");
+        SetColor(15);
+        printf("\x1B[1m");
+        printf("\t\t\t┌────────────────────────────────SELECT YOUR FOE─────────────────────────────────┐\n");
 
-        if(atksel)
-        {
-            printf("\t|====ACTION====/\n");
-            printf("\t| ");
-            SetColor(12);
-            printf(">>");
-            SetColor(15);
-            printf(" ATTACK   |\n");
-            printf("\t|-------------|\n");
-            printf("\t|    SKILL    |\n");
-        }
-
-        else if(skisel)
-        {
-            printf("\t|====ACTION====/\n");
-            printf("\t|    ATTACK   |\n");
-            printf("\t|-------------|\n");
-            printf("\t| ");
-            SetColor(12);
-            printf(">>");
-            SetColor(15);
-            printf(" SKILL    |\n");
-        }
-
-        printf("\033[11A");
-        while(!moved)
-        {
-            if(GetAsyncKeyState (VK_UP) != 0)
-            {
-                moved = true;
-#ifdef __linux__
-
-#elif _WIN32
-                _beginthread(moveCombatCursor, 0, &thread);
-#endif
-                if(skisel)
-                    {
-                        skisel = false;
-                        atksel = true;
-                        break;
-                    }
+        // Enemy Names
+        for(char enemyIndex = 0; enemyIndex < enemiesInEncounter; enemyIndex++) 
+        {            
+            if(enemyIndex == 0) { printf("\t\t\t│"); }
+            // If there's only one enemy, show its name and lifebar on the center
+            if(enemiesInEncounter == 1) 
+            { 
+                for(char j = 0; j < 26; j++) { putchar(' '); }
+                printf("│");
             }
 
-            if(GetAsyncKeyState (VK_DOWN) != 0)
+            if(Enemy[enemyIndex].current_HP < 0) 
             {
-                moved = true;
-#ifdef __linux__
+                enemyIsSelectable[enemyIndex] = false;
+                if(enemyIsSelectable[selIndex] == false) { selIndex++; }
+            }
+            
+            if (selIndex == enemyIndex) 
+            { 
+                SetColor(14);
+                printf(" ┼─ "); 
+            }
+            else { printf("    "); }
+            for(char j = 0; j < (22 - strlen(Enemy[enemyIndex].name))/2; j++) { putchar(' '); }
+            
+            if(Enemy[enemyIndex].current_HP < 0) { SetColor(8); }
+            printf("%s", Enemy[enemyIndex].name); 
 
-#elif _WIN32
-                _beginthread(moveCombatCursor, 0, &thread);
-#endif
-                if(atksel)
-                    {
-                        atksel = false;
-                        skisel = true;
-                        break;
-                    }
+            for(char j = 0; j < (22 - strlen(Enemy[enemyIndex].name))/2; j++) { putchar(' '); }
+            if(strlen(Enemy[enemyIndex].name) % 2 == 1) { putchar(' '); } // Correction for when names aren't even in length
+            SetColor(15);
+            printf("│");
+
+            if(enemiesInEncounter % 2 == 0 && enemyIndex == 0 || enemiesInEncounter == 1) 
+            { 
+                for(char j = 0; j < 26; j++) { putchar(' '); } 
+                printf("│");
+            }
+        }
+        printf("\n");
+        printf("\t\t\t└────────────────────────────────────────────────────────────────────────────────┘\n\n");
+        printf("\x1B[0m");
+        printf("\x1B[14A");
+        limitFPS(150);
+
+        while(true)
+        {
+            if(GetAsyncKeyState (VK_LEFT) != 0)
+            {
+                limitFPS(150);
+                playSFX("CombatCursorMove");
+                selIndex--;
+                if(selIndex < 0) { selIndex = enemiesInEncounter-1; }
+                break;
+            }
+
+            if(GetAsyncKeyState (VK_RIGHT) != 0)
+            {
+                limitFPS(150);
+                playSFX("CombatCursorMove");
+                selIndex++;
+                if(selIndex >= enemiesInEncounter) { selIndex = 0; }
+                break;
             }
 
             if(GetAsyncKeyState (VK_LCONTROL) != 0)
             {
-                moved = true;
-#ifdef __linux__
+                playSFX("CombatCursorSelect");
+                limitFPS(150);
+                return selIndex;
+            }
 
-#elif _WIN32
-                _beginthread(moveCombatCursor, 0, &thread);
-#endif
-                if(atksel)
-                    {
-                        playerAttackEnemy();
-                        return;
-                    }
-
-                else
-                    {
-                        magicused = renderPlayerMagicEnemyMenu();
-                        if(magicused) return;
-                    }
-                limitFPS(250);
-                break;
+            if(GetAsyncKeyState (VK_LSHIFT) != 0)
+            {
+                playSFX("ReturnFromMenu");
+                return -1;
             }
             limitFPS(0);
         }
     }
 }
 
-// Player UI in combat
-
-void renderPlayerCombatStat()
+int renderPlayerCombatEnemyMenu()
 {
-    printf("\t|___________________________________________________________________________|\n");
-    printf("\t|  Player:");
-    SetColor(3);
-    printf("%s\n", playerChar.name);
-    SetColor(15);
-    printf("\t|____________________________________________________________________________\n");
-    SetColor(10);
-    printf("\t| HP: %d/%d |",playerChar.current_HP, playerChar.max_HP);
-    SetColor(15);
-    printf("__________________________COMMANDS__________________________|\n");
-    SetColor(15);
-    SetColor(9);
-    printf("\t| MP: %d/%d   |", playerChar.current_MP, playerChar.max_MP);
-    SetColor(15);
-    printf("  CONTROL -> USE ACTION    LSHIFT -> RETURN TO ACTION SELECT|\n");
-    printf("\t|---------------|");
-    printf("              ARROWS -> MOVE BETWEEN ACTIONS                |\n");
-    printf("\t|_______________|____________________________________________________________|\n");
+    bool atksel = true;
+    bool spellsel = false;
+    bool actsel = false; // TODO: Unused, as AP skills aren't implemented yet
+    bool undosel = false; // TODO: Unused, as there has to be more than one character in the party
+    char enemyAttacked = -1;
+    int curcharacter = 0; // Only one character for now
+
+    while(true)
+    {
+        renderMainPartyStats(true, "");
+
+        SetColor(15);
+        printf("\x1B[1m");
+        printf("\t\t\t┌────────────────────────────────────────────────────────────────────────────────┐\n");
+        printf("\t\t\t┌──────────────────────────────SELECT YOUR COMMAND───────────────────────────────┐\n");
+        printf("\t\t\t│ ");
+        if(atksel) { SetColor(10); }
+        printf("%s", (atksel ? "┼─" : "  "));
+        printf(" BASIC ATTACK    ");
+        SetColor(15);
+        printf("│ ");
+        if(spellsel) { SetColor(9); }
+        printf("%s", (spellsel ? "┼─" : "  "));
+        printf(" MAGIC SPELL    ");
+        SetColor(15);
+        printf("│ ");
+        if(actsel) { SetColor(14); }
+        printf("%s", (actsel ? "┼─" : "  "));
+        printf(" CLASS SKILL    ");
+        SetColor(15);
+        printf("│ ");
+        if(undosel) { SetColor(11); }
+        else if(curcharacter == 0) { SetColor(8); }
+        printf("%s", (undosel ? "┼─" : "  "));
+        printf(" UNDO LAST      ");
+        SetColor(15);
+        printf("│");
+        printf("\n\t\t\t└────────────────────────────────────────────────────────────────────────────────┘\n");
+        printf("\x1B[0m");
+        printf("\x1B[14A");
+        while(true)
+        {
+            if(GetAsyncKeyState (VK_LEFT) != 0)
+            {
+                limitFPS(150);
+                playSFX("CombatCursorMove");
+                if(spellsel)
+                {
+                    spellsel = false;
+                    atksel = true;
+                }
+                else if(actsel)
+                {
+                    actsel = false;
+                    spellsel = true;
+                }
+                break;
+            }
+
+            if(GetAsyncKeyState (VK_RIGHT) != 0)
+            {
+                limitFPS(150);
+                playSFX("CombatCursorMove");
+                if(atksel)
+                {
+                    atksel = false;
+                    spellsel = true;
+                }
+                else if(spellsel)
+                {
+                    spellsel = false;
+                    actsel = true;
+                }
+                break;
+            }
+
+            if(GetAsyncKeyState (VK_LCONTROL) != 0)
+            {
+                playSFX("CombatCursorSelect");
+                if(atksel)
+                {
+                    enemyAttacked = selectEnemy();
+                    if(enemyAttacked != -1) 
+                    {
+                        strcpy(character[0].action,"ATK");
+                        playerAttackEnemy(enemyAttacked);
+                        return enemyAttacked;
+                    }
+                    
+                }
+                else
+                {
+                    enemyAttacked = renderPlayerMagicSpellMenu();
+                    if(enemyAttacked != -1) { return enemyAttacked; }
+                }
+                limitFPS(250);
+                break;
+            }
+            limitFPS(0);
+        }
+    }
+    return -1; // This should never happen
 }
 
-bool renderPlayerMagicEnemyMenu()
+// Party UI in combat
+void renderMainPartyStats(bool showCombatActions, char *combatText)
 {
-    bool moved = false;
-    short int skisel = 0;
-    bool magicused = false;
+    char charAt = 0;
+    SetColor(15);
+    printf("\x1B[1m");
 
-    if(findSkill(playerChar.magtree, "AQUA STORM", false) == false)
+    if(showCombatActions) 
+    {
+        printf("\t\t\t┌────────────────────────────────────────────────────────────────────────────────┐\n");
+        printf("\t\t\t│ %s", combatText);
+        for(int pad = 0; pad < COMBAT_TEXT_MAXLEN - strlen(combatText); pad++) { printf(" "); }
+        printf("│\n");
+        printf("\t\t\t└────────────────────────────────────────────────────────────────────────────────┘\n");
+
+    }
+    
+    printf("\t\t\t┌───────────────┬────────────────┬────────────────┬────────────────%s\n", (showCombatActions ? "┬─────────────┐" : "┐"));
+    
+    // Names
+    for(char i = 0; i < MAX_PARTY_SIZE; i++) 
+    {
+        SetColor(15);
+        if(i == 0) { printf("\t\t\t│ "); }
+        if(i < partySize) 
         {
-            renderPlayerCombatStat();
-            printf("\033[5B");
-            printf("\n\n\tYOU HAVE NO SKILLS YET!");
-            printf("\033[14A");
-            printf("\033[32D");
+            charAt = 0;
+            while(character[i].name[charAt] != '\0') 
+            { 
+                putchar(character[i].name[charAt]); 
+                charAt++; 
+            }
+            for(char i = 14 - (charAt+1); i > 0; i--) { printf(" "); }
+        }
+        else { printf(" ──────────────"); }
+        SetColor(15);
+        printf(" │");
+    }
+    if(showCombatActions) { printf(" KEY ACTIONS │"); }
+    
+    printf("\n");
 
-            limitFPS(1000);
-            return false;
+    SetColor(15);
+    printf("\t\t\t├───────────────┼────────────────┼────────────────┼────────────────%s\n", (showCombatActions ? "┼─────────────┤" : "┤"));
+
+    // HP Stats
+    for(char i = 0; i < MAX_PARTY_SIZE; i++) 
+    {
+        if(i == 0) { printf("\t\t\t│"); }
+
+        SetColor(10);
+        if(i < partySize)  { printf(" HP: %4d/%4d ",character[i].current_HP, character[i].max_HP); }
+        else { printf(" ────────────── "); }
+        SetColor(15);
+        printf("│");
+    }
+    if(showCombatActions) { printf(" <^v> - MOVE │"); }
+    printf("\n");
+
+    // MP Stats
+    for(char i = 0; i < MAX_PARTY_SIZE; i++) 
+    {
+        if(i == 0) { printf("\t\t\t│"); }
+        
+        SetColor(9);
+        if(i < partySize)  { printf(" MP: %4d/%4d ",character[i].current_MP, character[i].max_MP); }
+        else { printf(" ────────────── "); }
+        SetColor(15);
+        printf("│");
+    }
+    if(showCombatActions) { printf("CTRL - SELECT│"); }
+    printf("\n");
+
+    // AP Stats
+    for(char i = 0; i < MAX_PARTY_SIZE; i++) 
+    {
+        if(i == 0) { printf("\t\t\t│"); }
+        
+        SetColor(14);
+        if(i < partySize)  { printf(" AP: %3d/%d   ", 0, 100); } // character[0].current_AP, character[0].max_AP); // AP not implemented yetcharacter[i].current_AP, character[i].max_AP); }
+        else { printf(" ────────────── "); }
+        SetColor(15);
+        printf("│");
+    }
+    if(showCombatActions) { printf("SHFT - RETURN│"); }
+    printf("\n");
+
+    
+    printf("\t\t\t└──────%s──────┴────────────────┴────────────────┴────────────────%s\n", (strcmp(character[0].action, "") != 0 ? character[0].action : "───"), (showCombatActions ? "┴─────────────┘" : "┘"));
+    printf("\x1B[0m");
+}
+
+int renderPlayerMagicSpellMenu()
+{
+    char spellsel = 0;
+    char enemyIndex = 0;
+
+    while(true)
+    {
+        renderMainPartyStats(true, "");
+        SetColor(15);
+        printf("\x1B[1m");
+        printf("\t\t\t┌────────────────────────────────SELECT THE SPELL────────────────────────────────┐\n");
+        
+        // Max text len = 15
+        //printf("\x1B[4B");
+        printf("\t\t\t│");
+
+        if(spellsel == 0) { SetColor(10); }
+        if(findSkill(character[0].magtree, availableSpells[character[0].spellIndices[0]], false) == false) { printf("                    "); }
+        else 
+        {
+            printf(" %s", (spellsel == 0 && character[0].learnedSpells > 0 ? "┼─" : "  "));
+            printf(" %s", availableSpells[character[0].spellIndices[0]]);
+            for(int pad = 0; pad < 16-strlen(availableSpells[character[0].spellIndices[0]]); pad++) { putchar(' '); }
+        }
+        
+        SetColor(15);
+        printf("│");
+
+        if(spellsel == 1) { SetColor(10); }
+        if(findSkill(character[0].magtree, availableSpells[character[0].spellIndices[1]], false) == false) { printf("                   "); }
+        else 
+        {
+            printf(" %s", (spellsel == 1 && character[0].learnedSpells > 1 ? "┼─" : "  "));
+            printf(" %s", availableSpells[character[0].spellIndices[1]]);
+            for(int pad = 0; pad < 15-strlen(availableSpells[character[0].spellIndices[1]]); pad++) { putchar(' '); }
         }
 
+        SetColor(15);
+        printf("│");
 
-    while (1)
+        if(spellsel == 2) { SetColor(10); }
+        if(findSkill(character[0].magtree, availableSpells[character[0].spellIndices[2]], false) == false) { printf("                   "); }
+        else 
         {
-            moved = false;
-            renderPlayerCombatStat();
-            printf("\033[4B");
+            printf(" %s", (spellsel == 2 && character[0].learnedSpells > 2 ? "┼─" : "  "));
+            printf(" %s", availableSpells[character[0].spellIndices[2]]);
+            for(int pad = 0; pad < 15-strlen(availableSpells[character[0].spellIndices[2]]); pad++) { putchar(' '); }
+        }
 
-            if(skisel == 0)
-            {
-                printf("\t|=================MAGIC SELECTION=================||====MAGIC MP USE====|\n");
-                printf("\t| ");
-                SetColor(12);
-                printf(">>");
-                SetColor(10);
-                printf(" 1-AQUA STORM");
-                SetColor(15);
-                if(findSkill(playerChar.magtree, "WIND GUST", false) == false) SetColor(0);
-                printf("    2-WIND GUST");
-                if(findSkill(playerChar.magtree, "SCORCH FLAME", false) == false) SetColor(0);
-                printf("    3-SCORCH FLAME");
-                SetColor(15);
-                printf("|| 1-30    2-45   3-70|\n");
-                printf("\t|    ");
-                if(findSkill(playerChar.magtree, "BLIZZARD", false) == false) SetColor(0);
-                printf("4-BLIZZARD  ");
-                if(findSkill(playerChar.magtree, "EARTH SMASH", false) == false)SetColor(0);
-                printf("    5-EARTH SMASH                ");
-                SetColor(15);
-                printf("|| 4-110   5-150      |\n");
-            }
+        SetColor(15);
+        printf("│");
 
-            else if(skisel == 1)
-            {
-                printf("\t|=================MAGIC SELECTION=================||\n");
-                printf("\t| ");
-                printf("   1-AQUA STORM ");
-                SetColor(12);
-                printf(">>");
-                SetColor(10);
-                printf(" 2-WIND GUST");
-                SetColor(15);
-                if(findSkill(playerChar.magtree, "SCORCH FLAME", false) == false) SetColor(0);
-                printf("    3-SCORCH FLAME");
-                SetColor(15);
-                printf("|\n");
-                printf("\t|");
-                if(findSkill(playerChar.magtree, "BLIZZARD", false) == false)SetColor(0);
-                printf("    4-BLIZZARD  ");
-                if(findSkill(playerChar.magtree, "EARTH SMASH", false) == false)SetColor(0);
-                printf("    5-EARTH SMASH");
-                SetColor(15);
-                printf("                |\n");
-            }
-            if(skisel == 2)
-            {
-                printf("\t|=================MAGIC SELECTION=================||\n");
-                printf("\t| ");
-                printf("   1-AQUA STORM");
-                printf("    2-WIND GUST ");
-                SetColor(12);
-                printf(">>");
-                SetColor(10);
-                printf(" 3-SCORCH FLAME");
-                SetColor(15);
-                printf("|\n\t|");
-                if(findSkill(playerChar.magtree, "BLIZZARD", false) == false)SetColor(0);
-                printf("    4-BLIZZARD  ");
-                if(findSkill(playerChar.magtree, "EARTH SMASH", false) == false)SetColor(0);
-                printf("    5-EARTH SMASH");
-                printf("                |\n");
-            }
-            if(skisel == 3)
-            {
-                printf("\t|=================MAGIC SELECTION=================||\n");
-                printf("\t| ");
-                printf("   1-AQUA STORM");
-                printf("    2-WIND GUST");
-                printf("    3-SCORCH FLAME|\n");
-                printf("\t| ");
-                SetColor(12);
-                printf(">>");
-                SetColor(10);
-                printf(" 4-BLIZZARD  ");
-                SetColor(15);
-                if(findSkill(playerChar.magtree, "EARTH SMASH", false) == false)SetColor(0);
-                printf("    5-EARTH SMASH");
-                printf("                |\n");
-            }
-            if(skisel == 4)
-            {
-                printf("\t|=================MAGIC SELECTION=================||\n");
-                printf("\t| ");
-                printf("   1-AQUA STORM");
-                printf("    2-WIND GUST");
-                printf("    3-SCORCH FLAME||\n");
-                printf("\t|    4-BLIZZARD   ");
-                SetColor(12);
-                printf(">>");
-                SetColor(10);
-                printf(" 5-EARTH SMASH");
-                SetColor(15);
-                printf("                |\n");
-            }
+        if(spellsel == 3) { SetColor(10); }
+        if(findSkill(character[0].magtree, availableSpells[character[0].spellIndices[3]], false) == false) { printf("                   "); }
+        else 
+        {
+            printf(" %s", (spellsel == 3 && character[0].learnedSpells > 3 ? "┼─" : "  "));
+            printf(" %s", availableSpells[character[0].spellIndices[3]]);
+            for(int pad = 0; pad < 15-strlen(availableSpells[character[0].spellIndices[3]]); pad++) { putchar(' '); }
+        }
 
-            limitFPS(150);
-            printf("\033[14A");
-            while(!moved)
+        SetColor(15);
+        printf("│");
+
+        printf("\n\t\t\t│"); // 4 magic spells per line (will be the same for class skils)
+
+        if(spellsel == 4) { SetColor(10); }
+        if(findSkill(character[0].magtree, availableSpells[character[0].spellIndices[4]], false) == false) { printf("                    "); }
+        else 
+        {
+            printf(" %s", (spellsel == 4 && character[0].learnedSpells > 4 ? "┼─" : "  "));
+            printf(" %s", availableSpells[character[0].spellIndices[4]]);
+            for(int pad = 0; pad < 16-strlen(availableSpells[character[0].spellIndices[4]]); pad++) { putchar(' '); }
+        }
+
+        SetColor(15);
+        printf("│");
+
+        if(spellsel == 5) { SetColor(10); }
+        if(findSkill(character[0].magtree, availableSpells[character[0].spellIndices[5]], false) == false) { printf("                   "); }
+        else 
+        {
+            printf(" %s", (spellsel == 5 && character[0].learnedSpells > 5 ? "┼─" : "  "));
+            printf(" %s", availableSpells[character[0].spellIndices[5]]);
+            for(int pad = 0; pad < 15-strlen(availableSpells[character[0].spellIndices[5]]); pad++) { putchar(' '); }
+        }
+
+        SetColor(15);
+        printf("│");
+
+        if(spellsel == 6) { SetColor(10); }
+        if(findSkill(character[0].magtree, availableSpells[character[0].spellIndices[6]], false) == false) { printf("                   "); }
+        else 
+        {
+            printf(" %s", (spellsel == 6 && character[0].learnedSpells > 6 ? "┼─" : "  "));
+            printf(" %s", availableSpells[character[0].spellIndices[6]]);
+            for(int pad = 0; pad < 15-strlen(availableSpells[character[0].spellIndices[6]]); pad++) { putchar(' '); }
+        }
+
+        SetColor(15);
+        printf("│");
+
+        if(spellsel == 7) { SetColor(10); }
+        if(findSkill(character[0].magtree, availableSpells[character[0].spellIndices[7]], false) == false) { printf("                   "); }
+        else 
+        {
+            printf(" %s", (spellsel == 7 && character[0].learnedSpells > 7 ? "┼─" : "  "));
+            printf(" %s", availableSpells[character[0].spellIndices[7]]);
+            for(int pad = 0; pad < 15-strlen(availableSpells[character[0].spellIndices[7]]); pad++) { putchar(' '); }
+        }
+
+        SetColor(15);
+        printf("│");
+        
+
+        // TODO: We can have up to 8 spells here, there's just not that many yet
+
+        printf("\n\t\t\t└────────────────────────────────────────────────────────────────────────────────┘\n");
+        printf("\x1B[0m");
+        printf("\x1B[14A");
+        limitFPS(150);
+        
+        while(true)
+        {
+            if(character[0].learnedSpells > 0) // Only move the cursor of there's any spell to select
             {
-                 if(GetAsyncKeyState (VK_UP) != 0)
+                if(GetAsyncKeyState (VK_UP) != 0)
+                {
+                    if(spellsel > 3 && character[0].learnedSpells > 4) 
                     {
-                        moved = true;
-#ifdef __linux__
-
-#elif _WIN32
-                        _beginthread(moveCombatCursor, 0, &thread);
-#endif
-                        if(skisel == 3) skisel = 0;
-                        if(skisel == 4) skisel = 1;
-                    }
-
-                if(GetAsyncKeyState (VK_DOWN) != 0)
-                    {
-                        moved = true;
-#ifdef __linux__
-
-#elif _WIN32
-                        _beginthread(moveCombatCursor, 0, &thread);
-#endif
-                        if(skisel == 0 && findSkill(playerChar.magtree, "BLIZZARD", false) == true) skisel = 3;
-                        else if(skisel == 1 && findSkill(playerChar.magtree, "EARTH SMASH", false) == true) skisel = 4;
-                    }
-
-                if(GetAsyncKeyState (VK_LEFT) != 0)
-                    {
-                        moved = true;
-#ifdef __linux__
-
-#elif _WIN32
-                        _beginthread(moveCombatCursor, 0, &thread);
-#endif
-                        if(skisel == 1) skisel = 0;
-                        else if(skisel == 2) skisel = 1;
-                        else if(skisel == 3) skisel = 2;
-                        else if(skisel == 4) skisel = 3;
-                    }
-
-                if(GetAsyncKeyState (VK_RIGHT) != 0)
-                    {
-                        moved = true;
-#ifdef __linux__
-
-#elif _WIN32
-                        _beginthread(moveCombatCursor, 0, &thread);
-#endif
-                        if(skisel == 0 && findSkill(playerChar.magtree, "WIND GUST", false) == true) skisel = 1;
-                        else if(skisel == 1 && findSkill(playerChar.magtree, "SCORCH FLAME", false) == true) skisel = 2;
-                        else if(skisel == 2 && findSkill(playerChar.magtree, "BLIZZARD", false) == true) skisel = 3;
-                        else if(skisel == 3 && findSkill(playerChar.magtree, "EARTH SMASH", false) == true) skisel = 4;
-                    }
-
-                if(GetAsyncKeyState (VK_LCONTROL) != 0)
-                    {
-                        moved = true;
-#ifdef __linux__
-
-#elif _WIN32
-                        _beginthread(selectCombatAction, 0, &thread);
-#endif
-                        if(skisel == 0)
-                            {
-                                magicused = playerUseAqua();
-                                return magicused;
-                            }
-
-                        if(skisel == 1)
-                            {
-                                magicused = playerUseWind();
-                                return magicused;
-                            }
-
-                        if(skisel == 2)
-                            {
-                                magicused = playerUseFlame();
-                                return magicused;
-                            }
-
-                        if(skisel == 3)
-                            {
-                                magicused = playerUseBlizzard();
-                                return magicused;
-                            }
-
-                        if(skisel == 4)
-                            {
-                                magicused = playerUseEarth();
-                                return magicused;
-                            }
-                        limitFPS(250);
+                        playSFX("CombatCursorMove");
+                        spellsel -= MAGIC_SPELLS_PER_LINE; 
+                        limitFPS(150);
                         break;
                     }
+                }
 
-                if(GetAsyncKeyState (VK_LSHIFT) != 0)
+                if(GetAsyncKeyState (VK_DOWN) != 0)
+                {
+                    if(spellsel < 4 && character[0].learnedSpells > 4) 
                     {
-#ifdef __linux__
-
-#elif _WIN32
-                        _beginthread(returnFromSkills, 0, &thread);
-#endif
-                        moved = true;
-                        printf("\033[11B");
-                        printf("                                                                                    \n");
-                        printf("                                                                                    \n");
-                        printf("                                                                                    \n");
-                        printf("                                                                                    \n");
-                        printf("\033[15A");
-                        printf("\033[92D");
-                        return false;
+                        playSFX("CombatCursorMove");
+                        spellsel += MAGIC_SPELLS_PER_LINE;
+                        limitFPS(150);
+                        break;
                     }
+                }
 
+                if(GetAsyncKeyState (VK_LEFT) != 0)
+                {
+                    if(spellsel > 0) 
+                    { 
+                        playSFX("CombatCursorMove");
+                        spellsel -= 1; 
+                        limitFPS(150);
+                        break;
+                    }
+                }
+
+                if(GetAsyncKeyState (VK_RIGHT) != 0)
+                {
+                    if(spellsel < (character[0].learnedSpells-1)) 
+                    {
+                        playSFX("CombatCursorMove");
+                        spellsel += 1; 
+                        limitFPS(150);
+                        break;
+                    }
+                }
             }
+            
+
+            if(GetAsyncKeyState (VK_LCONTROL) != 0)
+            {
+                if(character[0].learnedSpells == 0) { break; } // Also only select spells if there are any available
+                limitFPS(150);
+                playSFX("CombatCursorSelect");
+                enemyIndex = selectEnemy();
+                if(enemyIndex == -1) { limitFPS(150); break; }
+
+                strcpy(character[0].action,"MAG");            
+                if(spellsel == 0)
+                {
+                    playerUseSpell(availableSpells[character[0].spellIndices[0]], enemyIndex);
+                    return enemyIndex;
+                }
+
+                if(spellsel == 1)
+                {
+                    playerUseSpell(availableSpells[character[0].spellIndices[1]], enemyIndex);
+                    return enemyIndex;
+                }
+
+                if(spellsel == 2)
+                {
+                    playerUseSpell(availableSpells[character[0].spellIndices[2]], enemyIndex);
+                    return enemyIndex;
+                }
+
+                if(spellsel == 3)
+                {
+                    playerUseSpell(availableSpells[character[0].spellIndices[3]], enemyIndex);
+                    return enemyIndex;
+                }
+
+                if(spellsel == 4)
+                {
+                    playerUseSpell(availableSpells[character[0].spellIndices[4]], enemyIndex);
+                    return enemyIndex;
+                }
+            }
+
+            if(GetAsyncKeyState (VK_LSHIFT) != 0)
+            {
+                playSFX("ReturnFromMenu");
+                return -1;
+            }
+
         }
+    }
 
 }
 
-void playerAttackEnemy()
+int playerAttackEnemy(char enemyIndex)
 {
-    int damage = (playerChar.atk - Enemy.def);
+    int damage = (character[0].atk - Enemy[enemyIndex].def);
+    char combatText[COMBAT_TEXT_MAXLEN];
+    bool gotCriticalHit = calculateCriticalHitChance(character[0].luck);
+
+    if(gotCriticalHit) 
+    { 
+        damage *= 1.5;
+        playSFX("CriticalHit");
+    }
+    else { playSFX("HitConfirm"); }
 
     if(damage > 0)
-        {
-            Enemy.current_HP -= damage;
-            printf("\033[11B");
-            printf("\n\t%s attacks... and causes %d damage to the enemy.", playerChar.name, damage);
-            printf("\033[14A");
-            limitFPS(700);
-        }
+    {
+        Enemy[enemyIndex].current_HP -= damage;
+        snprintf(combatText, COMBAT_TEXT_MAXLEN, "%s attacks... %s causes %d damage to '%s'.", character[0].name, (gotCriticalHit ? "CRITICAL HIT!!!" : "and"), damage, Enemy[enemyIndex].name);
+        renderMainPartyStats(true, combatText);
+        printf("\x1B[10A");
+        limitFPS(1000);
+    }
 }
 
-bool playerUseAqua()
+bool calculateCriticalHitChance(int luck) 
 {
-    int damage = (playerChar.atk - Enemy.def);
-    damage *= (playerChar.inte/100);
-    damage *= 1.1;
+    float luckStat = (float)(luck - 100) / (999 - 100);
+    float criticalHitChance = 0.025f + (luckStat * (0.325f - 0.025f));
 
-    if(strcmp(Enemy.weakness, "AQUA STORM") == 0) damage *= 2;
-    else if (strcmp(Enemy.resists, "AQUA STORM") == 0) damage *= 0.7;
+    //printf("crit:%f", criticalHitChance);
+
+    if (criticalHitChance < 0) { criticalHitChance = 0; }
+    if (criticalHitChance > 0.3f) { criticalHitChance = 0.3f; }
+
+    float scoredCriticalHit = (float)rand() / RAND_MAX;
+
+    return scoredCriticalHit < criticalHitChance;
+}
+
+// TODO: These should also be commonized. Tons of duplicated code...
+bool playerUseSpell(char *spell, char enemyIndex)
+{
+    int damage = (character[0].atk - Enemy[enemyIndex].def);
+    char combatText[COMBAT_TEXT_MAXLEN];
+
+    damage *= (character[0].inte/100);
+
+    playSFX("AquaStorm");
+    if(strcmp(Enemy[enemyIndex].weakness, spell) == 0) damage *= 2;
+    else if (strcmp(Enemy[enemyIndex].resists, spell) == 0) damage *= 0.7;
 
     if(damage > 0)
-        {
-            Enemy.current_HP -= damage;
-            printf("\033[14B");
-            printf("\n\t%s used aqua storm... and causes %d damage to the enemy.", playerChar.name, damage);
-            limitFPS(700);
-            printf("\033[5A");
-            printf("                                                                                    \n");
-            printf("                                                                                    \n");
-            printf("                                                                                    \n");
-            printf("                                                                                    \n");
-            printf("\033[15A");
-            printf("\033[92D");
-        }
+    {
+        Enemy[enemyIndex].current_HP -= damage;
+        snprintf(combatText, COMBAT_TEXT_MAXLEN, "%s used %s... and caused %d damage to '%s'.", character[0].name, spell, damage, Enemy[enemyIndex].name);
+        renderMainPartyStats(true, combatText);
+        printf("\x1B[10A");
+        limitFPS(1000);
+    }
 
-    playerChar.current_MP -=30;
+    character[0].current_MP -=30;
 
     return true;
 }
 
-bool playerUseWind()
+// TODO: Attacking party characters, though we need more than a party member for that
+void enemyAttackPlayer(char enemyIndex, char charIndex)
 {
-    int damage = (playerChar.atk - Enemy.def);
-    damage *= (playerChar.inte/100);
-    damage *= 1.15;
+    int damage = (Enemy[enemyIndex].atk - character[charIndex].def);
+    char combatText[COMBAT_TEXT_MAXLEN];
 
-    if(strcmp(Enemy.weakness, "WIND GUST") == 0) damage *= 2;
-    else if (strcmp(Enemy.resists, "WIND GUST") == 0) damage *= 0.8;
-
+    playSFX("PlayerHit");
     if(damage > 0)
-        {
-            Enemy.current_HP -= damage;
-            printf("\033[14B");
-            printf("\n\t%s used wind gust... and causes %d damage to the enemy.", playerChar.name, damage);
-            limitFPS(700);
-            printf("\033[5A");
-            printf("                                                                                    \n");
-            printf("                                                                                    \n");
-            printf("                                                                                    \n");
-            printf("                                                                                    \n");
-            printf("\033[15A");
-            printf("\033[92D");
-        }
-
-    playerChar.current_MP -=45;
-
-    return true;
+    {
+        character[charIndex].current_HP -= damage;
+        snprintf(combatText, COMBAT_TEXT_MAXLEN, "%s attacks... it caused %d damage to '%s'.", Enemy[enemyIndex].name, damage, character[charIndex].name);
+        renderMainPartyStats(true, combatText);
+        printf("\x1B[10A");
+        limitFPS(1000);
+    }
 }
 
-bool playerUseFlame()
+void enemyDozesOff(char enemyIndex)
 {
-    int damage = (playerChar.atk - Enemy.def);
-    damage *= (playerChar.inte/100);
-    damage *= 1.3;
-
-    if(strcmp(Enemy.weakness, "SCORCH FLAME") == 0) damage *= 2;
-    else if (strcmp(Enemy.resists, "SCORCH FLAME") == 0) damage *= 0.9;
-
-    if(damage > 0)
-        {
-            Enemy.current_HP -= damage;
-            printf("\033[14B");
-            printf("\n\t%s used scorch flame... and causes %d damage to the enemy.", playerChar.name, damage);
-            limitFPS(700);
-            printf("\033[5A");
-            printf("                                                                                    \n");
-            printf("                                                                                    \n");
-            printf("                                                                                    \n");
-            printf("                                                                                    \n");
-            printf("\033[15A");
-            printf("\033[92D");
-        }
-
-    playerChar.current_MP -=70;
-
-    return true;
-}
-
-bool playerUseBlizzard()
-{
-    int damage = (playerChar.atk - Enemy.def);
-    damage *= (playerChar.inte/100);
-    damage *= 1.45;
-
-    if(strcmp(Enemy.weakness, "BLIZZARD") == 0) damage *= 2;
-    else if (strcmp(Enemy.resists, "BLIZZARD") == 0) damage *= 0.8;
-
-    if(damage > 0)
-        {
-            Enemy.current_HP -= damage;
-            printf("\033[14B");
-            printf("\n\t%s used blizzard... and causes %d damage to the enemy.", playerChar.name, damage);
-            limitFPS(700);
-            printf("\033[5A");
-            printf("                                                                                    \n");
-            printf("                                                                                    \n");
-            printf("                                                                                    \n");
-            printf("                                                                                    \n");
-            printf("\033[15A");
-            printf("\033[92D");
-        }
-
-    playerChar.current_MP -=110;
-
-    return true;
-}
-
-bool playerUseEarth()
-{
-    int damage = (playerChar.atk - Enemy.def);
-    damage *= (playerChar.inte/100);
-    damage *= 1.6;
-
-    if(strcmp(Enemy.weakness, "EARTH SMASH") == 0) damage *= 2;
-    else if (strcmp(Enemy.resists, "EARTH SMASH") == 0) damage *= 0.9;
-
-    if(damage > 0)
-        {
-            Enemy.current_HP -= damage;
-            printf("\033[14B");
-            printf("\n\t%s used earth smash... and causes %d damage to the enemy.", playerChar.name, damage);
-            limitFPS(700);
-            printf("\033[5A");
-            printf("                                                                                    \n");
-            printf("                                                                                    \n");
-            printf("                                                                                    \n");
-            printf("                                                                                    \n");
-            printf("\033[15A");
-            printf("\033[92D");
-        }
-
-    playerChar.current_MP -=150;
-
-    return true;
-}
-
-void enemyAttackPlayer()
-{
-    int damage = (Enemy.atk - playerChar.def);
-
-    if(damage > 0)
-        {
-            playerChar.current_HP -= damage;
-            printf("\033[16B");
-            printf("\n\tThe enemy attacks... it caused %d damage to %s.", damage, playerChar.name);
-            limitFPS(700);
-        }
-}
-
-void enemyDozesOff()
-{
-            printf("\033[16B");
-            printf("\n\tThe enemy dozed off...");
-            limitFPS(700);
+    char combatText[COMBAT_TEXT_MAXLEN];
+    snprintf(combatText, COMBAT_TEXT_MAXLEN, "%s enemy dozed off...", Enemy[enemyIndex].name);
+    renderMainPartyStats(true, combatText);
+    printf("\x1B[10A");
+    limitFPS(1000);
 }
 
 void enemyAction()
 {
-    short int randaction = rand() % 100;
-    if(randaction <= 75)
-        enemyAttackPlayer();
-
-    else enemyDozesOff();
+    for(char enemyIndex = 0; enemyIndex < enemiesInEncounter; enemyIndex++) 
+    {
+        if(Enemy[enemyIndex].current_HP > 0) 
+        {
+            short int randaction = rand() % 100;
+            if(randaction <= 75) { enemyAttackPlayer(enemyIndex, 0); }
+            else { enemyDozesOff(enemyIndex); }
+        }
+    }
 }

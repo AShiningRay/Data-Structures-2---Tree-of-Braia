@@ -3,165 +3,107 @@
 #include <process.h>
 #endif
 
-// Overworld/Combat
-void healSpot()
+#define NUM_SFX 23 // Current number of SFX files
+#define NUM_BGM 8 // Current number of BGM files
+
+#include "miniaudio.h"
+
+ma_engine audioengine;
+
+ma_sound soundFX[NUM_SFX];
+ma_sound soundBGM[NUM_BGM];
+
+char FXPaths[NUM_SFX][128] = 
 {
-#ifdef __linux__
-    ;
-#elif _WIN32
-    for(short int i = 0; i < 10; i++)
+  "Audio Engine/SFX/OpenMenu.mp3",
+  "Audio Engine/SFX/CombatCursorMove.mp3",
+  "Audio Engine/SFX/CursorMove.mp3",
+  "Audio Engine/SFX/CombatCursorSelect.mp3",
+  "Audio Engine/SFX/CursorSelect.mp3",
+  "Audio Engine/SFX/LevelUp.mp3",
+  "Audio Engine/SFX/ReturnFromMenu.mp3",
+  "Audio Engine/SFX/UseItem.mp3",
+  "Audio Engine/SFX/HitConfirm.mp3",
+  "Audio Engine/SFX/CriticalHit.mp3",
+  "Audio Engine/SFX/AquaStorm.mp3",
+  "Audio Engine/SFX/EarthSmash.mp3",
+  "Audio Engine/SFX/WindGust.mp3",
+  "Audio Engine/SFX/ScorchFlame.mp3",
+  "Audio Engine/SFX/Blizzard.mp3",
+  "Audio Engine/SFX/CloseGame.mp3",
+  "Audio Engine/SFX/PlayerHit.mp3",
+  "Audio Engine/SFX/OpenChest.mp3",
+  "Audio Engine/SFX/FootStep.mp3",
+  "Audio Engine/SFX/HealSpot.mp3",
+  "Audio Engine/SFX/Speech.mp3",
+  "Audio Engine/SFX/BossDefeated.mp3",
+  "Audio Engine/SFX/EnemyDefeated.mp3",
+};
+
+char BGMPaths[NUM_BGM][128] = 
+{
+  "Audio Engine/BGM/Intro.mp3",
+  "Audio Engine/BGM/NameInput.mp3",
+  "Audio Engine/BGM/HubWorld.mp3",
+  "Audio Engine/BGM/Area1.mp3",
+  "Audio Engine/BGM/Area2.mp3",
+  "Audio Engine/BGM/Area3.mp3",
+  "Audio Engine/BGM/EnemyFight1.mp3",
+  "Audio Engine/BGM/BossFight1.mp3",
+};
+
+int initAudioEngine() 
+{
+    ma_result result;
+    result = ma_engine_init(NULL, &audioengine);
+    if (result != MA_SUCCESS) { return -1; }
+
+    for(char i = 0; i < NUM_SFX; i ++) 
     {
-        Beep(250*i, 120);
+      result = ma_sound_init_from_file(&audioengine, FXPaths[i], MA_SOUND_FLAG_NO_PITCH | MA_SOUND_FLAG_NO_SPATIALIZATION, NULL, NULL, &soundFX[i]);
+      if (result != MA_SUCCESS) { return -1; }
     }
-    _endthread();
-#endif
+
+    for(char i = 0; i < NUM_BGM; i ++) 
+    {
+      result = ma_sound_init_from_file(&audioengine, BGMPaths[i], MA_SOUND_FLAG_NO_PITCH | MA_SOUND_FLAG_NO_SPATIALIZATION, NULL, NULL, &soundBGM[i]);
+      if (result != MA_SUCCESS) { return -1; }
+      ma_sound_set_looping(&soundBGM[i], 1);
+    }
+
+    return 0;
 }
 
-void footStep()
+void playSFX(char* sfxName) 
 {
-#ifdef __linux__
-  ;
-#elif _WIN32
-    Beep(220, 200);
-    _endthread();
-#endif
-}
-
-void openMenu()
-{
-#ifdef __linux__
-  ;
-#elif _WIN32
-    Beep(1000, 200);
-    _endthread();
-#endif
-}
-
-void openSkillMenu()
-{
-#ifdef __linux__
-  ;
-#elif _WIN32
-    Beep(800, 200);
-    _endthread();
-#endif
-}
-
-void moveCombatCursor()
-{
-#ifdef __linux__
-  ;
-#elif _WIN32
-    Beep(500, 200);
-    _endthread();
-#endif
-}
-
-void selectCombatAction()
-{
-#ifdef __linux__
-  ;
-#elif _WIN32
-    Beep(1100, 100);
-    _endthread();
-#endif
-}
-
-void returnFromSkills()
-{
-#ifdef __linux__
-  ;
-#elif _WIN32
-    Beep(850, 250);
-    _endthread();
-#endif
-}
-
-// Menu interactions
-void moveCursor()
-{
-#ifdef __linux__
-  ;
-#elif _WIN32
-  Beep(500, 200);
-  _endthread();
-#endif
-}
-
-void useItem()
-{
-#ifdef __linux__
-  ;
-#elif _WIN32
-  for(short int i = 5; i < 12; i++)
+  for(char i = 0; i < NUM_SFX; i++) 
   {
-    Beep(250*i, 100);
+    if(strstr(FXPaths[i], sfxName) != NULL) 
+    { 
+      ma_sound_seek_to_pcm_frame(&soundFX[i], 0);
+      ma_sound_start(&soundFX[i]);
+    }
   }
-  _endthread();
-#endif
 }
 
-void closeMenu()
-{
-#ifdef __linux__
-  ;
-#elif _WIN32
-  Beep(700, 250);
-  _endthread();
-#endif
-}
+// SFX don't really need a stop() function.
 
-
-void endGame()
+void playBGM(char* bgmName) 
 {
-#ifdef __linux__
-  ;
-#elif _WIN32
-  for(short int i = 6; i > 0; i--)
+  for(char i = 0; i < NUM_BGM; i++) 
   {
-    Beep(250*i, 140);
+    if(strstr(BGMPaths[i], bgmName) != NULL) 
+    { 
+      ma_sound_seek_to_pcm_frame(&soundBGM[i], 0);
+      ma_sound_start(&soundBGM[i]);
+    }
   }
-  _endthread();
-#endif
 }
 
-// BGM
-void playBGMIntro()
+void stopBGM(char* bgmName) 
 {
-
-}
-
-void playBGMCredits()
-{
-
-}
-
-void playBGMFight()
-{
-
-}
-
-void playBGMBoss()
-{
-
-}
-
-void playBGM1()
-{
-
-}
-
-void playBGM2()
-{
-
-}
-
-void playBGM3()
-{
-
-}
-
-void playBGMHUB()
-{
-
+  for(char i = 0; i < NUM_BGM; i++) 
+  {
+    if(strstr(BGMPaths[i], bgmName) != NULL) { ma_sound_stop(&soundBGM[i]); }
+  }
 }

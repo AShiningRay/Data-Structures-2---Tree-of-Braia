@@ -1,7 +1,7 @@
 #include "Player.h"
 
 void openInventory();
-void showPlayerStats_Map();
+void showCaracterStats_Inventory();
 
 void openInventory()
 {
@@ -13,6 +13,7 @@ void openInventory()
     bool MPincsel = false;
     short int thread;
 
+    limitFPS(1000);
     if(GetAsyncKeyState(VK_LMENU) != 0) {}
 
     while (1)
@@ -23,105 +24,44 @@ void openInventory()
 #elif _WIN32
             system("cls");
 #endif
-            showPlayerStats_Map();
+            showCaracterStats_Inventory();
 
-            if(HPpotsel)
-            {
-                printf("\n\n\t===================================================\n");
-                printf("\t====================Inventory======================\n");
-                printf("\t|   ");
-                SetColor(12);
-                printf(">>");
-                SetColor(15);
-                printf("HP POTION : %d     |     HP MAX BOOSTER : %d  |\n", playerChar.it.HPpotion, playerChar.it.HPinc);
-                printf("\t|                       |                         |\n");
-                printf("\t|     MP POTION : %d     |     MP MAX BOOSTER : %d  |\n", playerChar.it.MPpotion, playerChar.it.MPinc);
-                printf("\t|____________________COMMANDS_____________________|\n");
-                printf("\t|  LSHIFT-USE ITEM      |  ARROWS- MOVE SELECTOR  |\n");
-                printf("\t|  LALT-CLOSE GAME      |  LCTRL - CLOSE INVENTORY|\n");
-                printf("\t|_______________________|_________________________|\n");
-                printf("\t|_______________ ITEM DESCRIPTION ________________|\n");
-                printf("\t|_________________________________________________|\n");
-                printf("\t|        HP POTION : RECOVER 20%% FROM MAX HP      |\n");
-                printf("\t|        MP POTION : RECOVER 20%% FROM MAX MP      |\n");
-                printf("\t|   HP MAX BOOSTER : INCREASES THE MAX HP BY 5%%   |\n");
-                printf("\t|   MP MAX BOOSTER : INCREASES THE MAX MP BY 5%%   |\n");
-                printf("\t|_________________________________________________|\n");
-            }
-
-            else if(HPincsel)
-            {
-                printf("\n\n\t===================================================\n");
-                printf("\t====================Inventory======================\n");
-                printf("\t|     HP POTION : %d     |   ",playerChar.it.HPpotion);
-                SetColor(12);
-                printf(">>");
-                SetColor(15);
-                printf("HP MAX BOOSTER : %d  |\n", playerChar.it.HPinc);
-                printf("\t|                       |                         |\n");
-                printf("\t|     MP POTION : %d     |     MP MAX BOOSTER : %d  |\n", playerChar.it.MPpotion, playerChar.it.MPinc);
-                printf("\t|____________________COMMANDS_____________________|\n");
-                printf("\t|  LSHIFT-USE ITEM      |  ARROWS- MOVE SELECTOR  |\n");
-                printf("\t|  LALT-CLOSE GAME      |  LCTRL - CLOSE INVENTORY|\n");
-                printf("\t|_______________________|_________________________|\n");
-                printf("\t|_______________ ITEM DESCRIPTION ________________|\n");
-                printf("\t|_________________________________________________|\n");
-                printf("\t|        HP POTION : RECOVER 20%% FROM MAX HP      |\n");
-                printf("\t|        MP POTION : RECOVER 20%% FROM MAX MP      |\n");
-                printf("\t|   HP MAX BOOSTER : INCREASES THE MAX HP BY 5%%   |\n");
-                printf("\t|   MP MAX BOOSTER : INCREASES THE MAX MP BY 5%%   |\n");
-                printf("\t|_________________________________________________|\n");
-            }
-
-            if(MPpotsel)
-            {
-                printf("\n\n\t===================================================\n");
-                printf("\t====================Inventory======================\n");
-                printf("\t|   ");
-                printf("  HP POTION : %d     |     HP MAX BOOSTER : %d  |\n", playerChar.it.HPpotion, playerChar.it.HPinc);
-                printf("\t|                       |                         |\n");
-                printf("\t|   ");
-                SetColor(12);
-                printf(">>");
-                SetColor(15);
-                printf("MP POTION : %d     |     MP MAX BOOSTER : %d  |\n", playerChar.it.MPpotion, playerChar.it.MPinc);
-                printf("\t|____________________COMMANDS_____________________|\n");
-                printf("\t|  LSHIFT-USE ITEM      |  ARROWS- MOVE SELECTOR  |\n");
-                printf("\t|  LALT-CLOSE GAME      |  LCTRL - CLOSE INVENTORY|\n");
-                printf("\t|_______________________|_________________________|\n");
-                printf("\t|_______________ ITEM DESCRIPTION ________________|\n");
-                printf("\t|_________________________________________________|\n");
-                printf("\t|        HP POTION : RECOVER 20%% FROM MAX HP      |\n");
-                printf("\t|        MP POTION : RECOVER 20%% FROM MAX MP      |\n");
-                printf("\t|   HP MAX BOOSTER : INCREASES THE MAX HP BY 5%%   |\n");
-                printf("\t|   MP MAX BOOSTER : INCREASES THE MAX MP BY 5%%   |\n");
-                printf("\t|_________________________________________________|\n");
-            }
-
-            else if(MPincsel)
-            {
-                printf("\n\n\t===================================================\n");
-                printf("\t====================Inventory======================\n");
-                printf("\t|     HP POTION : %d     |    ",playerChar.it.HPpotion);
-                printf(" HP MAX BOOSTER : %d  |\n", playerChar.it.HPinc);
-                printf("\t|                       |                         |\n");
-                printf("\t|     MP POTION : %d     |   ", playerChar.it.MPpotion);
-                SetColor(12);
-                printf(">>");
-                SetColor(15);
-                printf("MP MAX BOOSTER : %d  |\n", playerChar.it.MPinc);
-                printf("\t|____________________COMMANDS_____________________|\n");
-                printf("\t|  LSHIFT-USE ITEM      |  ARROWS- MOVE SELECTOR  |\n");
-                printf("\t|  LALT-CLOSE GAME      |  LCTRL - CLOSE INVENTORY|\n");
-                printf("\t|_______________________|_________________________|\n");
-                printf("\t|_______________ ITEM DESCRIPTION ________________|\n");
-                printf("\t|_________________________________________________|\n");
-                printf("\t|        HP POTION : RECOVER 20%% FROM MAX HP      |\n");
-                printf("\t|        MP POTION : RECOVER 20%% FROM MAX MP      |\n");
-                printf("\t|   HP MAX BOOSTER : INCREASES THE MAX HP BY 5%%   |\n");
-                printf("\t|   MP MAX BOOSTER : INCREASES THE MAX MP BY 5%%   |\n");
-                printf("\t|_________________________________________________|\n");
-            }
+            SetColor(15);
+            printf("\x1B[1m");
+            printf("\n\n");
+            printf("\t┌───────────────────INVENTORY─────────────────────┐\n");
+            printf("\t│");
+            if(HPpotsel) { SetColor(9); }
+            printf(" %s HP POTION : %d      ", (HPpotsel ? "┼─" : "  "), character[0].it.HPpotion);
+            SetColor(15);
+            printf("│");
+            if(HPincsel) { SetColor(9); }
+            printf(" %s HP MAX BOOSTER : %d   ", (HPincsel ? "┼─" : "  "), character[0].it.HPinc);
+            SetColor(15);
+            printf("│\n");
+            printf("\t│                       │                         │\n");
+            printf("\t│");
+            if(MPpotsel) { SetColor(9); }
+            printf(" %s MP POTION : %d      ", (MPpotsel ? "┼─" : "  "), character[0].it.MPpotion);
+            SetColor(15);
+            printf("│");
+            if(MPincsel) { SetColor(9); }
+            printf(" %s MP MAX BOOSTER : %d   ", (MPincsel ? "┼─" : "  "), character[0].it.MPinc);
+            SetColor(15);
+            printf("│\n");
+            // End of selectable items
+            printf("\t├────────────────────COMMANDS─────────────────────┤\n");
+            printf("\t│  LSHIFT-USE ITEM      │  ARROWS- MOVE SELECTOR  │\n");
+            printf("\t│  LALT-CLOSE GAME      │  LCTRL - CLOSE INVENTORY│\n");
+            printf("\t├───────────────────────┴─────────────────────────┤\n");
+            printf("\t├────────────────ITEM DESCRIPTION─────────────────┤\n");
+            printf("\t├─────────────────────────────────────────────────┤\n");
+            printf("\t│        HP POTION : RECOVER 20%% FROM MAX HP      │\n");
+            printf("\t│        MP POTION : RECOVER 20%% FROM MAX MP      │\n");
+            printf("\t│   HP MAX BOOSTER : INCREASES THE MAX HP BY 5%%   │\n");
+            printf("\t│   MP MAX BOOSTER : INCREASES THE MAX MP BY 5%%   │\n");
+            printf("\t└─────────────────────────────────────────────────┘\n");
+            printf("\x1B[0m");
 
             if(openingInventory)
             {
@@ -133,11 +73,7 @@ void openInventory()
             {
                  if(GetAsyncKeyState (VK_UP) != 0)
                     {
-#ifdef __linux__
-
-#elif _WIN32
-                        _beginthread(moveCursor, 0, &thread);
-#endif
+                        playSFX("MoveCursor");
                         moved = true;
                         if(MPpotsel)
                             {
@@ -155,11 +91,7 @@ void openInventory()
 
                 if(GetAsyncKeyState (VK_DOWN) != 0)
                     {
-#ifdef __linux__
-
-#elif _WIN32
-                        _beginthread(moveCursor, 0, &thread);
-#endif
+                        playSFX("MoveCursor");
                         moved = true;
                         if(HPpotsel)
                             {
@@ -177,11 +109,7 @@ void openInventory()
 
                 if(GetAsyncKeyState (VK_LEFT) != 0)
                     {
-#ifdef __linux__
-
-#elif _WIN32
-                        _beginthread(moveCursor, 0, &thread);
-#endif
+                        playSFX("MoveCursor");
                         moved = true;
                         if(MPincsel)
                             {
@@ -200,11 +128,7 @@ void openInventory()
 
                 if(GetAsyncKeyState (VK_RIGHT) != 0)
                     {
-#ifdef __linux__
-
-#elif _WIN32
-                        _beginthread(moveCursor, 0, &thread);
-#endif
+                        playSFX("MoveCursor");
                         moved = true;
                         if(MPpotsel)
                             {
@@ -223,11 +147,7 @@ void openInventory()
 
                 if(GetAsyncKeyState (VK_LCONTROL) != 0)
                     {
-#ifdef __linux__
-
-#elif _WIN32
-                        _beginthread(closeMenu, 0, &thread);
-#endif
+                        playSFX("ReturnFromMenu");
                         moved = true;
                         printf("\n\t\tClosing Inventory...");
                         limitFPS(1000);
@@ -237,82 +157,66 @@ void openInventory()
                 if(GetAsyncKeyState (VK_LSHIFT) != 0)
                     {
                         if(HPpotsel)
-                            if(playerChar.it.HPpotion > 0 && playerChar.current_HP < playerChar.max_HP)
+                            if(character[0].it.HPpotion > 0 && character[0].current_HP < character[0].max_HP)
                             {
-#ifdef __linux__
-
-#elif _WIN32
-                        _beginthread(useItem, 0, &thread);
-#endif
+                                playSFX("UseItem");
                                 moved = true;
-                                int recov_hp = (playerChar.max_HP * 0.2);
-                                playerChar.current_HP += recov_hp;
+                                int recov_hp = (character[0].max_HP * 0.2);
+                                character[0].current_HP += recov_hp;
 
-                                if(playerChar.current_HP > playerChar.max_HP)
+                                if(character[0].current_HP > character[0].max_HP)
                                     {
-                                        int correct_hp = playerChar.current_HP - playerChar.max_HP;
+                                        int correct_hp = character[0].current_HP - character[0].max_HP;
                                         recov_hp -= correct_hp;
-                                        playerChar.current_HP = playerChar.max_HP;
+                                        character[0].current_HP = character[0].max_HP;
                                     }
-                                printf("\n%s recovered %d HP.", playerChar.name, recov_hp);
-                                playerChar.it.HPpotion -= 1;
+                                printf("\n%s recovered %d HP.", character[0].name, recov_hp);
+                                character[0].it.HPpotion -= 1;
                                 limitFPS(800);
                             }
 
                         if(MPpotsel)
-                            if(playerChar.it.MPpotion > 0 && playerChar.current_MP < playerChar.max_MP)
+                            if(character[0].it.MPpotion > 0 && character[0].current_MP < character[0].max_MP)
                             {
-#ifdef __linux__
-
-#elif _WIN32
-                        _beginthread(useItem, 0, &thread);
-#endif
+                                playSFX("UseItem");
                                 moved = true;
-                                int recov_mp = (playerChar.max_MP * 0.2);
-                                playerChar.current_MP += recov_mp;
+                                int recov_mp = (character[0].max_MP * 0.2);
+                                character[0].current_MP += recov_mp;
 
-                                if(playerChar.current_MP > playerChar.max_MP)
+                                if(character[0].current_MP > character[0].max_MP)
                                     {
-                                        int correct_mp = playerChar.current_MP - playerChar.max_MP;
+                                        int correct_mp = character[0].current_MP - character[0].max_MP;
                                         recov_mp -= correct_mp;
-                                        playerChar.current_MP = playerChar.max_MP;
+                                        character[0].current_MP = character[0].max_MP;
                                     }
-                                printf("\n%s recovered %d MP.", playerChar.name, recov_mp);
-                                playerChar.it.MPpotion -= 1;
+                                printf("\n%s recovered %d MP.", character[0].name, recov_mp);
+                                character[0].it.MPpotion -= 1;
                                 limitFPS(800);
                             }
 
                         if(HPincsel)
-                            if(playerChar.it.HPinc > 0)
+                            if(character[0].it.HPinc > 0)
                             {
-#ifdef __linux__
-
-#elif _WIN32
-                        _beginthread(useItem, 0, &thread);
-#endif
+                                playSFX("UseItem");
                                 moved = true;
-                                int increase_hp = (playerChar.max_HP * 1.05) - playerChar.max_HP;
-                                printf("\n%s's max HP increased by %d points..", playerChar.name, increase_hp);
-                                playerChar.max_HP *= 1.05;
-                                playerChar.current_HP += increase_hp;
-                                playerChar.it.HPinc -= 1;
+                                int increase_hp = (character[0].max_HP * 1.05) - character[0].max_HP;
+                                printf("\n%s's max HP increased by %d points..", character[0].name, increase_hp);
+                                character[0].max_HP *= 1.05;
+                                character[0].current_HP += increase_hp;
+                                character[0].it.HPinc -= 1;
                                 limitFPS(800);
                             }
 
                         if(MPincsel)
-                            if(playerChar.it.MPinc > 0)
+                            if(character[0].it.MPinc > 0)
                             {
-#ifdef __linux__
-
-#elif _WIN32
-                        _beginthread(useItem, 0, &thread);
-#endif
+                                playSFX("UseItem");
                                 moved = true;
-                                int increase_mp = (playerChar.max_MP * 1.05) - playerChar.max_MP;
-                                printf("\n%s's max MP increased by %d points.", playerChar.name, increase_mp);
-                                playerChar.max_MP *= 1.05;
-                                playerChar.current_MP += increase_mp;
-                                playerChar.it.MPinc -= 1;
+                                int increase_mp = (character[0].max_MP * 1.05) - character[0].max_MP;
+                                printf("\n%s's max MP increased by %d points.", character[0].name, increase_mp);
+                                character[0].max_MP *= 1.05;
+                                character[0].current_MP += increase_mp;
+                                character[0].it.MPinc -= 1;
                                 limitFPS(800);
                             }
 
@@ -320,18 +224,9 @@ void openInventory()
 
                 if(GetAsyncKeyState (VK_LMENU) != 0)
                 {
-#ifdef __linux__
-
-#elif _WIN32
-                        _beginthread(endGame, 0, &thread);
-#endif             
+                    playSFX("CloseGame");     
                     printf("\n\tTERMINATING THE GAME...");
                     limitFPS(1000);
-#ifdef __linux__
-
-#elif _WIN32
-    system("taskkill /F /T /IM wmplayer.exe");
-#endif  
                     exit(0);
                 }
                 limitFPS(0);
@@ -339,69 +234,120 @@ void openInventory()
         }
 }
 
-void showPlayerStats_Map()
+void showCaracterStats_Inventory()
 {
+    printf("\x1B[1m");
+    
     printf("\t  Player:");
     SetColor(3);
-    printf("%s",playerChar.name);
+    printf("%s",character[0].name);
     SetColor(15);
     printf("\n\t  Level:");
     SetColor(14);
-    printf("%d", playerChar.Level);
+    printf("%d", character[0].Level);
     SetColor(15);
     printf("  Gold:");
     SetColor(6);
-    printf("%d", playerChar.gold);
+    printf("%d", character[0].gold);
     SetColor(15);
     printf("  Got Key:");
     SetColor(2);
-    printf("%s \n", playerChar.key ? " Yes" : " No");
+    printf("%s \n", character[0].key ? " Yes" : " No");
     SetColor(15);
-    printf("\t|___________________________________|  |\t  STRATEGY GUIDE  \t|\n");
-    printf("\t|        cur / max       cur/max    |  |P-CHAR E-ENTRANCE F-FINISH K-KEY|\n");
-    printf("\t|");
+    printf("\t├───────────────────────────────────────────┤  │\t  STRATEGY GUIDE  \t│\n");
+    printf("\t│    cur / max      cur / max       cur/max │  │P-CHAR E-ENTRANCE F-FINISH K-KEY│\n");
+    printf("\t│");
     SetColor(10);
-    printf("    HP: %d/%d",playerChar.current_HP, playerChar.max_HP);
+    printf(" HP:%4d/%4d",character[0].current_HP, character[0].max_HP);
     SetColor(15);
-    printf(" | ");
+    printf(" │ ");
     SetColor(9);
-    printf("MP: %d/%d    ", playerChar.current_MP, playerChar.max_MP);
+    printf("MP:%4d/%4d ", character[0].current_MP, character[0].max_MP);
     SetColor(15);
-    printf("|  | B-BOSS ?-ITEM N-NPC M-MERCHANT |\n");
-    printf("\t|___________________________________|  |____________COMMANDS____________|\n");
+    printf(" │ ");
+    SetColor(14);
+    printf("AP:%3d/%d ", 0, 100); // character[0].current_AP, character[0].max_AP); // AP not implemented yet
+    SetColor(15);
+    printf("│  │ B-BOSS ?-ITEM N-NPC M-MERCHANT │\n");
+    printf("\t├───────────────────────────────────────────┤  ├────────────COMMANDS────────────┤\n");
+    printf("\t│");
     SetColor(11);
-    printf("\t|atk: %d",playerChar.atk);
+    printf("  atk:%3d",character[0].atk);
     SetColor(15);
-    printf("|");
+    printf("│");
     SetColor(13);
-    printf("def: %d", playerChar.def);
+    printf("def:%3d", character[0].def);
     SetColor(15);
-    printf("|");
+    printf("│");
     SetColor(1);
-    printf("int: %d", playerChar.inte);
+    printf("int:%3d", character[0].inte);
     SetColor(15);
-    printf("|");
+    printf("│");
     SetColor(5);
-    printf("lck: %d", playerChar.luck);
+    printf("lck:%3d", character[0].luck);
     SetColor(15);
-    printf("|  |  ARROWS-MOVE  LCTRL-INVENTORY  |\n");
+    printf("│");
+    SetColor(10);
+    printf("spd:%3d  ", 0); // character[0].spd); //SPD stat not implemented
+    SetColor(15);
+    printf("│  │  ARROWS-MOVE  LCTRL-INVENTORY  │\n");
 
-    printf("\t|XP:(");
+    printf("\t│XP:(");
 
 
     short int percent; // XP bar calculus, has a conditional structure to prevent XP overflow(from level 2 to 3, the XP increase caused a infinite loop on print).
-    if(playerChar.Level > 1)
-        percent = (int) (((float)playerChar.current_XP / (float)playerChar.next_XP) * 31);
+    if(character[0].Level > 1)
+        percent = (int) (((float)character[0].current_XP / (float)character[0].next_XP) * 31);
     else
-        percent = (int) (((float)playerChar.current_XP / (float)playerChar.next_XP) * 32);
+        percent = (int) (((float)character[0].current_XP / (float)character[0].next_XP) * 32);
 
         SetColor(14);
     for(unsigned short int i = 0; i < percent; i++) printf(">");
 
       SetColor(15);
 
-    for(short int i = 32 - percent - 2; i > 0; i--)
-    printf(" ");
+    for(short int i = 40 - percent - 2; i > 0; i--) { printf(" "); }
 
-    printf(")|  |      LSHIFT-OPEN SKILLTREE     |");
+    printf(")│  │      LSHIFT-OPEN SKILLTREE     │");
+
+    printf("\x1B[0m");
+}
+
+
+// TODO: This needs an overhaul
+void renderPlayerSkillMenu()
+{
+    bool moved = false;
+    moved = false;
+    limitFPS(1000);
+    while (1)
+        {
+#ifdef __linux__
+            system("clear");
+#elif _WIN32
+            system("cls");
+#endif
+            printf("\t┌──────────────────────────────────────────────────────────────────────────┐\n");
+            printf("\t│  Player:");
+            SetColor(3);
+            printf("%s\n", character[0].name);
+            SetColor(15);
+            printf("\t│___________________________________________________\n\n");
+            print_skillTree((character[0].magtree), 20);
+            printf("\n\t(Skills)\n\n");
+            print_skillTree((character[0].phystree), 20);
+            printf("\t|\tPRESS LSHIFT TO CLOSE THE MENU");
+            printf("\n\t│___________________________________________________\n");
+
+            while(!moved)
+            {
+                 if(GetAsyncKeyState (VK_LSHIFT) != 0)
+                    {
+                        moved = true;
+                        printf("\n\tCLOSING THE MENU...");
+                        limitFPS(1000);
+                        return;
+                    }
+            }
+        }
 }

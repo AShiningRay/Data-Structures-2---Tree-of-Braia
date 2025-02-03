@@ -2,6 +2,8 @@
 #include "../Combat/Combat.h"
 #include "../TAD_DialogHash/Dialogs_PlayerLines.h"
 #include "../TAD_DialogHash/DialogsNPC.h"
+#include "Area1_NavigationScreens.h"
+#include "Minimaps.h"
 
 void talkToMerchant();
 void talkToNPC2();
@@ -51,150 +53,6 @@ char logo[39][150] =
 "                                                                 (||||||||||||||)                                                               ",
 "                                                                 (||||||||||||||||)                                                             ",
 "================================================================================================================================================"
-};
-
-
-
-char HUB[30][100] =
-{
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-"===========~~~~~~~~~~~~=============~~~===~~===================~~~~~~~~~~~~~~~~~~=========~~~~~",
-"~=        ==============           ===== ====                 ==================== ;   ; ===~~~",
-"~~=                                                                ;  ;  #####       ;  ; =~~~~",
-"~~~=         ++++++++  |;; ;; ;; ;; ;;; ; ;;|               -------- ;  ####*##   ; ;  ; =~~~~~",
-"~~~~=        |vvvvvv|  | ;; ;; ;; ;; ;; ;; ;|    :::        |wwwwww|;  ##*###*##;    ;  =~~~~~~",
-"~~~~~=       |      |  |; ;; ;; ;; ;; ;; ;; |   :   :       |      | ;  ##|||##   ;    =~~~~~~~",
-"~~~~=        | 1    |   ====================   :  R  :      |  2   |   ;  |||  ;   ;  =~~~~~~~~",
-"~~~=         |----  |                           :   :       |----  | ; ;  |||    ;   =~~~~~~~~~",
-"~~=  ========        ============================   ========        ==================~~~~~~~~~",
-"=====                                                                                =~~~~~~~~~",
-"P                                                                                     =~~~~~~~~",
-"=====                     3                                                            =~~~~~~~",
-"~~~~~=                                                                                  =~~~~~~",
-"~~~~~~=                                                  5                               =~~~~~",
-"~~~~~~~=                                                                                =~~~~~~",
-"~~~~~~~~=            #####                                                               ======",
-"~~~~~~~=            ####*##            4                                                      F",
-"~~~~~~=  ^^^^^^    ##*####*#     ------------                 +++            6           ======",
-"~~~~~~~==++++++=== ####*#### ===/~~~~~~~~~~~~/=======        +++++                 ======~~~~~~",
-"~~~~~~=  xxxxxx   = # ||| # =   /~~~~~~~~~~~~/ ;    =  +++++++xxx+++++++++++++++  = ;    =~~~~~",
-"~~~~~=   xxxxxx    = ;||| ;=    /~~~~~~~~~~~~/    ;  = ++++++xxxxx++++++++++++++ =       =~~~~~",
-"~~~~=    |    |    =; |||; =     ------------ ;       =xxxxxxxxxxxxxxxxxxxxxxxxx=    ;  =~~~~~~",
-"~~~=               = ; ;  ;=                    ;      xxxxxxxxxxxxxxxxxxxxxxxxx   ;   =~~~~~~~",
-"~~=                 = ; ; =                  ;     ;   xxxxxx     xxxxxxxxxxxxxx      =~~~~~~~~",
-"~~=             ;    =====       ;             ;                   ;      ;          ; =~~~~~~~",
-"~~=                        ;                         ;     ;   ;       ;     ;   ;      =~~~~~~",
-"~~~======================================================================================~~~~~~"
-};
-
-char MAP_1[28][100] =
-{
-"========",
-"=      ?==~~~~~~~~~~~~~~~~       ~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-"=         =~~~~~~~~~~~~~~~~~   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-"=          =~~~===========~~~  ~~~=====================~~~~~~",
-"=           ===           =~~~~~~=                     =~~~~~~",
-"=                          =~~~~=                       =~~~~~",
-"=                           ===                         =~~~",
-"=                                                        =~~~",
-"=                                        ====             =~~~~~~",
-"=                                       =~~~~=             ====~~~~",
-"=                                      =~~~~~~=                =~~~~~",
-"=                                       =~~~~=                =====",
-"=                                        ====                    F=",
-"=                        ##############                       =====",
-"=                      ####################                  =~~~~~~~~",
-"=                    #########################                =~~~",
-"=                   ###########################                =~~~~~~",
-"=                  #############################                =~",
-"=                 ##############################                =~~~",
-"=                 #######     ||||   ##########              ===~~",
-"=                             ||||                          =~~~",
-"=                             ||||                         =~~~~",
-"=                             ||||                        =~~~~~",
-"=                            ;|EE|;                ======~~~~~~",
-"=                                            ======~~~~~~~",
-"=           __                              =~~~~~~~",
-"= P        ;  :                            =~~~~~~",
-"===========================================~~~~"
-};
-
-char MAP_1_int[12][18] =
-{
-"#################",
-"#K       | ######",
-"|##  |    #   ?#|",
-"|  #####   #  ###",
-"|           # |#|",
-"|   |           |",
-"|  |            |",
-"|  |    P       |",
-"|  |            |",
-"-------EE--------"
-};
-
-char MAP_2[28][100] =
-{
-"        --        -----                ----                  --",
-"       |P |      |  .  |              |   ?|                 |F|                |",
-"      |   |     |  .    ---          |      |             |-|   -|             -|",
-"     |     |---|  .  .  .  |----||--|--      |           -  -  -  |          -| |",
-"    |    ?     |    .    .     ..  .   |      |         |          |       -|    |",
-"   |            |   .    .    .   .   |        -|      |            |    -|     |",
-"  |              |     .    .. . .   |           -|---|              |--|       |",
-" |                |    .            |                                            |",
-"  |                |---------------|                                              |",
-"   |                                                                             |",
-"    |                    *  ;:;  *                                                |",
-"     |                    **;:;**                 *  ;:;  *                      |",
-"    |                       ;:;                    **;:;**                        |",
-"     |                      ;:;                      ;:;                           |",
-"    |                              ---   ----        ;:;                          |",
-"   |                              |~~~---~~~~|                                   |",
-"  |                              |~~~~~~~~~~~~|                                   |",
-" |                               |~~~~~~~~~~~~|             *  ;:;  *              |",
-"  |         *  ;:;  *             |---~~~~---|               **;:;**                |",
-"   |         **;:;**    |--------|    ----           |-----|   ;:;                 |",
-"    |          ;:;     |~~~~~~~~~~|                 |~~~~~~~|  ;:;                |",
-"   |           ;:;     |~~~~~~~~~~|                 |~~~~~~~|          -- --     |",
-"  |                     |--------|                   |-----|          |     |    |",
-"   |                   --------------                                |       |    |",
-"    |                 |  .  .     .  |--        |-- ? |-----|         |     |    |",
-"   |       | ---|    |    .     .    .  |-     |   |--       |----|    | K |    |",
-"  |       |      |---  .    . .     .  .  |----                    |-----------|",
-"   -------"
-};
-
-char MAP_3[28][50] =
-{
-"                                                ",
-"",
-"",
-"",
-"",
-"",
-"",
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-"|~~|______________====________________~~|",
-".|~~|            =    =               |~~|",
-"|~~|               ==                 ?|~~|",
-"~~|________     _==~~==________       |~~|",
-"~~|. . .. .=   = . |~~| .   . .|     |~~~~|",
-"|~~~~~~~~~~~=   =~~~~~~|________=   =~~~~~~|",
-"|~~|_________=   =___~~~~~~~~~~~~=   =~~~~~|",
-"~~|               |  |~~| ._______=   =___|",
-"|~~|               ||~~|  |. __          |",
-"~~|_____      ______|~~|_|. |~~|         |",
-"~~| .  .|=   =. . .|~~| | . |~~|          |",
-"~~~~~~~~~~=   =~~~~~~~~~~| . __ ?          |",
-"~~~~~~~~~~~=   =~~~~~~~~~~~ _______=  =|____|",
-"|~~|_______|=   = |~~|  |~~~~~~~~~~~=  =~~~~~|",
-".|~~| . .  |   |___|~~|__|~~~~~~~~~~~=  =~~~~~|",
-". |~~|.  .  |   | . |~~| .|___________=  =~~~~~|",
-" . |~~|   . .|   |   |~~|    .  .  .  |=  =|~~~~|",
-". . |~~|.  .  |   | . |~~| .  .   .  |     |~~~~|",
-" ___|~~|______| P |___|~~|__________|   F   |~~~~",
-"~~~~~~~~~~~~~~|___|~~~~~~~~~~~~~~~~~~_______~~~~~"
 };
 
 char credits[80][60] =
@@ -356,16 +214,9 @@ void hub()
     playerDialogs = InsertHashData();
     NPCDialogs = InsertHashDataNPC();
     bool moved = false;
-#ifdef __linux__
-
-#elif _WIN32
-    system("taskkill /F /T /IM wmplayer.exe");
-#endif  
-
     limitFPS(100);
     
-    playBGMHUB();
-
+    playBGM("HubWorld");
     while(1)
         {
 #ifdef __linux__
@@ -503,7 +354,7 @@ void hub()
                 putchar('\n');
             }
 
-            showPlayerStats_Map();
+            renderMainPartyStats(false, "");
 
             while (!moved) {
 
@@ -517,11 +368,7 @@ void hub()
                             {
                                  if(GetAsyncKeyState (VK_UP) != 0)
                                     {
-#ifdef __linux__
-
-#elif _WIN32
-                                        _beginthread(footStep, 0, &thread);
-#endif
+                                        playBGM("FootStep");
                                         short int y2 = (y - 1);
                                         switch(HUB[y2][x])
                                         {
@@ -539,10 +386,10 @@ void hub()
                                             case '?':
                                             {
                                                 moved = true;
-                                                printf("%s GOT A HP POTION!", playerChar.name);
+                                                printf("%s GOT A HP POTION!", character[0].name);
                                                 limitFPS(1000);
                                                 HUB[y-1][x] = ' ';
-                                                playerChar.it.HPpotion += 1;
+                                                character[0].it.HPpotion += 1;
                                             }
                                             case '1' :
                                             {
@@ -585,11 +432,7 @@ void hub()
 
                                 if(GetAsyncKeyState (VK_DOWN) != 0)
                                     {
-#ifdef __linux__
-
-#elif _WIN32
-                                        _beginthread(footStep, 0, &thread);
-#endif
+                                        playBGM("FootStep");
                                         short int y2 = (y + 1);
                                         switch(HUB[y2][x])
                                         {
@@ -607,10 +450,10 @@ void hub()
                                             case '?':
                                             {
                                                 moved = true;
-                                                printf("%s GOT A HP POTION!", playerChar.name);
+                                                printf("%s GOT A HP POTION!", character[0].name);
                                                 limitFPS(1000);
                                                 HUB[y+1][x] = ' ';
-                                                playerChar.it.HPpotion += 1;
+                                                character[0].it.HPpotion += 1;
                                             }
                                             case '1' :
                                             {
@@ -653,11 +496,7 @@ void hub()
 
                                 if(GetAsyncKeyState (VK_LEFT) != 0)
                                     {
-#ifdef __linux__
-
-#elif _WIN32
-                                        _beginthread(footStep, 0, &thread);
-#endif
+                                        playBGM("FootStep");
                                         int x2 = (x - 1);
                                         switch(HUB[y][x2])
                                         {
@@ -675,10 +514,10 @@ void hub()
                                             case '?':
                                             {
                                                 moved = true;
-                                                printf("%s GOT A HP POTION!", playerChar.name);
+                                                printf("%s GOT A HP POTION!", character[0].name);
                                                 limitFPS(1000);
                                                 HUB[y][x-1] = ' ';
-                                                playerChar.it.HPpotion += 1;
+                                                character[0].it.HPpotion += 1;
                                             }
                                             case '1' :
                                             {
@@ -721,11 +560,7 @@ void hub()
 
                                 if(GetAsyncKeyState (VK_RIGHT) != 0)
                                     {
-#ifdef __linux__
-
-#elif _WIN32
-                                        _beginthread(footStep, 0, &thread);
-#endif
+                                        playBGM("FootStep");
                                         int x2 = (x + 1);
                                         switch(HUB[y][x2])
                                         {
@@ -743,10 +578,10 @@ void hub()
                                             case '?':
                                             {
                                                 moved = true;
-                                                printf("%s GOT A HP POTION!", playerChar.name);
+                                                printf("%s GOT A HP POTION!", character[0].name);
                                                 limitFPS(1000);
                                                 HUB[y][x+1] = ' ';
-                                                playerChar.it.HPpotion += 1;
+                                                character[0].it.HPpotion += 1;
                                             }
                                             case '1' :
                                             {
@@ -788,22 +623,14 @@ void hub()
                                     }
                                     if(GetAsyncKeyState (VK_LCONTROL) != 0)
                                         {
-#ifdef __linux__
-
-#elif _WIN32
-                                            _beginthread(openMenu, 0, &thread);
-#endif
+                                            playSFX("OpenMenu");
                                             moved = true;
                                             openInventory();
                                         }
 
                                     if(GetAsyncKeyState (VK_LSHIFT) != 0)
                                         {
-#ifdef __linux__
-
-#elif _WIN32
-                                            _beginthread(openMenu, 0, &thread);
-#endif
+                                            playSFX("OpenMenu");
                                             moved = true;
                                             renderPlayerSkillMenu();
                                         }
@@ -825,8 +652,9 @@ void area1()
 {
     short int encounterChance = 0;
     bool moved = false;
-    int enemylevel = 0, playerX, playerY;
-    playBGM1();
+    int levelCap = 9, playerX, playerY;
+
+    playBGM("Area1");
     while(1)
     {
 #ifdef __linux__
@@ -892,15 +720,13 @@ void area1()
             putchar('\n');
         }
 
-        showPlayerStats_Map();
+        renderMainPartyStats(false, "");
 
         while (!moved) 
         {
-            enemylevel = rand() % 6;
-
             if(GetAsyncKeyState (VK_UP) != 0)
             {
-                footStep();
+                playBGM("FootStep");
                 encounterChance = rand() % 100;
 
                 switch(MAP_1[playerY-1][playerX])
@@ -909,8 +735,8 @@ void area1()
                     {
                         if(encounterChance >= 80)
                             {
-                                combat(enemylevel);
-                                playBGM1();                                            
+                                enemyEncounter(levelCap-9,levelCap);
+                                playBGM("Area1"); 
                             }
                             MAP_1[playerY][playerX] = ' ';
                             MAP_1[--playerY][playerX] = 'P';
@@ -918,7 +744,7 @@ void area1()
                     } break;
                     case 'F':
                     {
-                        if(playerChar.key)
+                        if(character[0].key)
                             hub();
                         else
                         {
@@ -935,10 +761,11 @@ void area1()
                     case '?':
                     {
                         moved = true;
-                        printf("%s GOT A HP POTION!", playerChar.name);
+
+                        printf("%s GOT A HP POTION!", character[0].name);
                         limitFPS(1000);
                         MAP_1[--playerY][playerX] = ' ';
-                        playerChar.it.HPpotion += 1;
+                        character[0].it.HPpotion += 1;
                     }
 
                 }
@@ -946,7 +773,7 @@ void area1()
 
             else if(GetAsyncKeyState (VK_DOWN) != 0)
             {
-                footStep();
+                playBGM("FootStep");
                 encounterChance = rand() % 100;
 
                 switch(MAP_1[playerY+1][playerX])
@@ -955,8 +782,8 @@ void area1()
                     {
                         if(encounterChance >= 80)
                             {
-                                combat(enemylevel);
-                                playBGM1();                                           
+                                enemyEncounter(levelCap-9,levelCap);
+                                playBGM("Area1");
                             }
                             MAP_1[playerY][playerX] = ' ';
                             MAP_1[++playerY][playerX] = 'P';
@@ -964,7 +791,7 @@ void area1()
                     } break;
                     case 'F':
                     {
-                        if(playerChar.key)
+                        if(character[0].key)
                             hub();
                         else
                         {
@@ -981,10 +808,10 @@ void area1()
                     case '?':
                     {
                         moved = true;
-                        printf("%s GOT A HP POTION!", playerChar.name);
+                        printf("%s GOT A HP POTION!", character[0].name);
                         limitFPS(1000);
                         MAP_1[++playerY][playerX] = ' ';
-                        playerChar.it.HPpotion += 1;
+                        character[0].it.HPpotion += 1;
                     }
 
                 }
@@ -992,7 +819,7 @@ void area1()
 
             else if(GetAsyncKeyState (VK_LEFT) != 0)
             {
-                footStep();
+                playBGM("FootStep");
                 encounterChance = rand() % 100;
 
                 switch(MAP_1[playerY][playerX-1])
@@ -1001,8 +828,8 @@ void area1()
                     {
                         if(encounterChance >= 80)
                             {
-                                combat(enemylevel);
-                                playBGM1();                                 
+                                enemyEncounter(levelCap-9,levelCap);
+                                playBGM("Area1");
                             }
                             MAP_1[playerY][playerX] = ' ';
                             MAP_1[playerY][--playerX] = 'P';
@@ -1010,7 +837,7 @@ void area1()
                     } break;
                     case 'F':
                     {
-                        if(playerChar.key)
+                        if(character[0].key)
                             hub();
                         else
                         {
@@ -1027,10 +854,10 @@ void area1()
                     case '?':
                     {
                         moved = true;
-                        printf("%s GOT A HP POTION!", playerChar.name);
+                        printf("%s GOT A HP POTION!", character[0].name);
                         limitFPS(1000);
                         MAP_1[playerY][--playerX] = ' ';
-                        playerChar.it.HPpotion += 1;
+                        character[0].it.HPpotion += 1;
                     }
 
                 }
@@ -1038,7 +865,7 @@ void area1()
 
             else if(GetAsyncKeyState (VK_RIGHT) != 0)
             {
-                footStep();
+                playBGM("FootStep");
                 encounterChance = rand() % 100;
 
                 switch(MAP_1[playerY][playerX+1])
@@ -1047,8 +874,8 @@ void area1()
                     {
                         if(encounterChance >= 80)
                             {
-                                combat(enemylevel);
-                                playBGM1();                               
+                                enemyEncounter(levelCap-9,levelCap);
+                                playBGM("Area1");
                             }
                             MAP_1[playerY][playerX] = ' ';
                             MAP_1[playerY][++playerX] = 'P';
@@ -1056,7 +883,7 @@ void area1()
                     } break;
                     case 'F':
                     {
-                        if(playerChar.key)
+                        if(character[0].key)
                             hub();
                         else
                         {
@@ -1073,26 +900,24 @@ void area1()
                     case '?':
                     {
                         moved = true;
-                        printf("%s GOT A HP POTION!", playerChar.name);
+                        printf("%s GOT A HP POTION!", character[0].name);
                         limitFPS(1000);
                         MAP_1[playerY][++playerX] = ' ';
-                        playerChar.it.HPpotion += 1;
+                        character[0].it.HPpotion += 1;
                     }
 
                 }
             }
             else if(GetAsyncKeyState (VK_LCONTROL) != 0)
             {
-                limitFPS(1000);
-                openMenu();
+                playSFX("OpenMenu");
                 moved = true;
                 openInventory();
             }
 
             else if(GetAsyncKeyState (VK_LSHIFT) != 0)
             {
-                limitFPS(1000);
-                openMenu();
+                playSFX("OpenMenu");
                 moved = true;
                 renderPlayerSkillMenu();
             }
@@ -1101,11 +926,11 @@ void area1()
     }
 }
 
-void area1_int()
+void area1_int() // TODO: Progression temporarily blocked here. The KEY interaction should start a boss fight.
 {
     short int encounterChance = 0;
     bool moved = false;
-    int enemylevel = 0, playerX, playerY;
+    int levelCap = 9, playerX, playerY;
 
     while(1)
         {
@@ -1160,15 +985,13 @@ void area1_int()
             putchar('\n');
         }
 
-        showPlayerStats_Map();
+        renderMainPartyStats(false, "");
 
         while (!moved) 
         {
-            enemylevel = rand() % 6;
-
             if(GetAsyncKeyState (VK_UP) != 0)
             {
-                footStep();
+                playBGM("FootStep");
                 encounterChance = rand() % 100;
                 
                 switch(MAP_1[playerY-1][playerX])
@@ -1177,8 +1000,8 @@ void area1_int()
                     {
                         if(encounterChance >= 80)
                             {
-                                combat(enemylevel);
-                                playBGM1();                                            
+                                enemyEncounter(levelCap-9,levelCap);
+                                playBGM("Area1"); 
                             }
                             MAP_1[playerY][playerX] = ' ';
                             MAP_1[--playerY][playerX] = 'P';
@@ -1191,10 +1014,10 @@ void area1_int()
                     case '?':
                     {
                         moved = true;
-                        printf("%s GOT an MP POTION!", playerChar.name);
+                        printf("%s GOT an MP POTION!", character[0].name);
                         limitFPS(1000);
                         MAP_1[--playerY][playerX] = ' ';
-                        playerChar.it.MPpotion += 1;
+                        character[0].it.MPpotion += 1;
                     }
 
                 }
@@ -1202,7 +1025,7 @@ void area1_int()
 
             else if(GetAsyncKeyState (VK_DOWN) != 0)
             {
-                footStep();
+                playBGM("FootStep");
                 encounterChance = rand() % 100;
 
                 switch(MAP_1[playerY+1][playerX])
@@ -1211,8 +1034,8 @@ void area1_int()
                     {
                         if(encounterChance >= 80)
                             {
-                                combat(enemylevel);
-                                playBGM1();                                           
+                                enemyEncounter(levelCap-9,levelCap);
+                                playBGM("Area1");
                             }
                             MAP_1[playerY][playerX] = ' ';
                             MAP_1[++playerY][playerX] = 'P';
@@ -1225,10 +1048,10 @@ void area1_int()
                     case '?':
                     {
                         moved = true;
-                        printf("%s GOT an MP POTION!", playerChar.name);
+                        printf("%s GOT an MP POTION!", character[0].name);
                         limitFPS(1000);
                         MAP_1[--playerY][playerX] = ' ';
-                        playerChar.it.MPpotion += 1;
+                        character[0].it.MPpotion += 1;
                     }
 
                 }
@@ -1236,7 +1059,7 @@ void area1_int()
 
             else if(GetAsyncKeyState (VK_LEFT) != 0)
             {
-                footStep();
+                playBGM("FootStep");
                 encounterChance = rand() % 100;
 
                 switch(MAP_1[playerY][playerX-1])
@@ -1245,8 +1068,8 @@ void area1_int()
                     {
                         if(encounterChance >= 80)
                             {
-                                combat(enemylevel);
-                                playBGM1();                                 
+                                enemyEncounter(levelCap-9,levelCap);
+                                playBGM("Area1");
                             }
                             MAP_1[playerY][playerX] = ' ';
                             MAP_1[playerY][--playerX] = 'P';
@@ -1259,10 +1082,10 @@ void area1_int()
                     case '?':
                     {
                         moved = true;
-                        printf("%s GOT an MP POTION!", playerChar.name);
+                        printf("%s GOT an MP POTION!", character[0].name);
                         limitFPS(1000);
                         MAP_1[--playerY][playerX] = ' ';
-                        playerChar.it.MPpotion += 1;
+                        character[0].it.MPpotion += 1;
                     }
 
                 }
@@ -1270,7 +1093,7 @@ void area1_int()
 
             else if(GetAsyncKeyState (VK_RIGHT) != 0)
             {
-                footStep();
+                playBGM("FootStep");
                 encounterChance = rand() % 100;
 
                 switch(MAP_1[playerY][playerX+1])
@@ -1279,8 +1102,8 @@ void area1_int()
                     {
                         if(encounterChance >= 80)
                             {
-                                combat(enemylevel);
-                                playBGM1();                               
+                                enemyEncounter(levelCap-9,levelCap);
+                                playBGM("Area1");
                             }
                             MAP_1[playerY][playerX] = ' ';
                             MAP_1[playerY][++playerX] = 'P';
@@ -1293,10 +1116,10 @@ void area1_int()
                     case '?':
                     {
                         moved = true;
-                        printf("%s GOT an MP POTION!", playerChar.name);
+                        printf("%s GOT an MP POTION!", character[0].name);
                         limitFPS(1000);
                         MAP_1[--playerY][playerX] = ' ';
-                        playerChar.it.MPpotion += 1;
+                        character[0].it.MPpotion += 1;
                     }
 
                 }
@@ -1304,16 +1127,14 @@ void area1_int()
 
             else if(GetAsyncKeyState (VK_LCONTROL) != 0)
             {
-                limitFPS(500);
-                openMenu();
+                playSFX("OpenMenu");
                 moved = true;
                 openInventory();
             }
 
             else if(GetAsyncKeyState (VK_LSHIFT) != 0)
             {
-                limitFPS(500);
-                openMenu();
+                playSFX("OpenMenu");
                 moved = true;
                 renderPlayerSkillMenu();
             }
@@ -1326,15 +1147,12 @@ int area2()
 {
     short int encounterChance = 0;
     bool moved = false;
-    int enemylevel = 0, playerX, playerY;
-#ifdef __linux__
+    int levelCap = 19, playerX, playerY;
 
-#elif _WIN32
-    ShellExecute(NULL,"open","C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe" ,"/play \"C:\\Users\\paulo\\Desktop\\ED2 Project\\Game\\Audio Engine\\Samples\\Music7.ogg\",",NULL,SW_HIDE);
-#endif        
+    playBGM("Area2");
     while (1)
             {
-    #ifdef __linux__
+#ifdef __linux__
             system("clear");
 #elif _WIN32
             system("cls");
@@ -1418,14 +1236,13 @@ int area2()
                         putchar('\n');
                 }
 
-            showPlayerStats_Map();
+            renderMainPartyStats(false, "");
 
         while (!moved) 
         {
-            enemylevel = (rand() % 8) + 11;
             if(GetAsyncKeyState (VK_UP) != 0)
             {
-                footStep();
+                playBGM("FootStep");
                 encounterChance = rand() % 100;
 
                 switch(MAP_1[playerY-1][playerX])
@@ -1434,8 +1251,8 @@ int area2()
                     {
                         if(encounterChance >= 80)
                             {
-                                combat(enemylevel);
-                                playBGM1();                                            
+                                enemyEncounter(levelCap-9,levelCap);
+                                playBGM("Area2"); 
                             }
                             MAP_1[playerY][playerX] = ' ';
                             MAP_1[--playerY][playerX] = 'P';
@@ -1454,10 +1271,10 @@ int area2()
                     case '?':
                     {
                         moved = true;
-                        printf("%s GOT A HP POTION!", playerChar.name);
+                        printf("%s GOT A HP POTION!", character[0].name);
                         limitFPS(1000);
                         MAP_1[--playerY][playerX] = ' ';
-                        playerChar.it.HPpotion += 1;
+                        character[0].it.HPpotion += 1;
                     }
 
                 }
@@ -1465,7 +1282,7 @@ int area2()
 
             else if(GetAsyncKeyState (VK_DOWN) != 0)
             {
-                footStep();
+                playBGM("FootStep");
                 encounterChance = rand() % 100;
 
                 switch(MAP_1[playerY+1][playerX])
@@ -1474,8 +1291,8 @@ int area2()
                     {
                         if(encounterChance >= 80)
                             {
-                                combat(enemylevel);
-                                playBGM1();                                           
+                                enemyEncounter(levelCap-9,levelCap);
+                                playBGM("Area2");
                             }
                             MAP_1[playerY][playerX] = ' ';
                             MAP_1[++playerY][playerX] = 'P';
@@ -1494,10 +1311,10 @@ int area2()
                     case '?':
                     {
                         moved = true;
-                        printf("%s GOT A HP POTION!", playerChar.name);
+                        printf("%s GOT A HP POTION!", character[0].name);
                         limitFPS(1000);
                         MAP_1[++playerY][playerX] = ' ';
-                        playerChar.it.HPpotion += 1;
+                        character[0].it.HPpotion += 1;
                     }
 
                 }
@@ -1505,7 +1322,7 @@ int area2()
 
             else if(GetAsyncKeyState (VK_LEFT) != 0)
             {
-                footStep();
+                playBGM("FootStep");
                 encounterChance = rand() % 100;
 
                 switch(MAP_1[playerY][playerX-1])
@@ -1514,8 +1331,8 @@ int area2()
                     {
                         if(encounterChance >= 80)
                             {
-                                combat(enemylevel);
-                                playBGM1();                                 
+                                enemyEncounter(levelCap-9,levelCap);
+                                playBGM("Area2");
                             }
                             MAP_1[playerY][playerX] = ' ';
                             MAP_1[playerY][--playerX] = 'P';
@@ -1534,10 +1351,10 @@ int area2()
                     case '?':
                     {
                         moved = true;
-                        printf("%s GOT A HP POTION!", playerChar.name);
+                        printf("%s GOT A HP POTION!", character[0].name);
                         limitFPS(1000);
                         MAP_1[playerY][--playerX] = ' ';
-                        playerChar.it.HPpotion += 1;
+                        character[0].it.HPpotion += 1;
                     }
 
                 }
@@ -1545,7 +1362,7 @@ int area2()
 
             else if(GetAsyncKeyState (VK_RIGHT) != 0)
             {
-                footStep();
+                playBGM("FootStep");
                 encounterChance = rand() % 100;
 
                 switch(MAP_1[playerY][playerX+1])
@@ -1554,8 +1371,8 @@ int area2()
                     {
                         if(encounterChance >= 80)
                             {
-                                combat(enemylevel);
-                                playBGM1();                               
+                                enemyEncounter(levelCap-9,levelCap);
+                                playBGM("Area2");
                             }
                             MAP_1[playerY][playerX] = ' ';
                             MAP_1[playerY][++playerX] = 'P';
@@ -1574,26 +1391,24 @@ int area2()
                     case '?':
                     {
                         moved = true;
-                        printf("%s GOT A HP POTION!", playerChar.name);
+                        printf("%s GOT A HP POTION!", character[0].name);
                         limitFPS(1000);
                         MAP_1[playerY][++playerX] = ' ';
-                        playerChar.it.HPpotion += 1;
+                        character[0].it.HPpotion += 1;
                     }
 
                 }
             }
             else if(GetAsyncKeyState (VK_LCONTROL) != 0)
             {
-                limitFPS(1000);
-                openMenu();
+                playSFX("OpenMenu");
                 moved = true;
                 openInventory();
             }
 
             else if(GetAsyncKeyState (VK_LSHIFT) != 0)
             {
-                limitFPS(1000);
-                openMenu();
+                playSFX("OpenMenu");
                 moved = true;
                 renderPlayerSkillMenu();
             }
@@ -1606,15 +1421,12 @@ void area3()
 {
     short int encounterChance = 0;
     bool moved = false;
-    int enemylevel = 0, playerX, playerY;
-#ifdef __linux__
+    int levelCap = 29, playerX, playerY;
 
-#elif _WIN32
-    ShellExecute(NULL,"open","C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe" ,"/play \"C:\\Users\\paulo\\Desktop\\ED2 Project\\Game\\Audio Engine\\Samples\\Music5.ogg\",",NULL,SW_HIDE);
-#endif        
+    playBGM("Area3");   
     while (1)
             {
-    #ifdef __linux__
+#ifdef __linux__
             system("clear");
 #elif _WIN32
             system("cls");
@@ -1703,14 +1515,13 @@ void area3()
                         putchar('\n');
                 }
 
-            showPlayerStats_Map();
+            renderMainPartyStats(false, "");
 
         while (!moved) 
         {
-            enemylevel = (rand() % 8) + 21;
             if(GetAsyncKeyState (VK_UP) != 0)
             {
-                footStep();
+                playBGM("FootStep");
                 encounterChance = rand() % 100;
 
                 switch(MAP_1[playerY-1][playerX])
@@ -1719,8 +1530,8 @@ void area3()
                     {
                         if(encounterChance >= 80)
                             {
-                                combat(enemylevel);
-                                playBGM1();                                            
+                                enemyEncounter(levelCap-9,levelCap);
+                                playBGM("Area3"); 
                             }
                             MAP_1[playerY][playerX] = ' ';
                             MAP_1[--playerY][playerX] = 'P';
@@ -1728,24 +1539,24 @@ void area3()
                     } break;
                     case 'F':
                     {
-                        combat(30);
+                        fightBoss(30);
                         limitFPS(4000);
                         ending();
                     } break;
                     case '?':
                     {
                         moved = true;
-                        printf("%s GOT A HP POTION!", playerChar.name);
+                        printf("%s GOT A HP POTION!", character[0].name);
                         limitFPS(1000);
                         MAP_1[--playerY][playerX] = ' ';
-                        playerChar.it.HPpotion += 1;
+                        character[0].it.HPpotion += 1;
                     }
                     case 'K':
                     {
-                    printf("\n%s Found the key, but it is being guarded by a Boss!", playerChar.name);
+                    printf("\n%s Found the key, but it is being guarded by a Boss!", character[0].name);
                     limitFPS(800);
-                    combat(20);
-                    playerChar.key = true;
+                    fightBoss(20);
+                    character[0].key = true;
                     MAP_3[--playerY][playerX] = ' ';
                     }
 
@@ -1754,7 +1565,7 @@ void area3()
 
             else if(GetAsyncKeyState (VK_DOWN) != 0)
             {
-                footStep();
+                playBGM("FootStep");
                 encounterChance = rand() % 100;
 
                 switch(MAP_1[playerY+1][playerX])
@@ -1763,8 +1574,8 @@ void area3()
                     {
                         if(encounterChance >= 80)
                             {
-                                combat(enemylevel);
-                                playBGM1();                                           
+                                enemyEncounter(levelCap-9,levelCap);
+                                playBGM("Area3");
                             }
                             MAP_1[playerY][playerX] = ' ';
                             MAP_1[++playerY][playerX] = 'P';
@@ -1772,24 +1583,24 @@ void area3()
                     } break;
                     case 'F':
                     {
-                        combat(30);
+                        fightBoss(30);
                         limitFPS(4000);
                         ending();
                     } break;
                     case '?':
                     {
                         moved = true;
-                        printf("%s GOT A HP POTION!", playerChar.name);
+                        printf("%s GOT A HP POTION!", character[0].name);
                         limitFPS(1000);
                         MAP_1[++playerY][playerX] = ' ';
-                        playerChar.it.HPpotion += 1;
+                        character[0].it.HPpotion += 1;
                     }
                     case 'K':
                     {
-                        printf("\n%s Found the key, but it is being guarded by a Boss!", playerChar.name);
+                        printf("\n%s Found the key, but it is being guarded by a Boss!", character[0].name);
                         limitFPS(800);
-                        combat(20);
-                        playerChar.key = true;
+                        fightBoss(20);
+                        character[0].key = true;
                         MAP_3[++playerY][playerX] = ' ';
                     }
                 }
@@ -1797,7 +1608,7 @@ void area3()
 
             else if(GetAsyncKeyState (VK_LEFT) != 0)
             {
-                footStep();
+                playBGM("FootStep");
                 encounterChance = rand() % 100;
 
                 switch(MAP_1[playerY][playerX-1])
@@ -1806,8 +1617,8 @@ void area3()
                     {
                         if(encounterChance >= 80)
                             {
-                                combat(enemylevel);
-                                playBGM1();                                 
+                                enemyEncounter(levelCap-9,levelCap);
+                                playBGM("Area3");
                             }
                             MAP_1[playerY][playerX] = ' ';
                             MAP_1[playerY][--playerX] = 'P';
@@ -1815,24 +1626,24 @@ void area3()
                     } break;
                     case 'F':
                     {
-                        combat(30);
+                        fightBoss(30);
                         limitFPS(4000);
                         ending();
                     } break;
                     case '?':
                     {
                         moved = true;
-                        printf("%s GOT A HP POTION!", playerChar.name);
+                        printf("%s GOT A HP POTION!", character[0].name);
                         limitFPS(1000);
                         MAP_1[playerY][--playerX] = ' ';
-                        playerChar.it.HPpotion += 1;
+                        character[0].it.HPpotion += 1;
                     }
                     case 'K':
                     {
-                        printf("\n%s Found the key, but it is being guarded by a Boss!", playerChar.name);
+                        printf("\n%s Found the key, but it is being guarded by a Boss!", character[0].name);
                         limitFPS(800);
-                        combat(20);
-                        playerChar.key = true;
+                        fightBoss(20);
+                        character[0].key = true;
                         MAP_3[playerY][--playerX] = ' ';
                     }
                 }
@@ -1840,7 +1651,7 @@ void area3()
 
             else if(GetAsyncKeyState (VK_RIGHT) != 0)
             {
-                footStep();
+                playBGM("FootStep");
                 encounterChance = rand() % 100;
 
                 switch(MAP_1[playerY][playerX+1])
@@ -1849,8 +1660,8 @@ void area3()
                     {
                         if(encounterChance >= 80)
                             {
-                                combat(enemylevel);
-                                playBGM1();                               
+                                enemyEncounter(levelCap-9,levelCap);
+                                playBGM("Area3");
                             }
                             MAP_1[playerY][playerX] = ' ';
                             MAP_1[playerY][++playerX] = 'P';
@@ -1858,40 +1669,38 @@ void area3()
                     } break;
                     case 'F':
                     {
-                        combat(30);
+                        fightBoss(30);
                         limitFPS(4000);
                         ending();
                     } break;
                     case '?':
                     {
                         moved = true;
-                        printf("%s GOT A HP POTION!", playerChar.name);
+                        printf("%s GOT A HP POTION!", character[0].name);
                         limitFPS(1000);
                         MAP_1[playerY][++playerX] = ' ';
-                        playerChar.it.HPpotion += 1;
+                        character[0].it.HPpotion += 1;
                     }
                     case 'K':
                     {
-                        printf("\n%s Found the key, but it is being guarded by a Boss!", playerChar.name);
+                        printf("\n%s Found the key, but it is being guarded by a Boss!", character[0].name);
                         limitFPS(800);
-                        combat(20);
-                        playerChar.key = true;
+                        fightBoss(20);
+                        character[0].key = true;
                         MAP_3[playerY][++playerX] = ' ';
                     }
                 }
             }
             else if(GetAsyncKeyState (VK_LCONTROL) != 0)
             {
-                limitFPS(1000);
-                openMenu();
+                playSFX("OpenMenu");
                 moved = true;
                 openInventory();
             }
 
             else if(GetAsyncKeyState (VK_LSHIFT) != 0)
             {
-                limitFPS(1000);
-                openMenu();
+                playSFX("OpenMenu");
                 moved = true;
                 renderPlayerSkillMenu();
             }
@@ -1908,16 +1717,16 @@ void talkToMerchant()
     bool buy = drawSelectMenu();
     if(buy)
         {
-            if(playerChar.gold >= 250)
+            if(character[0].gold >= 250)
                 {
                     SearchHash_NPC(NPCDialogs, 2, &npcLine);
                     printf("\n\t\t%s", npcLine.speak);
-                    playerChar.gold -= 250;
-                    playerChar.it.HPpotion += 1;
-                    playerChar.it.MPpotion += 1;
+                    character[0].gold -= 250;
+                    character[0].it.HPpotion += 1;
+                    character[0].it.MPpotion += 1;
                 }
 
-            else if (playerChar.it.HPpotion == 9 || playerChar.it.MPpotion == 9)
+            else if (character[0].it.HPpotion == 9 || character[0].it.MPpotion == 9)
                 {
                     SearchHash_NPC(NPCDialogs, 6, &npcLine);
                     printf("\n\t\t%s", npcLine.speak);
@@ -1946,7 +1755,7 @@ void talkToNPC2()
     printf("\n\n\t\t%s", npcLine.speak);
     limitFPS(700);
     SearchHash(playerDialogs, 4, &pLine);
-    printf("\n\t\t%s%s", playerChar.name, pLine.speak);
+    printf("\n\t\t%s%s", character[0].name, pLine.speak);
     limitFPS(1200);
 }
 
@@ -1956,7 +1765,7 @@ void talkToNPC3()
     printf("\n\n\t\t%s", npcLine.speak);
     limitFPS(700);
     SearchHash(playerDialogs, 5, &pLine);
-    printf("\n\t\t%s%s", playerChar.name, pLine.speak);
+    printf("\n\t\t%s%s", character[0].name, pLine.speak);
     limitFPS(2400);
 }
 
@@ -1966,7 +1775,7 @@ void talkToNPC4()
     printf("\n\n\t\t%s", npcLine.speak);
     limitFPS(700);
     SearchHash(playerDialogs, 3, &pLine);
-    printf("\n\t\t%s%s", playerChar.name, pLine.speak);
+    printf("\n\t\t%s%s", character[0].name, pLine.speak);
     limitFPS(2400);
 }
 
@@ -1976,7 +1785,7 @@ void talkToNPC5()
     printf("\n\n\t\t%s", npcLine.speak);
     limitFPS(700);
     SearchHash(playerDialogs, 6, &pLine);
-    printf("\n\t\t%s%s", playerChar.name, pLine.speak);
+    printf("\n\t\t%s%s", character[0].name, pLine.speak);
     limitFPS(2400);
 }
 
@@ -1986,7 +1795,7 @@ void talkToNPC6()
     printf("\n\n\t\t%s", npcLine.speak);
     limitFPS(700);
     SearchHash(playerDialogs, 7, &pLine);
-    printf("\n\t\t%s%s", playerChar.name, pLine.speak);
+    printf("\n\t\t%s%s", character[0].name, pLine.speak);
     limitFPS(2400);
 }
 
@@ -2023,11 +1832,7 @@ bool drawSelectMenu()
                 if(GetAsyncKeyState (VK_RIGHT) != 0)
                     {
                         moved = true;
-#ifdef __linux__
-
-#elif _WIN32
-                        _beginthread(moveCursor, 0, &thread);
-#endif
+                        playSFX("CursorMove");
                         if(yes)
                             {
                                 yes = false;
@@ -2038,11 +1843,7 @@ bool drawSelectMenu()
                 if(GetAsyncKeyState (VK_LEFT) != 0)
                     {
                         moved = true;
-#ifdef __linux__
-
-#elif _WIN32
-                        _beginthread(moveCursor, 0, &thread);
-#endif
+                        playSFX("CursorMove");
                         if(!yes)
                             {
                                 yes = true;
@@ -2053,11 +1854,7 @@ bool drawSelectMenu()
                 if(GetAsyncKeyState (VK_LCONTROL) != 0)
                     {
                         moved = true;
-#ifdef __linux__
-
-#elif _WIN32
-                        _beginthread(openMenu, 0, &thread);
-#endif
+                        playSFX("OpenMenu");
                         if(yes) return 1;
                         else return 0;
                     }

@@ -20,41 +20,41 @@ typedef enum
 
 #ifdef __linux__
 const char* colorCodes[] = {
-    "\033[30m",  // BLACK
-    "\033[34m",  // BLUE
-    "\033[32m",  // GREEN
-    "\033[36m",  // CYAN
-    "\033[31m",  // RED
-    "\033[35m",  // MAGENTA
-    "\033[33m",  // BROWN
-    "\033[37m",  // LIGHTGRAY
-    "\033[90m",  // DARKGRAY
-    "\033[94m",  // LIGHTBLUE
-    "\033[92m",  // LIGHTGREEN
-    "\033[96m",  // LIGHTCYAN
-    "\033[91m",  // LIGHTRED
-    "\033[95m",  // LIGHTMAGENTA
-    "\033[93m",  // YELLOW
-    "\033[97m"   // WHITE
+    "\x1B[30m",  // BLACK
+    "\x1B[34m",  // BLUE
+    "\x1B[32m",  // GREEN
+    "\x1B[36m",  // CYAN
+    "\x1B[31m",  // RED
+    "\x1B[35m",  // MAGENTA
+    "\x1B[33m",  // BROWN
+    "\x1B[37m",  // LIGHTGRAY
+    "\x1B[90m",  // DARKGRAY
+    "\x1B[94m",  // LIGHTBLUE
+    "\x1B[92m",  // LIGHTGREEN
+    "\x1B[96m",  // LIGHTCYAN
+    "\x1B[91m",  // LIGHTRED
+    "\x1B[95m",  // LIGHTMAGENTA
+    "\x1B[93m",  // YELLOW
+    "\x1B[97m"   // WHITE
 };
 
 const char* bgColorCodes[] = {
-    "\033[40m",  // BLACK
-    "\033[44m",  // BLUE
-    "\033[42m",  // GREEN
-    "\033[46m",  // CYAN
-    "\033[41m",  // RED
-    "\033[45m",  // MAGENTA
-    "\033[43m",  // BROWN
-    "\033[47m",  // LIGHTGRAY
-    "\033[100m", // DARKGRAY
-    "\033[104m", // LIGHTBLUE
-    "\033[102m", // LIGHTGREEN
-    "\033[106m", // LIGHTCYAN
-    "\033[101m", // LIGHTRED
-    "\033[105m", // LIGHTMAGENTA
-    "\033[103m", // YELLOW
-    "\033[107m"  // WHITE
+    "\x1B[40m",  // BLACK
+    "\x1B[44m",  // BLUE
+    "\x1B[42m",  // GREEN
+    "\x1B[46m",  // CYAN
+    "\x1B[41m",  // RED
+    "\x1B[45m",  // MAGENTA
+    "\x1B[43m",  // BROWN
+    "\x1B[47m",  // LIGHTGRAY
+    "\x1B[100m", // DARKGRAY
+    "\x1B[104m", // LIGHTBLUE
+    "\x1B[102m", // LIGHTGREEN
+    "\x1B[106m", // LIGHTCYAN
+    "\x1B[101m", // LIGHTRED
+    "\x1B[105m", // LIGHTMAGENTA
+    "\x1B[103m", // YELLOW
+    "\x1B[107m"  // WHITE
 };
 #endif
 
