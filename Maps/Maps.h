@@ -11,6 +11,7 @@ void talkToNPC3();
 void talkToNPC4();
 void talkToNPC5();
 void talkToNPC6();
+void renderAreaNavigation(int areaIndex, int navIndex, int *playerX, int *playerY);
 
 char logo[39][150] =
 {
@@ -372,9 +373,9 @@ void hub()
                                         short int y2 = (y - 1);
                                         switch(HUB[y2][x])
                                         {
-                                            case ' ':
+                                            case ':': case ';': case '.': case ' ':
                                             {
-                                                HUB[y][x] = ' ';
+                                                 HUB[y][x] = HUB[y2][x];
                                                  y -=1;
                                                  HUB[y2][x] = 'P';
                                                  moved = true;
@@ -436,9 +437,9 @@ void hub()
                                         short int y2 = (y + 1);
                                         switch(HUB[y2][x])
                                         {
-                                            case ' ':
+                                            case ':': case ';': case '.': case ' ':
                                             {
-                                                HUB[y][x] = ' ';
+                                                HUB[y][x] = HUB[y2][x];
                                                  y +=1;
                                                  HUB[y2][x] = 'P';
                                                  moved = true;
@@ -500,9 +501,9 @@ void hub()
                                         int x2 = (x - 1);
                                         switch(HUB[y][x2])
                                         {
-                                            case ' ':
+                                            case ':': case ';': case '.': case ' ':
                                             {
-                                                HUB[y][x] = ' ';
+                                                HUB[y][x] = HUB[y][x2];
                                                  x -=1;
                                                  HUB[y][x2] = 'P';
                                                  moved = true;
@@ -564,9 +565,9 @@ void hub()
                                         int x2 = (x + 1);
                                         switch(HUB[y][x2])
                                         {
-                                            case ' ':
+                                            case ':': case ';': case '.': case ' ':
                                             {
-                                                HUB[y][x] = ' ';
+                                                HUB[y][x] = HUB[y][x2];
                                                  x +=1;
                                                  HUB[y][x2] = 'P';
                                                  moved = true;
@@ -652,8 +653,8 @@ void area1()
 {
     short int encounterChance = 0;
     bool moved = false;
-    int levelCap = 9, playerX, playerY;
-
+    int levelCap = 9, navIndex = 0, navIndexTmp = 0;
+    int playerX = 0, playerY = 0;
     playBGM("Area1");
     while(1)
     {
@@ -662,65 +663,13 @@ void area1()
 #elif _WIN32
         system("cls");
 #endif
-        for(short int y = 0; y <28; y++)
-        {
-            moved = false;
-            int xmax = strlen(MAP_1[y]);
 
-            for(int x = 0; x < xmax; x++)
-            {
-                if (MAP_1[y][x] == '#')
-                {
-                    textcolor(LIGHTGREEN);
-                    textbackground(LIGHTGREEN);
-                }
-                if (MAP_1[y][x] == 'P')
-                {
-                    textcolor(CYAN);
-                    playerX = x;
-                    playerY = y;
-                }
-                if (MAP_1[y][x] == 'F')
-                {
-                    textcolor(RED);
-                }
-                if (MAP_1[y][x] == '|')
-                {
-                    textcolor(BLACK);
-                    textbackground(BROWN);
-                }
-                if (MAP_1[y][x] == '`')
-                {
-                    textcolor(BROWN);
-                    textbackground(BROWN);
-                }
-                if (MAP_1[y][x] == '?')
-                {
-                    textcolor(LIGHTRED);
-                    textbackground(YELLOW);
-                }
-                if (MAP_1[y][x] == '~')
-                {
-                    textcolor(WHITE);
-                    textbackground(CYAN);
-                }
-                if (MAP_1[y][x] == 'E')
-                {
-                    textcolor(DARKGRAY);
-                }
-                if (MAP_1[y][x] == '=')
-                {
-                    textbackground(WHITE);
-                }
-
-                putchar(MAP_1[y][x]);
-                textcolor(WHITE);
-                textbackground(BLACK);
-            }
-            putchar('\n');
-        }
+        renderAreaNavigation(0, navIndex, &playerX, &playerY);
+        putchar('\n');
 
         renderMainPartyStats(false, "");
+
+        moved = false;
 
         while (!moved) 
         {
@@ -731,16 +680,22 @@ void area1()
 
                 switch(MAP_1[playerY-1][playerX])
                 {
-                    case ' ':
+                    case ':': case ';': case '.': case ' ':
                     {
-                        if(encounterChance >= 80)
+                        if(encounterChance >= 87)
                             {
+                                limitFPS(0);
                                 enemyEncounter(levelCap-9,levelCap);
                                 playBGM("Area1"); 
                             }
-                            MAP_1[playerY][playerX] = ' ';
+                            MAP_1[playerY][playerX] = MAP_1[playerY-1][playerX];
                             MAP_1[--playerY][playerX] = 'P';
                             moved = true;
+                            do
+                            {
+                                navIndexTmp = rand() % 3;
+                            } while (navIndexTmp == navIndex);
+                            navIndex = navIndexTmp;
                     } break;
                     case 'F':
                     {
@@ -778,16 +733,22 @@ void area1()
 
                 switch(MAP_1[playerY+1][playerX])
                 {
-                    case ' ':
+                    case ':': case ';': case '.': case ' ':
                     {
-                        if(encounterChance >= 80)
+                        if(encounterChance >= 87)
                             {
+                                limitFPS(0);
                                 enemyEncounter(levelCap-9,levelCap);
                                 playBGM("Area1");
                             }
-                            MAP_1[playerY][playerX] = ' ';
+                            MAP_1[playerY][playerX] = MAP_1[playerY+1][playerX];
                             MAP_1[++playerY][playerX] = 'P';
                             moved = true;
+                            do
+                            {
+                                navIndexTmp = rand() % 3;
+                            } while (navIndexTmp == navIndex);
+                            navIndex = navIndexTmp;
                     } break;
                     case 'F':
                     {
@@ -824,16 +785,22 @@ void area1()
 
                 switch(MAP_1[playerY][playerX-1])
                 {
-                    case ' ':
+                    case ':': case ';': case '.': case ' ':
                     {
-                        if(encounterChance >= 80)
+                        if(encounterChance >= 87)
                             {
+                                limitFPS(0);
                                 enemyEncounter(levelCap-9,levelCap);
                                 playBGM("Area1");
                             }
-                            MAP_1[playerY][playerX] = ' ';
+                            MAP_1[playerY][playerX] = MAP_1[playerY][playerX-1];
                             MAP_1[playerY][--playerX] = 'P';
                             moved = true;
+                            do
+                            {
+                                navIndexTmp = rand() % 3;
+                            } while (navIndexTmp == navIndex);
+                            navIndex = navIndexTmp;
                     } break;
                     case 'F':
                     {
@@ -870,16 +837,22 @@ void area1()
 
                 switch(MAP_1[playerY][playerX+1])
                 {
-                    case ' ':
+                    case ':': case ';': case '.': case ' ':
                     {
-                        if(encounterChance >= 80)
+                        if(encounterChance >= 87)
                             {
+                                limitFPS(0);
                                 enemyEncounter(levelCap-9,levelCap);
                                 playBGM("Area1");
                             }
-                            MAP_1[playerY][playerX] = ' ';
+                            MAP_1[playerY][playerX] = MAP_1[playerY][playerX+1];
                             MAP_1[playerY][++playerX] = 'P';
                             moved = true;
+                            do
+                            {
+                                navIndexTmp = rand() % 3;
+                            } while (navIndexTmp == navIndex);
+                            navIndex = navIndexTmp;
                     } break;
                     case 'F':
                     {
@@ -996,9 +969,9 @@ void area1_int() // TODO: Progression temporarily blocked here. The KEY interact
                 
                 switch(MAP_1[playerY-1][playerX])
                 {
-                    case ' ':
+                    case ':': case ';': case '.': case ' ':
                     {
-                        if(encounterChance >= 80)
+                        if(encounterChance >= 87)
                             {
                                 enemyEncounter(levelCap-9,levelCap);
                                 playBGM("Area1"); 
@@ -1030,9 +1003,9 @@ void area1_int() // TODO: Progression temporarily blocked here. The KEY interact
 
                 switch(MAP_1[playerY+1][playerX])
                 {
-                    case ' ':
+                    case ':': case ';': case '.': case ' ':
                     {
-                        if(encounterChance >= 80)
+                        if(encounterChance >= 87)
                             {
                                 enemyEncounter(levelCap-9,levelCap);
                                 playBGM("Area1");
@@ -1064,9 +1037,9 @@ void area1_int() // TODO: Progression temporarily blocked here. The KEY interact
 
                 switch(MAP_1[playerY][playerX-1])
                 {
-                    case ' ':
+                    case ':': case ';': case '.': case ' ':
                     {
-                        if(encounterChance >= 80)
+                        if(encounterChance >= 87)
                             {
                                 enemyEncounter(levelCap-9,levelCap);
                                 playBGM("Area1");
@@ -1098,9 +1071,9 @@ void area1_int() // TODO: Progression temporarily blocked here. The KEY interact
 
                 switch(MAP_1[playerY][playerX+1])
                 {
-                    case ' ':
+                    case ':': case ';': case '.': case ' ':
                     {
-                        if(encounterChance >= 80)
+                        if(encounterChance >= 87)
                             {
                                 enemyEncounter(levelCap-9,levelCap);
                                 playBGM("Area1");
@@ -1247,9 +1220,9 @@ int area2()
 
                 switch(MAP_1[playerY-1][playerX])
                 {
-                    case ' ':
+                    case ':': case ';': case '.': case ' ':
                     {
-                        if(encounterChance >= 80)
+                        if(encounterChance >= 87)
                             {
                                 enemyEncounter(levelCap-9,levelCap);
                                 playBGM("Area2"); 
@@ -1287,9 +1260,9 @@ int area2()
 
                 switch(MAP_1[playerY+1][playerX])
                 {
-                    case ' ':
+                    case ':': case ';': case '.': case ' ':
                     {
-                        if(encounterChance >= 80)
+                        if(encounterChance >= 87)
                             {
                                 enemyEncounter(levelCap-9,levelCap);
                                 playBGM("Area2");
@@ -1327,9 +1300,9 @@ int area2()
 
                 switch(MAP_1[playerY][playerX-1])
                 {
-                    case ' ':
+                    case ':': case ';': case '.': case ' ':
                     {
-                        if(encounterChance >= 80)
+                        if(encounterChance >= 87)
                             {
                                 enemyEncounter(levelCap-9,levelCap);
                                 playBGM("Area2");
@@ -1367,9 +1340,9 @@ int area2()
 
                 switch(MAP_1[playerY][playerX+1])
                 {
-                    case ' ':
+                    case ':': case ';': case '.': case ' ':
                     {
-                        if(encounterChance >= 80)
+                        if(encounterChance >= 87)
                             {
                                 enemyEncounter(levelCap-9,levelCap);
                                 playBGM("Area2");
@@ -1526,9 +1499,9 @@ void area3()
 
                 switch(MAP_1[playerY-1][playerX])
                 {
-                    case ' ':
+                    case ':': case ';': case '.': case ' ':
                     {
-                        if(encounterChance >= 80)
+                        if(encounterChance >= 87)
                             {
                                 enemyEncounter(levelCap-9,levelCap);
                                 playBGM("Area3"); 
@@ -1570,9 +1543,9 @@ void area3()
 
                 switch(MAP_1[playerY+1][playerX])
                 {
-                    case ' ':
+                    case ':': case ';': case '.': case ' ':
                     {
-                        if(encounterChance >= 80)
+                        if(encounterChance >= 87)
                             {
                                 enemyEncounter(levelCap-9,levelCap);
                                 playBGM("Area3");
@@ -1613,9 +1586,9 @@ void area3()
 
                 switch(MAP_1[playerY][playerX-1])
                 {
-                    case ' ':
+                    case ':': case ';': case '.': case ' ':
                     {
-                        if(encounterChance >= 80)
+                        if(encounterChance >= 87)
                             {
                                 enemyEncounter(levelCap-9,levelCap);
                                 playBGM("Area3");
@@ -1656,9 +1629,9 @@ void area3()
 
                 switch(MAP_1[playerY][playerX+1])
                 {
-                    case ' ':
+                    case ':': case ';': case '.': case ' ':
                     {
-                        if(encounterChance >= 80)
+                        if(encounterChance >= 87)
                             {
                                 enemyEncounter(levelCap-9,levelCap);
                                 playBGM("Area3");
@@ -1889,4 +1862,74 @@ void ending()
                 }
             ymax++;
         }
+}
+
+void renderAreaNavigation(int areaIndex, int navIndex, int *playerX, int *playerY)
+{
+    // Update player map position first
+    for(unsigned char y = 0; y <28; y++)
+    {
+        short int xmax = strlen(MAP_1[y]);
+
+        for(unsigned char x = 0; x < xmax; x++)
+        {
+
+            if (MAP_1[y][x] == 'P')
+            {
+                *playerX = x;
+                *playerY = y;
+            }
+        }
+    }
+    if(areaIndex == 1) { navIndex += 9; }
+    printf("  ┌─────────────────────────────────────────────────────────────────────────────────────────────────────┐\n");
+    for(int y = 0; y < NAVAREA_YSIZE; y++) 
+    {
+        printf("  │");
+        for(int x = 0; x < NAVAREA_XSIZE; x++) 
+        {
+            char pixelToDraw = navAreas[navIndex][y][x];
+            applyColorPalette(pixelToDraw);
+            putchar(pixelToDraw);
+            textcolor(WHITE);
+            textbackground(BLACK);
+        }
+        printf("│");
+
+        // Draw the mini-map at the side
+        if(y == (NAVAREA_YSIZE/2) - 8) { printf("  ┌─────────────────┐"); }
+        else if(y == (NAVAREA_YSIZE/2) - 7 || y == (NAVAREA_YSIZE/2) + 7) { printf("  │                 │");}
+        else if(y > (NAVAREA_YSIZE/2) - 7 && y < (NAVAREA_YSIZE/2) + 7)
+        {
+            printf("  │ ");
+            int minimapY = *playerY - 7 + (y - (NAVAREA_YSIZE/2) + 7);
+            //printf("minimapY:%d", minimapY);
+            for(int minimapX = 0; minimapX < 15; minimapX++) 
+            {
+                if(minimapY*(strlen(MAP_1[0])) + *playerX - 7 + minimapX < 0 ||
+                minimapY*(strlen(MAP_1[0])) + *playerX - 7 + minimapX > sizeof(MAP_1) ||
+                *playerX - 7 + minimapX < 0 || minimapY >= sizeof(MAP_1) / sizeof(MAP_1[0]) ||
+                *playerX - 7 + minimapX >= strlen(MAP_1[minimapY]))
+                {
+                    textcolor(WHITE);
+                    textbackground(BLACK);
+                    putchar(' ');
+                }
+                else 
+                {
+                    char pixelToDraw = MAP_1[minimapY][*playerX - 7 + minimapX];
+                    applyColorPalette(pixelToDraw);
+                    putchar(pixelToDraw);
+                    textcolor(WHITE);
+                    textbackground(BLACK);
+                }
+            }
+            printf(" │");
+        }
+        else if (y == (NAVAREA_YSIZE/2) + 8) { printf("  └─────────────────┘"); }
+
+        printf("\n");
+    }
+    printf("  └─────────────────────────────────────────────────────────────────────────────────────────────────────┘");
+
 }

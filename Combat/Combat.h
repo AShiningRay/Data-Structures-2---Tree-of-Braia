@@ -463,11 +463,11 @@ void applyColorPalette(char check)
     else if (check == ':')
     {
         textcolor(BROWN);
-        textbackground(GREEN);
+        textbackground(LIGHTGREEN);
     }
     else if (check == ';')
     {
-        textcolor(GREEN);
+        textcolor(LIGHTGREEN);
         textbackground(BROWN);
     }
     

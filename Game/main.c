@@ -32,6 +32,7 @@ int main()
     insertCharName(0);
 
     initEnemies();
+    initNavAreas();
 
 #ifdef _WIN32
     if(GetAsyncKeyState(VK_LCONTROL) != 0){} // Clears the CTRL input from the logo "START GAME" prompt

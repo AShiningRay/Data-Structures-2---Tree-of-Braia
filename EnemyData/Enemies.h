@@ -50,7 +50,7 @@ void generateEnemy(char enemyIndex, char* enemy, int enemyLevel)
         snprintf(Enemy[enemyIndex].name, MAX_ENEMY_NAME_SIZE, "%s Lv.%d", enemy, enemyLevel);
         Enemy[enemyIndex].max_HP = 250 + 18*enemyLevel;
         Enemy[enemyIndex].current_HP = Enemy[enemyIndex].max_HP;
-        Enemy[enemyIndex].atk = 155 + 5*enemyLevel;
+        Enemy[enemyIndex].atk = 150 + 5*enemyLevel;
         Enemy[enemyIndex].def = 45 + 4*enemyLevel;
         Enemy[enemyIndex].inte = 10 + 2*enemyLevel;
         Enemy[enemyIndex].XP_given = 65 + 15*enemyLevel;
