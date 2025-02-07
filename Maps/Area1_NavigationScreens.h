@@ -1,10 +1,394 @@
-#define AREA1_NAVAREAS 9
+#define HUBTOWN_NAVAREAS 10 // TBF
+#define AREA1_NAVAREAS 10 // TBF
 #define AREA1INT_NAVAREAS 0 // TODO
+#define AREA2_NAVAREAS 0 // TODO
 
 #define NAVAREA_YSIZE 42
 #define NAVAREA_XSIZE 101
 
-char (*navAreas[AREA1_NAVAREAS+AREA1INT_NAVAREAS])[101];
+// ######################################### Ending and Title Screen (maybe some cutscenes later)
+
+
+char Title_BG[48][128] =
+{
+"................................................#.&....#.#..##&##..#..##..#####................................................",
+".......................................&.....&.###........&...#&.K#K##KKKK#.####&...#..##K.....................................",
+".................................#...&..&...&##K##.#.....###K....###KK####K#KKKKK#####...KK#..#....#...........................",
+".................................................##.KKK####KK#K#K.&.....&.KK#K#########KKK&...&K&..&...........................",
+"..........................#K##.......#.......#KKKK...###K####K#&#...#........#KK#&&#&###....K#K#.##............................",
+".....................&&&###K...&.#&&#K##KK#######K&KK#####K####K####&.&&##&&...#####&####.#####&#.&.&..........................",
+"......................K###K....#KK####K##########&KK#K################K##KKKKK&#KKK#####K#&#####K#K&.....##....................",
+"...................#K##KK.K....#KK#K###KK####&K##KK#K####K&K###K###&###K###K.KKK#K#####&K#&#K####KK#####.##K#K.................",
+".................&K#&K..K#K&KK.#.KK#.#.KK..K###########.########&##.#####KKK##KKKKK######KK#K#KK##KK##K#K#K###&##&.&..&........",
+"............&&&...#####KK####K##K#######..&K###.##K#.#...KKK..KK..K####K##&#K&KK##&.K####K##K######K&#K&####KKK.##K#KK.&&......",
+"...........&&####&#KK###K#KK.&##...############...#K#.&.....&..KK##...&########KK#K#&#&#K####K##KKK##K#K#...K#####KKK#.........",
+".........#####.K#.##K&..&.#..####.#.####.###&....KKK#K&K.###..&K#.....&.&#&K#########KKK###KKK#K###KK##KK###..K#######&#.&&....",
+"........&###.#.KKKK#.##&######.&.#.######&#K.KK#######.##...&&#K&&&......K##&#.#.####&#&#&&##########K###&###K#K#K#K&##KK......",
+".........##...K##.#.#...#.&.##...&KK.K.K###..KKKK#K#KK#.K..&..###..&..&..#&&#@@..K##&@@@@#K&#K##K#KK#######K##.K#K.##K.###.....",
+"............##K&&&......&.K#KK##K####K##K##.##K###K#.K..K....&&.##....&...KK#..######K##&#..K.##&##KK###K########K##.##........",
+"......&&&##K&KK##&...&&#K##KK###KKK##&#KK#K#KK#&##KK.&K#K..#...&&#...&.&..K&##&&#&##&#&#..K.K#.&..###.K#&#&#K######KK#.#.......",
+"......#.######K###KKK######K#KKK###@@@@@K@@@@@@@@@@@&K&.K.&....@@##K&&...&&&@.@#..#.K@.K&&&.K..@@@@..#&@@#@@@@@KK@KKKKK#.#.....",
+"....#&..##K@@&@K##K###K###K##KKK@K#####K@&@@@&&&@@@&KK.......####K.###.K@#@#K..@..###&@.#.KK@@@&@@&&&&@..##@##@@##@@&KK#KKK##.#",
+"..K&..###@@#@@#&@####K#KK###&@#K@K#@@@KKK##K@@&##@@@@.&.....&..&#KK###K##K#...&...@#K@@K&&.@@@@@@...#.&..#&&&@@@&&&@KK@@#K#KK@#",
+"..#.##K##K#K#K@@K#@@KK@K@KK@KK&#.##&K#@K@####&...@@@K@.&..........########&........@@@@@@@@@@KK##.#&@.@#@@###&K##K@#######@@.@K",
+"##.K#KKK#K##@#K@&&&K&@@@@@@@@@@..#.@..&#@@...@@@@@@@&@.&.......#@..@K@@@K...&&.#K#K##K&@@.#.##..#.&&##..@###KK#@@..@..@#@@K&#KK",
+"##K#@K#@@##@K#@#@@@@@@@@@@@@@@@@@@@@@@@@@@&&&&@#@@@@@@@.........KK@@@@@K.&.K#..###@#K####..&&.&.@@@@@.K#.#&#@K@@..&#...###KK##@",
+"&&K#K@@KK@#KKK@@@@@@#K#...K#.##@@@@@@@@@@@@@@@@@@@@@@@&&@..@...&&K@@@@@@@&..&.&KK@K@#K##K##.#.#K@####KKK.####....&...&...&..#K&",
+"K#K@K@&.&#KK#@@@@&&@#K..#.##.##&&@@@@@@@#@.@@@@@@@@@@@@@@@&##....&@@@@@#.....#@@@@@@@@@#&#&#@@@#@&&@K#KKK#KK.K.K........#&.....",
+"@@.KK..@##K#@@@@#@#########&.@@@@K#K#K.&.K&........K@@@@@@@@....K@@@@@@...&@@@@@@@###.#&&@@#@@@@@&#@&K&##@KK##.K#..............",
+".......#@#K@@@#.......####@@####.###&#.KKK@&@@&@@@&@KK@@@@@@@@.@@@@@@@@..@@@@@@@.##@K@@@@@@@@@#@....&#@@#@@@KK###KKK&&.K@......",
+"......@@#@@@&###K#K##K#K@&.&##KK#..&...&K@@&#.....@&@@@@@@@@@@@@@@@@@@@K@@@@@@....K@@@@&.K#K####K.&....&&@@.@@@@KKKK#K#KK@.....",
+"......K#K#K#KK#.########..#K#K###&@@@@@@@K.....&......@@@@@@@@@@@@@@@@@@@@@@@....#@@@@@#@#@@K######.....#....@@##@#KK@K#K#.&...",
+"......K##K#&K....###KK#KKKKK&@@&@@@&..&.&&K.@#..........@@@@@@@@@@@@@@@@@@@@@....&@@@@@@@@@@&@#@#&@......&....K&##@@@@#K@@##...",
+".......@.&.#....#KKK#K@@@@@@@##.#.###@.&.@&K##....K##.#K##@@@@@@@@@@@@@@@@@@&@@@@@@@@@@@@@@@@@@@@K#..K.....&...#&#K#@##K@##K#..",
+"............#&KKK#KKK#@#@@@@#&##...&K...K@@@#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@###&@@##@#@@@@######.&#&.##.#K&##K&KKKK#&.",
+"............&KK#K#K@K..@@........&..@#@K##.K.&.#K.&#..@@@@@@@@@@@@@@@@@@@@@@@@@@@@&#..K#..&@.@##&&@@@@@@KK&#@.K#...............",
+"..........&&##.KKKKKKK.@#.....&..@&.#...@#..&&..@###.#.@@@@@@@@@@@@@@@@@@@@@@@@@@####......&.#@##.#####@&##@##&.#&.............",
+"..............#@###.@##.@#...#.#@&@..@......&..#&@@.....@@@@@@@@@@@@@@@@@@@@@..#....@......&@@#.&.....&K@@######...............",
+"..............#@.&#................&..&..................@@@@@@@@@@@@@@@@@@@.....&#.&.&........@&......&#@#K#KK................",
+"..........................................................@@@@@@@@@@@@@@@@@@.....&.................#&#&&#K#KK@K&...............",
+".........................................................@@@@@@@@@@.@@@@@@@@.............................#.KK.K@...............",
+".........................................................@.@@@.@@@...@@@@@@@..................................K................",
+".........................................................@@@@@@@@.....@@@@@@...................................................",
+"........................................................@.@@@@@@@@....@@@@@@@..................................................",
+"........................................................@.@@@@@@@.....@@@@@@@@.................................................",
+".......................................................@@@@@@@@.........@@@@@@@@...............................................",
+".....................................................@@@@@@@@....@@..@...@@@@@@@@@@............................................",
+"...................................................@@@@@@@..@@@@@@@@@@@@@@@@@@@@@@@@@@.........................................",
+".............................................@.@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.......................................",
+"..........................@@@@.@.@.@@@@@@@@@.@@@@@@@@@@..@@@@@@@@..@@@@@@@@@@@@@@@@@@@@@@@@@.@@@..@.......@.@..................",
+"...@..@@@.@@@@@...@@@@@@@@@@@@@@@@.@.@@.@..@.@....@.@@@.@@...@@..@@@@@..@.@@@@@@@@.@@.@@@.@@@@@@@@@@.@@@@@..@@@@@@@.@...@@.....",
+"........@.@@..@@.@@.@@@@@@@.@@@@@..@@@@@@@@@@@@@@@@@@@@@@@.@@@@@@@@@@...@@@@@@@@.@.@.@@...@@@@@@@@@@@@@@@@@@@...@@@@.@.@@.@....",
+};
+
+// Yes, this looks weird, it's because the backslash has to be escaped (basically \ becomes \\)
+char Title[29][128] = 
+{
+". /\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\    /\\\\\\\\\\\\\\\\\\      /\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\  /\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\  .                                                    ",
+". \\///////\\\\\\/////   /\\\\\\///////\\\\\\   \\/\\\\\\///////////  \\/\\\\\\///////////  .                                                    ",
+" .       \\/\\\\\\       \\/\\\\\\     \\/\\\\\\   \\/\\\\\\             \\/\\\\\\           .                                                     ",
+"   .      \\/\\\\\\       \\/\\\\\\\\\\\\\\\\\\\\\\/    \\/\\\\\\\\\\\\\\\\\\\\\\     \\/\\\\\\\\\\\\\\\\\\\\\\   .                                                    ",
+"     .     \\/\\\\\\       \\/\\\\\\//////\\\\\\    \\/\\\\\\///////      \\/\\\\\\///////      .                                                 ",
+"       .    \\/\\\\\\       \\/\\\\\\    \\//\\\\\\   \\/\\\\\\             \\/\\\\\\           .                                                  ",
+"        .    \\/\\\\\\       \\/\\\\\\     \\//\\\\\\  \\/\\\\\\             \\/\\\\\\            .                                                ",
+"         .    \\/\\\\\\       \\/\\\\\\      \\//\\\\\\ \\/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ \\/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ .                                              ",
+"                                  .   /\\\\\\\\\\       /\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ ///////////  .                                             ",
+"                                 .   /\\\\\\///\\\\\\    \\/\\\\\\///////////            .                                               ",
+"                                .   /\\\\\\/  \\///\\\\\\  \\/\\\\\\             .                                                        ",
+"                                .   /\\\\\\      \\//\\\\\\ \\/\\\\\\\\\\\\\\\\\\\\\\  .                                                          ",
+"                                .   \\/\\\\\\       \\/\\\\\\ \\/\\\\\\///////  .                                                          ",
+"                                 .   \\//\\\\\\      /\\\\\\  \\/\\\\\\       .                                                           ",
+"                                  .    \\///\\\\\\  /\\\\\\    \\/\\\\\\    .                                                             ",
+"                               .         \\\\///\\\\\\\\\\/     \\/\\\\\\     .                                                           ",
+"                             .   /\\\\\\\\\\\\\\\\\\\\\\\\\\      /\\\\\\\\\\\\\\\\\\         /\\\\\\\\\\\\\\\\\\     /\\\\\\\\\\\\\\\\\\\\\\     /\\\\\\\\\\\\\\\\\\   .         ",
+"                              .  \\/\\\\\\/////////\\\\\\  /\\\\\\///////\\\\\\     /\\\\\\\\\\\\\\\\\\\\\\\\\\  \\/////\\\\\\///    /\\\\\\\\\\\\\\\\\\\\\\\\\\  .       ",
+"                               .  \\/\\\\\\       \\/\\\\\\ \\/\\\\\\     \\/\\\\\\    /\\\\\\/////////\\\\\\     \\/\\\\\\      /\\\\\\/////////\\\\\\  .     ",
+"                                .  \\/\\\\\\\\\\\\\\\\\\\\\\\\\\\\  \\/\\\\\\\\\\\\\\\\\\\\\\/    \\/\\\\\\       \\/\\\\\\     \\/\\\\\\     \\/\\\\\\       \\/\\\\\\  .    ",
+"                                 .  \\/\\\\\\/////////\\\\\\ \\/\\\\\\//////\\\\\\    \\/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\     \\/\\\\\\     \\/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\  .   ",
+"                                  .  \\/\\\\\\       \\/\\\\\\ \\/\\\\\\    \\//\\\\\\   \\/\\\\\\/////////\\\\\\     \\/\\\\\\     \\/\\\\\\/////////\\\\\\  .  ",
+"                                   .  \\/\\\\\\       \\/\\\\\\ \\/\\\\\\     \\//\\\\\\  \\/\\\\\\       \\/\\\\\\     \\/\\\\\\     \\/\\\\\\       \\/\\\\\\  . ",
+"                                    .  \\/\\\\\\\\\\\\\\\\\\\\\\\\\\/  \\/\\\\\\      \\//\\\\\\ \\/\\\\\\       \\/\\\\\\  /\\\\\\\\\\\\\\\\\\\\\\ \\/\\\\\\       \\/\\\\\\  .",
+"                                     .  \\/////////////    \\///        \\///  \\///        \\///  \\///////////  \\///        \\///  .",
+"                                                                                         . ___  ______  ______   __ ______  .  ",
+"                                                                                        . / _ \\/ __/  |/  / _ | / //_/ __/ .   ",
+"                                                                                       . / , _/ _// /|_/ / __ |/ ,< / _/  .    ",
+"                                                                                      . /_/|_/___/_/  /_/_/ |_/_/|_/___/ .     ",
+};
+
+// How it should look like:
+/*char Title[30][128] = 
+{
+". /\\\\\\\\\\\\\\\    /\\\\\\\\\      /\\\\\\\\\\\\\\\  /\\\\\\\\\\\\\\\  |                                                    ",
+". \///////\\\/////   /\\\///////\\\   \/\\\///////////  \/\\\///////////  |                                                    ",
+" .       \/\\\       \/\\\     \/\\\   \/\\\             \/\\\           |                                                     ",
+"   .      \/\\\       \/\\\\\\\\\\\/    \/\\\\\\\\\\\     \/\\\\\\\\\\\   |                                                    ",
+"     .     \/\\\       \/\\\//////\\\    \/\\\///////      \/\\\///////      |                                                 ",
+"       .    \/\\\       \/\\\    \//\\\   \/\\\             \/\\\           |                                                  ",
+"        .    \/\\\       \/\\\     \//\\\  \/\\\             \/\\\            |                                                ",
+"         .    \/\\\       \/\\\      \//\\\ \/\\\\\\\\\\\\\\\ \/\\\\\\\\\\\\\\\ |                                              ",
+"            .                         /\\\\\       /\\\\\\\\\\\\\\\ ///////////  |                                             ",
+"                                 .   /\\\///\\\    \/\\\///////////            |                                               ",
+"                                .   /\\\/  \///\\\  \/\\\             |                                                        ",
+"                                .   /\\\      \//\\\ \/\\\\\\\\\\\  |                                                          ",
+"                                .   \/\\\       \/\\\ \/\\\///////  |                                                          ",
+"                                 .   \//\\\      /\\\  \/\\\       |                                                           ",
+"                                  .    \///\\\  /\\\    \/\\\    |                                                             ",
+"                              .          \\///\\\\\/     \/\\\                                                      |          ",
+"                             .   /\\\\\\\\\\\\\      /\\\\\\\\\         /\\\\\\\\\     /\\\\\\\\\\\     /\\\\\\\\\   |         ",
+"                              .  \/\\\/////////\\\  /\\\///////\\\     /\\\\\\\\\\\\\  \/////\\\///    /\\\\\\\\\\\\\  |       ",
+"                               .  \/\\\       \/\\\ \/\\\     \/\\\    /\\\/////////\\\     \/\\\      /\\\/////////\\\  |     ",
+"                                .  \/\\\\\\\\\\\\\\  \/\\\\\\\\\\\/    \/\\\       \/\\\     \/\\\     \/\\\       \/\\\  |    ",
+"                                 .  \/\\\/////////\\\ \/\\\//////\\\    \/\\\\\\\\\\\\\\\     \/\\\     \/\\\\\\\\\\\\\\\  |   ",
+"                                  .  \/\\\       \/\\\ \/\\\    \//\\\   \/\\\/////////\\\     \/\\\     \/\\\/////////\\\  |  ",
+"                                   .  \/\\\       \/\\\ \/\\\     \//\\\  \/\\\       \/\\\     \/\\\     \/\\\       \/\\\  | ",
+"                                    .  \/\\\\\\\\\\\\\/  \/\\\      \//\\\ \/\\\       \/\\\  /\\\\\\\\\\\ \/\\\       \/\\\  |",
+"                                     .  \/////////////    \///        \///  \///        \///  \///////////  \///        \///  |",
+"                                                                                         . ___  ______  ______   __ ______  |  ",
+"                                                                                        . / _ \/ __/  |/  / _ | / //_/ __/ |   ",
+"                                                                                       . / , _/ _// /|_/ / __ |/ ,< / _/  |    ",
+"                                                                                      . /_/|_/___/_/  /_/_/ |_/_/|_/___/ |     ",
+};*/
+
+char pressCtrl[5][128] = 
+{
+"         ____  ____  ________________    _  ________________  __   _    __________     ______________    ____  ______   __     ",
+"        / __ \\/ __ \\/ ____/ ___/ ___/   ( )/ ____/_  __/ __ \\/ /  ( )  /_  __/ __ \\   / ___/_  __/   |  / __ \\/_  __/  / /     ",
+"       / /_/ / /_/ / __/  \\__ \\\\__ \\    |// /     / / / /_/ / /   |/    / / / / / /   \\__ \\ / / / /| | / /_/ / / /    / /      ",
+"      / ____/ _, _/ /___ ___/ /__/ /     / /___  / / / _, _/ /___      / / / /_/ /   ___/ // / / ___ |/ _, _/ / /    /_/       ",
+"     /_/   /_/ |_/_____//____/____/      \\____/ /_/ /_/ |_/_____/     /_/  \\____/   /____//_/ /_/  |_/_/ |_| /_/    (_)        ",
+};
+
+char Credits[80][60] =
+{
+"",
+"",
+"",
+"",
+"               DEVELOPED BY BRAIA SOFTWORKS",
+"",
+"",
+"",
+"                      LEAD DEVELOPERS",
+"",
+"             Paulo Sousa      Game Designer                ",
+"           Matheus Rondon      Game Designer               ",
+"                                                           ",
+"                           WRITING                         ",
+"",
+"            Kaio Nascimento    Main Writer                 ",
+"            Paulo Sousa        Secondary Writer            ", ///////
+"            Matheus Rondon     Secondary Writer            ",
+"",
+"                           ART",
+"",
+"           Matheus Rondon      Lead Artist                 ",
+"            Paulo Sousa       Secondary Artist             ",
+"           Wisley Kilder      Secondary Artist             ",
+"                                                           ",
+"                       PROGRAMMING",
+"",
+"            Paulo Sousa       Lead Programmer              ",
+"            Matheus Rondon   Secondary Programmer          ",
+"",
+"                         TESTING",
+"                                   ",
+"             Tulio Estrela      Main playthrough tester    ",
+"             Wisley Kilder      Main gameplay tester       ",
+"             Kaio Nascimento    Secondary gameplay tester  ",
+"",
+"                    SOUND ENGINEERING",
+"                                   ",
+"             Paulo Sousa    Main Sound Developer     ",
+"             Matheus Rondon    Secondary Sound Developer   ",
+"             Matheus Rondon    Audio Engineer",
+"",
+"                    TAD DEVELOPMENT",
+"                                   ",
+"             Paulo Sousa    Main TAD Developer     ",
+"             Matheus Rondon    Secondary TAD Developer    ",
+"             Tulio Estrela   Main TAD Tester",
+"             Kaio Nascimento Secondary TAD Tester",
+};
+
+// ######################################### Actual Game Areas
+
+char (*navAreas[HUBTOWN_NAVAREAS + AREA1_NAVAREAS + AREA1INT_NAVAREAS + AREA2_NAVAREAS])[101];
+
+unsigned char numNavAreas[NUM_AREAS];
+
+char HubTown_Nav1[][101] = 
+{
+"BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+"BBBBBBBBBBBBBBVBBBBBBBWWWWW0BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBVBBBBVBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+"BBBBBBBBBBBBBBBBVWWWWWWWWWWWWW$BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBVVVVBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+"BVBBBVVVVVBBVVVWWWWWWWWWWWW0WWWVVVVVVVVBVVVVBVVBVBBVVVVBVVVBBVVV$WWWWWWWVVVVVBBBVBBVVVVBVVVVVVBBBBVVV",
+"VVVVVVVVVVVVVVWWWWWWWWWWWWWWWWWWWWWVVVVVVVVVVVVVVVV00VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV",
+"VVVVVVVVVVVVVVW0W0WWWW0WWWWWWWWWWWWWVVVVVVVVVVV0WWWWWWWWVVVVVVVVVVVVVVVVVVVVV0WWWW0VVVVVVVVVVVVVVVVVV",
+"VVVVVVVVVVVWWWW0WWWWWWWWWWWWW00W0WWW0VVVVVVVVVV00WWWWWWWW0VVVVVVVVVVVVVVVVVVWWWWWWWWWWWVVVVVVVVVVVVVV",
+"VVVVVVWWWWWWWWWWWWWWWW0000WWWWWWWWWWWWWWWVVV00WWWWWW00WW0VVWWVVVVVVVV0WWWWWWWW0W0WWW0WWW0WWWWWVVVVVVV",
+"0VVWWW00V00W00V0W0WW0VVVVV0WWWWW00WWVV0WW0VV000WWWWWWWWWWWWWWWW00VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV",
+"VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVWWWWWWW0WWWWWWWWWWWWWWWVVVVVVVVVVVVVVVVWVVVVVVVVVVVVVVVVVV",
+"VVVVVVVVVVVVVVVVVVVVVVVVVV0WWWWVVVVVVVVWWWWWWWWWWWW00WWWWWWWWWW0WWW0WW00VVVVVV0WWWWWWW00WWVVVVVVVVVVV",
+"WWWWWVVVVVVVVVVVWWWWW0VVV00WWWWWWWVV0VW0VVVVVVVVVVVV00WWWWW0VWWVVVVVVVVVVVVV0WWWWWWWWWWWWWWWWWWVVWVVV",
+"0000000VVVVV0WW0WWWWWWW000WWWWWWWWWVVVVVVVVVVV0WWV000WWWWWWWWWW0VVVVVVVVVWWWWWWW0WWWWW0W0V00WW0WW00VV",
+"WVVVV0VVVVWW0WWWWWWWWWWW00WWWWWWWWWWWWWVVVVV00V0VVVV00WWWWWW0WWWWVVVVVVVVVVV0WWW0WWW0W00VVV00VWW0VVVV",
+"WWV0VCCV@C$#WV000WWWWWWWWWV0W0WWWWWWWW0W0WVWWWWWWWW0V0VVV00WWWWW0WWWWW0W0000V$V0W0VV00VVWV$WW0WW$C$00",
+"WV$$$C##C#CVVC$V00VVVVVWV0W0V0V0000000WW00WWWWWWWW0WVVVVV0WW0W0000W000WWW00#CVVVVVVVVWWW0VCV0WVVCVCVV",
+"##CC#CCCCV#VVV#VWVVCCV00VVW0WV#VWVV0WWWWWWW000VVVVV0WWWWW0WWWW0VVVVV000V00C##C#WVVV#CCVWVC##VVVVC#CCV",
+"##VCC#CCCC##CCC#VVVC@C##V##CVCCCVVVWCVV00W000V0VVVVV0VVVVVVVVVW0VVCCVVV#VV#CCCC#VVVCC##CC#C##VCCCCCC#",
+"#V#$#CC#C#$CC$#$$#$#CC##CC$##CC#$CC#CVVVWVVWVVVVVWVVVVW0VVWVCCVCCV#C#VC#V$$#CCCC$#CCC##$#CCC$$CC$#CCC",
+"##C#$CC#C#C$$CC$#$#CCC#CCC##$##CCCCCCC####$##$######$#$C$######C$$$C###C$CCCCC#C$###C##CC#CCCC#C#CCCC",
+"#CCC$#C##C####$#$CC#CC#CCCC#C#CC#C#C#CCC#C#C###CC###CCCC###CCC#CCCCC#CCC#CCCCCC##C#CCC$#CCCC##CCC$CCC",
+"CC#CC#$###CC$#CC##CCCCCCC#C#C##CC#CCCC#C#C#C####CC#C#C#C#####C##C$##CCCCC#$$#CC#CCCCCCCCCCC#CCC#C#C#C",
+"##CC###C$$C####CCC##CC##CCC#$#C##C&&&KKK&##CCCCCCCCC##CC#CC#C#C####CCC#CC##CC#CCC#CCC#CCC#$$##CCCC#CC",
+"CCCCC##C#CC$##CC$$$#CC&C&&&&&&K&&&&&&&&&&&&&&&&&&&&K&&&&K&KKK&&KKKKKK&KKKK&&&CCCCCCC###$$$####$CC#C#C",
+"####CCC##C#CC#$$C&&&&&&&&&&&&KK&&KKKKKKKKKKK&&&&&&&&&&KKK&&&K&&&&&&&&&&&&&K&&&&&&&&&&&&&CC$$$$$$$CC$$",
+"C##CCCCCC###C####$#CCC&&&&&&&&&&&&&&&&&&0&&&KKKKKKKKKK&&W&&&&&&&&&&&&&K&&&&&&W&&&&&&&&&&CCC$$##$#$###",
+"#$$$$$$##$###C###CCCCCC&CC&&&&&&&&&K&&&&&&&&&&&&&&&&&K&&KKKKK&K&&&&&&&&K&&&&&KKKKKK&K&&&&&&&&&&&&&C&C",
+"########$$#####CKKCCC&&&&&CC##CCCC&&&&&&&K&&K&&&&&&&000&&&&&&&KKKKKKKKK&KK&K&&&&KKKK&&&&&&&&&&&&&&&&C",
+"$$$$##C##C###CCCCC&&&KKKK.&&&&&&CCC&&&C&&&&&&&&&&&&&&&&&KKKKKKK&&&&&&&CC&#$C&&&&&&&&&&&&&&&&&&&&&&&&C",
+"$$$$$$$$$$########$##$$$$$$#####CC&&&K&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&KKKC&CC#CCCCCC",
+"#####$$$$$$$#####$##CCC#$$$$$$$$$#C&&&&K&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&K&&&&&&&&&&&&&KKCK#$$$CC#CCC#C#",
+"########$$$$$#$#$$#$C#CC$C$######CCCCC#$#$CC&&&&+0+&&&&&&&&&&&&&&&&&&&&&&&&&&&&CCC#CC#$$#CCCC$$$#&CC#",
+"##CC#C#C########$$$$###############CC#CCCCCCCC&K000C&C&&&&&&&&&&&&&&&&&00&&&CCCCC#C####$$$$#CC#CC&C##",
+"#C#C#####C####$####$$#$++++++$$##$####CCC#CCCCCC00CCC&&C&&C&&&&&&&&&&C&&CCCCCCC#CC++++++CCCCCCCC####$",
+"#C#########C#C######$+++0000++$###########C##C##CCCCCCCCCCC#####C####CCCCCC&CC&&&0000000&&KC#########",
+"C#C###C######C######+000000000$$$$#$#$#$###&C$##C$#C#CCCC&C&&CCC###CK&CCCCCC&C#C000000&&&&$$C########",
+"CCC#C######C###C#C#.00000000000$$$$$$$$$##CCC##C##C#C#CC##CC#CCCC##CCCCCCCC&CCC#CCCCCCC++++CCC#$$###$",
+"##C#############CC....&&C&C$#$###$#$$$#$$$$$##CCC#####CCCCC&C###$#C######C&#C$#CCCCCC#++000CCCC######",
+"C##C###C#C#CC####$#$$$$$$CC$$$#########$$$$$$$####$##CCC##CC#C##CC#############$####$+00000.$$$#C###$",
+"CCCC###C##C#C##########$$$$$##$#C##$$#$$$$$$$$$##########CCCCCC##CCC#######C##CC##C#++00000..##$$#$$$",
+"CCCCCC#C+#####C#CCCC++++C#CC@CC#######$$$$$$$$$$$#CCCCC##CCC############CC######$$$$$#$$$$#$$###$$##$",
+"0CC0CCC00C0#CCCCCCC@@@@@@CC###C####C########$$$$$$$$$$$$$$$$##$$$$$$$$$$$#$#$$$###$###$###C#C####C$CC",
+};
+
+char HubTown_Nav2[][101] = 
+{
+"BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+"BBBBBBBBBBBBBBVBBBBBBBWWWWW0BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBVBBBBVBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+"BBBBBBBBBBBBBBBBVWWWWWWWWWWWWW$BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBVVVVBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+"BVBBBVVVVVBBVVVWWWWWWWWWWWW0WWWVVVVVVVVBVVVVBVVBVBBVVVVBVVVBBVVV$WWWWWWWVVVVVBBBVBBVVVVBVVVVVVBBBBVVV",
+"VVVVVVVVVVVVVVWWWWWWWWWWWWWWWWWWWWWVVVVVVVVVVVVVVVV00VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV",
+"VVVVVVVVVVVVVVW0W0WWWW0WWWWWWWWWWWWWVVVVVVVVVVV0WWWWWWWWVVVVVVVVVVVVVVVVVVVVV0WWWW0VVVVVVVVVVVVVVVVVV",
+"VVVVVVVVVVVWWWW0WWWWWWWWWWWWW00W0WWW0VVVVVVVVVV00WWWWWWWW0VVVVVVVVVVVVVVVVVVWWWWWWWWWWWVVVVVVVVVVVVVV",
+"VVVVVVWWWWWWWWWWWWWWWW0000WWWWWWWWWWWWWWWVVV00WWWWWW00WW0VVWWVVVVVVVV0WWWWWWWW0W0WWW0WWW0WWWWWVVVVVVV",
+"0VVWWW00V00W00V0W0WW0VVVVV0WWWWW00WWVV0WW0VV000WWWWWWWWWWWWWWWW00VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV",
+"VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVWWWWWWW0WWWWWWWWWWWWWWWVVVVVVVVVVVVVVVVWVVVVVVVVVVVVVVVVVV",
+"VVVVVVVVVVVVVVVVVVVVVVVVVV0WWWWVVVVVVVVWWWWWWWWWWWW00WWWWWWWWWW0WWW0WW00VVVVVV0WWWWWWW00WWVVVVVVVVVVV",
+"WWWWWVVVVVVVVVVVWWWWW0VVV00WWWWWWWVV0VW0VVVVVVVVVVVV00WWWWW0VWWVVVVVVVVVVVVV0WWWWWWWWWWWWWWWWWWVVWVVV",
+"0000000VVVVV0WW0WWWWWWW000WWWWWWWWWVVVVVVVVVVV0WWV000WWWWWWWWWW0VVVVVVVVVWWWWWWW0WWWWW0W0V00WW0WW00VV",
+"WVVVV0VVVVWW0WWWWWWWWWWW00WWWWWWWWWWWWWVVVVV00V0VVVV00WWWWWW0WWWWVVVVVVVVVVV0WWW0WWW0W00VVV00VWW0VVVV",
+"WWV0VCCV@C$#WV000WWWWWWWWWV0W0WWWWWWWW0W0WVWWWWWWWW0V0VVV00WWWWW0WWWWW0W0000V$V0W0VV00VVWV$WW0WW$C$00",
+"WV$$$C##C#CVVC$V00VVVVVWV0W0V0V0000000WW00WWWWWWWW0WVVVVV0WW0W0000W000WWW00#CVVVVVVVVWWW0VCV0WVVCVCVV",
+"##CC#CCCCV#VVV#VWVVCCV00VVW0WV#VWVV0WWWWWWW000VVVVV0WWWWW0WWWW0VVVVV000V00C##C#WVVV#CCVWVC##VVVVC#CCV",
+"##VCC#CCCC##CCC#VVVC@C##V##CVCCCVVVWCVV00W000V0VVVVV0VVVVVVVVVW0VVCCVVV#VV#CCCC#VVVCC##CC#C##VCCCCCC#",
+"#V#$#CC#C#$CC$#$$#$#CC##CC$##CC#$CC#CVVVWVVWVVVVVWVVVVW0VVWVCCVCCV#C#VC#V$$#CCCC$#CCC##$#CCC$$CC$#CCC",
+"##C#$CC#C#C$$CC$#$#CCC#CCC##$##CCCCCCC####$##$######$#$C$######C$$$C###C$CCCCC#C$###C##CC#CCCC#C#CCCC",
+"#CCC$#C##C####$#$CC#CC#CCCC#C#CC#C#C#CCC#C#C###CC###CCCC###CCC#CCCCC#CCC#CCCCCC##C#CCC$#CCCC##CCC$CCC",
+"CC#CC#$###CC$#CC##CCCCCCC#C#C##CC#CCCC#C#C#C####CC#C#C#C#####C##C$##CCCCC#$$#CC#CCCCCCCCCCC#CCC#C#C#C",
+"##CC###C$$C####CCC##CC##CCC#$#C##C&&&KKK&##CCCCCCCCC##CC#CC#C#C####CCC#CC##CC#CCC#CCC#CCC#$$##CCCC#CC",
+"CCCCC##C#CC$##CC$$$#CC&C&&&&&&K&&&&&&&&&&&&&&&&&&&&K&&&&K&KKK&&KKKKKK&KKKK&&&CCCCCCC###$$$####$CC#C#C",
+"####CCC##C#CC#$$C&&&&&&&&&&&&KK&&KKKKKKKKKKK&&&&&&&&&&KKK&&&K&&&&&&&&&&&&&K&&&&&&&&&&&&&CC$$$$$$$CC$$",
+"C##CCCCCC###C####$#CCC&&&&&&&&&&&&&&&&&&0&&&KKKKKKKKKK&&W&&&&&&&&&&&&&K&&&&&&W&&&&&&&&&&CCC$$##$#$###",
+"#$$$$$$##$###C###CCCCCC&CC&&&&&&&&&K&&&&&&&&&&&&&&&&&K&&KKKKK&K&&&&&&&&K&&&&&KKKKKK&K&&&&&&&&&&&&&C&C",
+"########$$#####CKKCCC&&&&&CC##CCCC&&&&&&&K&&K&&&&&&&000&&&&&&&KKKKKKKKK&KK&K&&&&KKKK&&&&&&&&&&&&&&&&C",
+"$$$$##C##C###CCCCC&&&KKKK.&&&&&&CCC&&&C&&&&&&&&&&&&&&&&&KKKKKKK&&&&&&&CC&#$C&&&&&&&&&&&&&&&&&&&&&&&&C",
+"$$$$$$$$$$########$##$$$$$$#####CC&&&K&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&KKKC&CC#CCCCCC",
+"#####$$$$$$$#####$##CCC#$$$$$$$$$#C&&&&K&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&K&&&&&&&&&&&&&KKCK#$$$CC#CCC#C#",
+"########$$$$$#$#$$#$C#CC$C$######CCCCC#$#$CC&&&&+0+&&&&&&&&&&&&&&&&&&&&&&&&&&&&CCC#CC#$$#CCCC$$$#&CC#",
+"##CC#C#C########$$$$###############CC#CCCCCCCC&K000C&C&&&&&&&&&&&&&&&&&00&&&CCCCC#C####$$$$#CC#CC&C##",
+"#C#C#####C####$####$$#$++++++$$##$####CCC#CCCCCC00CCC&&C&&C&&&&&&&&&&C&&CCCCCCC#CC++++++CCCCCCCC####$",
+"#C#########C#C######$+++0000++$###########C##C##CCCCCCCCCCC#####C####CCCCCC&CC&&&0000000&&KC#########",
+"C#C###C######C######+000000000$$$$#$#$#$###&C$##C$#C#CCCC&C&&CCC###CK&CCCCCC&C#C000000&&&&$$C########",
+"CCC#C######C###C#C#.00000000000$$$$$$$$$##CCC##C##C#C#CC##CC#CCCC##CCCCCCCC&CCC#CCCCCCC++++CCC#$$###$",
+"##C#############CC....&&C&C$#$###$#$$$#$$$$$##CCC#####CCCCC&C###$#C######C&#C$#CCCCCC#++000CCCC######",
+"C##C###C#C#CC####$#$$$$$$CC$$$#########$$$$$$$####$##CCC##CC#C##CC#############$####$+00000.$$$#C###$",
+"CCCC###C##C#C##########$$$$$##$#C##$$#$$$$$$$$$##########CCCCCC##CCC#######C##CC##C#++00000..##$$#$$$",
+"CCCCCC#C+#####C#CCCC++++C#CC@CC#######$$$$$$$$$$$#CCCCC##CCC############CC######$$$$$#$$$$#$$###$$##$",
+"0CC0CCC00C0#CCCCCCC@@@@@@CC###C####C########$$$$$$$$$$$$$$$$##$$$$$$$$$$$#$#$$$###$###$###C#C####C$CC",
+};
+
+char HubTown_Nav3[][101] = 
+{
+"BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+"BBBBBBBBBBBBBBVBBBBBBBWWWWW0BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBVBBBBVBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+"BBBBBBBBBBBBBBBBVWWWWWWWWWWWWW$BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBVVVVBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+"BVBBBVVVVVBBVVVWWWWWWWWWWWW0WWWVVVVVVVVBVVVVBVVBVBBVVVVBVVVBBVVV$WWWWWWWVVVVVBBBVBBVVVVBVVVVVVBBBBVVV",
+"VVVVVVVVVVVVVVWWWWWWWWWWWWWWWWWWWWWVVVVVVVVVVVVVVVV00VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV",
+"VVVVVVVVVVVVVVW0W0WWWW0WWWWWWWWWWWWWVVVVVVVVVVV0WWWWWWWWVVVVVVVVVVVVVVVVVVVVV0WWWW0VVVVVVVVVVVVVVVVVV",
+"VVVVVVVVVVVWWWW0WWWWWWWWWWWWW00W0WWW0VVVVVVVVVV00WWWWWWWW0VVVVVVVVVVVVVVVVVVWWWWWWWWWWWVVVVVVVVVVVVVV",
+"VVVVVVWWWWWWWWWWWWWWWW0000WWWWWWWWWWWWWWWVVV00WWWWWW00WW0VVWWVVVVVVVV0WWWWWWWW0W0WWW0WWW0WWWWWVVVVVVV",
+"0VVWWW00V00W00V0W0WW0VVVVV0WWWWW00WWVV0WW0VV000WWWWWWWWWWWWWWWW00VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV",
+"VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVWWWWWWW0WWWWWWWWWWWWWWWVVVVVVVVVVVVVVVVWVVVVVVVVVVVVVVVVVV",
+"VVVVVVVVVVVVVVVVVVVVVVVVVV0WWWWVVVVVVVVWWWWWWWWWWWW00WWWWWWWWWW0WWW0WW00VVVVVV0WWWWWWW00WWVVVVVVVVVVV",
+"WWWWWVVVVVVVVVVVWWWWW0VVV00WWWWWWWVV0VW0VVVVVVVVVVVV00WWWWW0VWWVVVVVVVVVVVVV0WWWWWWWWWWWWWWWWWWVVWVVV",
+"0000000VVVVV0WW0WWWWWWW000WWWWWWWWWVVVVVVVVVVV0WWV000WWWWWWWWWW0VVVVVVVVVWWWWWWW0WWWWW0W0V00WW0WW00VV",
+"WVVVV0VVVVWW0WWWWWWWWWWW00WWWWWWWWWWWWWVVVVV00V0VVVV00WWWWWW0WWWWVVVVVVVVVVV0WWW0WWW0W00VVV00VWW0VVVV",
+"WWV0VCCV@C$#WV000WWWWWWWWWV0W0WWWWWWWW0W0WVWWWWWWWW0V0VVV00WWWWW0WWWWW0W0000V$V0W0VV00VVWV$WW0WW$C$00",
+"WV$$$C##C#CVVC$V00VVVVVWV0W0V0V0000000WW00WWWWWWWW0WVVVVV0WW0W0000W000WWW00#CVVVVVVVVWWW0VCV0WVVCVCVV",
+"##CC#CCCCV#VVV#VWVVCCV00VVW0WV#VWVV0WWWWWWW000VVVVV0WWWWW0WWWW0VVVVV000V00C##C#WVVV#CCVWVC##VVVVC#CCV",
+"##VCC#CCCC##CCC#VVVC@C##V##CVCCCVVVWCVV00W000V0VVVVV0VVVVVVVVVW0VVCCVVV#VV#CCCC#VVVCC##CC#C##VCCCCCC#",
+"#V#$#CC#C#$CC$#$$#$#CC##CC$##CC#$CC#CVVVWVVWVVVVVWVVVVW0VVWVCCVCCV#C#VC#V$$#CCCC$#CCC##$#CCC$$CC$#CCC",
+"##C#$CC#C#C$$CC$#$#CCC#CCC##$##CCCCCCC####$##$######$#$C$######C$$$C###C$CCCCC#C$###C##CC#CCCC#C#CCCC",
+"#CCC$#C##C####$#$CC#CC#CCCC#C#CC#C#C#CCC#C#C###CC###CCCC###CCC#CCCCC#CCC#CCCCCC##C#CCC$#CCCC##CCC$CCC",
+"CC#CC#$###CC$#CC##CCCCCCC#C#C##CC#CCCC#C#C#C####CC#C#C#C#####C##C$##CCCCC#$$#CC#CCCCCCCCCCC#CCC#C#C#C",
+"##CC###C$$C####CCC##CC##CCC#$#C##C&&&KKK&##CCCCCCCCC##CC#CC#C#C####CCC#CC##CC#CCC#CCC#CCC#$$##CCCC#CC",
+"CCCCC##C#CC$##CC$$$#CC&C&&&&&&K&&&&&&&&&&&&&&&&&&&&K&&&&K&KKK&&KKKKKK&KKKK&&&CCCCCCC###$$$####$CC#C#C",
+"####CCC##C#CC#$$C&&&&&&&&&&&&KK&&KKKKKKKKKKK&&&&&&&&&&KKK&&&K&&&&&&&&&&&&&K&&&&&&&&&&&&&CC$$$$$$$CC$$",
+"C##CCCCCC###C####$#CCC&&&&&&&&&&&&&&&&&&0&&&KKKKKKKKKK&&W&&&&&&&&&&&&&K&&&&&&W&&&&&&&&&&CCC$$##$#$###",
+"#$$$$$$##$###C###CCCCCC&CC&&&&&&&&&K&&&&&&&&&&&&&&&&&K&&KKKKK&K&&&&&&&&K&&&&&KKKKKK&K&&&&&&&&&&&&&C&C",
+"########$$#####CKKCCC&&&&&CC##CCCC&&&&&&&K&&K&&&&&&&000&&&&&&&KKKKKKKKK&KK&K&&&&KKKK&&&&&&&&&&&&&&&&C",
+"$$$$##C##C###CCCCC&&&KKKK.&&&&&&CCC&&&C&&&&&&&&&&&&&&&&&KKKKKKK&&&&&&&CC&#$C&&&&&&&&&&&&&&&&&&&&&&&&C",
+"$$$$$$$$$$########$##$$$$$$#####CC&&&K&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&KKKC&CC#CCCCCC",
+"#####$$$$$$$#####$##CCC#$$$$$$$$$#C&&&&K&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&K&&&&&&&&&&&&&KKCK#$$$CC#CCC#C#",
+"########$$$$$#$#$$#$C#CC$C$######CCCCC#$#$CC&&&&+0+&&&&&&&&&&&&&&&&&&&&&&&&&&&&CCC#CC#$$#CCCC$$$#&CC#",
+"##CC#C#C########$$$$###############CC#CCCCCCCC&K000C&C&&&&&&&&&&&&&&&&&00&&&CCCCC#C####$$$$#CC#CC&C##",
+"#C#C#####C####$####$$#$++++++$$##$####CCC#CCCCCC00CCC&&C&&C&&&&&&&&&&C&&CCCCCCC#CC++++++CCCCCCCC####$",
+"#C#########C#C######$+++0000++$###########C##C##CCCCCCCCCCC#####C####CCCCCC&CC&&&0000000&&KC#########",
+"C#C###C######C######+000000000$$$$#$#$#$###&C$##C$#C#CCCC&C&&CCC###CK&CCCCCC&C#C000000&&&&$$C########",
+"CCC#C######C###C#C#.00000000000$$$$$$$$$##CCC##C##C#C#CC##CC#CCCC##CCCCCCCC&CCC#CCCCCCC++++CCC#$$###$",
+"##C#############CC....&&C&C$#$###$#$$$#$$$$$##CCC#####CCCCC&C###$#C######C&#C$#CCCCCC#++000CCCC######",
+"C##C###C#C#CC####$#$$$$$$CC$$$#########$$$$$$$####$##CCC##CC#C##CC#############$####$+00000.$$$#C###$",
+"CCCC###C##C#C##########$$$$$##$#C##$$#$$$$$$$$$##########CCCCCC##CCC#######C##CC##C#++00000..##$$#$$$",
+"CCCCCC#C+#####C#CCCC++++C#CC@CC#######$$$$$$$$$$$#CCCCC##CCC############CC######$$$$$#$$$$#$$###$$##$",
+"0CC0CCC00C0#CCCCCCC@@@@@@CC###C####C########$$$$$$$$$$$$$$$$##$$$$$$$$$$$#$#$$$###$###$###C#C####C$CC",
+};
+
+char HubTown_NavNPC[][101] =
+{
+    // TODO
+};
+
+char HubTown_NavNPC2[][101] =
+{
+    // TODO
+};
+
+char HubTown_NavNPC3[][101] =
+{
+    // TODO
+};
+
+char HubTown_NavMerchant[][101] =
+{
+    // TODO
+};
+
+char HubTown_NavHousesFar[][101] =
+{
+    // TODO
+};
+
+char HubTown_NavHousesClose[][101] =
+{
+    // TODO
+};
+
+char HubTown_NavExit[][101] =
+{
+    // TODO
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 char Area1_Nav1[][101] = 
 {
@@ -174,22 +558,47 @@ char Area1_NavBigTreeClose[][101] =
     // TODO
 };
 
+char Area1_NavExitToHub[][101] =
+{
+    // TODO
+};
+
+
 void initNavAreas() 
 {
-    // Area1
-    navAreas[0] = Area1_Nav1;
-    navAreas[1] = Area1_Nav2;
-    navAreas[2] = Area1_Nav3;
-    navAreas[3] = Area1_NavSP1;
-    navAreas[4] = Area1_NavSP2;
-    navAreas[5] = Area1_NavClosed;
-    navAreas[6] = Area1_NavBigTreeVeryFar;
-    navAreas[7] = Area1_NavBigTreeFar;
-    navAreas[8] = Area1_NavBigTreeClose;
+    // Hub Town
+    navAreas[0] = HubTown_Nav1;
+    navAreas[1] = HubTown_Nav2;
+    navAreas[2] = HubTown_Nav3;
+    navAreas[3] = HubTown_NavNPC;
+    navAreas[4] = HubTown_NavNPC2;
+    navAreas[5] = HubTown_NavNPC3;
+    navAreas[6] = HubTown_NavMerchant;
+    navAreas[7] = HubTown_NavHousesFar;
+    navAreas[8] = HubTown_NavHousesClose;
+    navAreas[9] = HubTown_NavExit;
 
+    numNavAreas[0] = HUBTOWN_NAVAREAS;
+    // Area1
+    navAreas[10] = Area1_Nav1;
+    navAreas[11] = Area1_Nav2;
+    navAreas[12] = Area1_Nav3;
+    navAreas[13] = Area1_NavSP1;
+    navAreas[14] = Area1_NavSP2;
+    navAreas[15] = Area1_NavClosed;
+    navAreas[16] = Area1_NavBigTreeVeryFar;
+    navAreas[17] = Area1_NavBigTreeFar;
+    navAreas[18] = Area1_NavBigTreeClose;
+    navAreas[19] = Area1_NavExitToHub;
+
+    numNavAreas[1] = AREA1_NAVAREAS;
     // Area1_Interior (Big Tree)
 
 
+    numNavAreas[2] = AREA1INT_NAVAREAS;
     // Area2
     
+
+    numNavAreas[3] = AREA2_NAVAREAS;
+    // ...
 }

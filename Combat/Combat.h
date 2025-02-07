@@ -5,55 +5,89 @@
 #define CLASS_SKILLS_PER_LINE 4
 #define COMBAT_TEXT_MAXLEN 79
 
-void enemyEncounter(int baseLevel, int levelCap);
+void enemyEncounter(unsigned char baseLevel, unsigned char levelCap);
 void checkPlayerXP();
-void characterLeveledUp(char charIndex, int leftOver_XP);
+void characterLeveledUp(unsigned char charIndex, unsigned short int leftOver_XP);
 
 void renderCombatStartAnim();
-void applyColorPalette(char check);
 
-void renderArea1BG();
-void renderEnemyCharacters(int charIndex[3], bool isBoss[3]);
+void renderArea1BG(int animTime);
+void renderEnemyCharacters(short int charIndex[3], bool isBoss[3], int animTime);
 
 void renderPlayerSkillMenu();
-int renderPlayerCombatEnemyMenu();
-int renderPlayerMagicSpellMenu();
+unsigned char renderPlayerCombatEnemyMenu();
+unsigned char renderPlayerMagicSpellMenu();
 void renderMainPartyStats(bool showCombatActions, char *combatText);
 void renderPlayerSkillMenu();
 void renderEnemyCombatStat();
 
-int selectEnemy();
-int playerAttackEnemy(char enemyIndex);
-bool calculateCriticalHitChance(int luck);
-bool playerUseSpell(char *spell, char enemyIndex);
+unsigned char selectEnemy();
+unsigned char playerAttackEnemy(unsigned char enemyIndex);
+bool calculateCriticalHitChance(unsigned short int luck);
+bool playerUseSpell(char *spell, unsigned char enemyIndex);
 
-void enemyAttackPlayer(char enemyIndex, char charIndex);
-void enemyDozesOff(char enemyIndex);
+void enemyAttackPlayer(unsigned char enemyIndex, unsigned char charIndex);
+void enemyDozesOff(unsigned char enemyIndex);
 
 void enemyAction();
 
-short int thread;
-
-void enemyEncounter(int baseLevel, int levelCap)
+void enemyEncounter(unsigned char baseLevel, unsigned char levelCap)
 {
     stopBGM("Area1");
     stopBGM("Area2");
     stopBGM("Area3");
     stopBGM("HubWorld");
 
+    moveCursorUpBy(56);
+    playSFX("EnemyEncounter");
+    for(unsigned char y = 0; y < MAX_YSIZE-1; y++) 
+    {
+        if(y % 2 == 0)
+        {
+            for(unsigned char x = 0; x < MAX_XSIZE; x++) 
+            {
+                putchar(' ');
+            }
+            limitFPS(-(TARGET_TIME/2000));
+            putchar('\n');
+        }
+        else 
+        {
+            moveCursorDownBy(1);
+        }
+    }
+
+    moveCursorUpBy(56);
+    for(unsigned char y = 0; y < MAX_YSIZE; y++) 
+    {
+        if(y % 2 == 1)
+        {
+            for(unsigned char x = 0; x < MAX_XSIZE; x++) 
+            {
+                putchar(' ');
+            }
+            limitFPS(-(TARGET_TIME/2000));
+            putchar('\n');
+        }
+        else 
+        {
+            moveCursorDownBy(1);
+        }
+    }
+
     playBGM("EnemyFight1");
 
-    int enemiesToRender[3] = {-1, -1, -1}; // Sprite table indices
+    short int enemiesToRender[3] = {-1, -1, -1}; // Sprite table indices
     bool enemyIsBoss[3] = {false, false, false}; // If the enemy is a boss UNUSED YET
-    int spawnedEnemies = rand();
+    unsigned char spawnedEnemies = rand();
     
     if(spawnedEnemies % 3 == 0)      { enemiesInEncounter = 3; }
     else if(spawnedEnemies % 2 == 0) { enemiesInEncounter = 2; }
     else                             { enemiesInEncounter = 1; }
 
-    for(char enemyIndex = 0; enemyIndex < enemiesInEncounter; enemyIndex++) 
+    for(unsigned char enemyIndex = 0; enemyIndex < enemiesInEncounter; enemyIndex++) 
     {
-        int enemyLevel = baseLevel + 1 + (rand() % (levelCap-1)); // Enemy Level always goes from "baseLevel+1" to "levelCap"
+        unsigned char enemyLevel = baseLevel + 1 + (rand() % (levelCap-1)); // Enemy Level always goes from "baseLevel+1" to "levelCap"
 
         if(enemyLevel > 0 && enemyLevel < 5)
         {
@@ -91,24 +125,23 @@ void enemyEncounter(int baseLevel, int levelCap)
             enemiesToRender[enemyIndex] = 5;
         }
     }
-    renderEnemyCharacters(enemiesToRender, enemyIsBoss);
+
+    renderEnemyCharacters(enemiesToRender, enemyIsBoss, -(TARGET_TIME/3000));
 
     checkPlayerXP();
     stopBGM("EnemyFight1");
 }
 
-void fightBoss(int enemyLevel)
+void fightBoss(unsigned char enemyLevel)
 {
     stopBGM("Area1");
     stopBGM("Area2");
     stopBGM("Area3");
     stopBGM("HubWorld");
 
-
-
     playBGM("BossFight1");
 
-    int enemiesToRender[3] = {-1, 0, 0};
+    short int enemiesToRender[3] = {-1, 0, 0};
     bool enemyIsBoss[3] = {true, false, false};
 
     if(enemyLevel == 10)
@@ -129,41 +162,41 @@ void fightBoss(int enemyLevel)
         enemiesToRender[0] = 2;
     }
 
-    renderEnemyCharacters(enemiesToRender, enemyIsBoss);
+    renderEnemyCharacters(enemiesToRender, enemyIsBoss, -(TARGET_TIME/3000));
     checkPlayerXP();
     stopBGM("BossFight1");
 }
 
-void renderEnemyCharacters(int charIndex[3], bool isBoss[3]) 
+void renderEnemyCharacters(short int charIndex[3], bool isBoss[3], int animTime) 
 {
-    int attackedEnemy = 0;
-    bool allEnemiesKilled = false;
-    do
+    unsigned char enemyIndex = 0, attackedEnemy = 0;
+    int internalAnimTime;
+    bool allEnemiesKilled = false, enteringEncounter = true, enemyChanged = true;
+
+    while (1) 
     {
-#ifdef __linux__
-        system("clear");
-#elif _WIN32
-        system("cls");
-#endif
+        moveCursorUpBy(56);
         renderEnemyCombatStat();
 
-        renderArea1BG();
-        int enemyIndex = 0;
+        // BG should only animate at the start as internal animations (enemy killed, etc) should only affect the foreground.
+        if(enteringEncounter) { renderArea1BG(animTime); enteringEncounter = false; } 
+        else { renderArea1BG(0); }
+
         for(enemyIndex = 0; enemyIndex < enemiesInEncounter; enemyIndex++) 
         { 
             if(isBoss[enemyIndex]) { charIndex[enemyIndex] += NUM_ENEMIES; }
         }
 
         char enemyHeight = 0;
-        for(short int y = 0; y < BG_YSIZE-FIGHTSCREEN_Y_PADDING; y++)
+        for(unsigned char y = 0; y < BG_YSIZE-FIGHTSCREEN_Y_PADDING; y++)
         {
             // On the enemy sprite data, bosses are addressed after all normal enemies
-            int charToRender = charIndex[0];
+            unsigned char charToRender = charIndex[0];
 
-            int maxX = (enemiesInEncounter*ENEMY_X_SEPARATOR);
-            int enemyXArea = maxX + FIGHTSCREEN_X_PADDING - 1;
+            unsigned char maxX = (enemiesInEncounter*ENEMY_X_SEPARATOR);
+            unsigned char enemyXArea = maxX + FIGHTSCREEN_X_PADDING - 1;
             
-            for(int x = 0; x < enemyXArea; x++) 
+            for(unsigned char x = 0; x < enemyXArea; x++) 
             {
                 if(x-FIGHTSCREEN_X_PADDING >= 0)
                 {
@@ -187,16 +220,15 @@ void renderEnemyCharacters(int charIndex[3], bool isBoss[3])
                             }
                             else // IF the previous enemy also has a transparent pixel here, draw the BG instead
                             {
-                                applyColorPalette(Area1_BG[y+FIGHTSCREEN_Y_PADDING][x-FIGHTSCREEN_X_PADDING]);
-                                putchar(Area1_BG[y+FIGHTSCREEN_Y_PADDING][x-FIGHTSCREEN_X_PADDING]);
+                                applyColorPalette(Area1_BG[y+FIGHTSCREEN_Y_PADDING][x]);
+                                putchar(Area1_BG[y+FIGHTSCREEN_Y_PADDING][x]);
                             }
                         }
                         else // Or the background
                         {
-                            applyColorPalette(Area1_BG[y+FIGHTSCREEN_Y_PADDING][x-FIGHTSCREEN_X_PADDING]);
-                            putchar(Area1_BG[y+FIGHTSCREEN_Y_PADDING][x-FIGHTSCREEN_X_PADDING]);
+                            applyColorPalette(Area1_BG[y+FIGHTSCREEN_Y_PADDING][x]);
+                            putchar(Area1_BG[y+FIGHTSCREEN_Y_PADDING][x]);
                         }
-                        
                     }
                 }
                 else
@@ -210,10 +242,22 @@ void renderEnemyCharacters(int charIndex[3], bool isBoss[3])
             }
             putchar('\n');
             enemyHeight += 1;
+            if(animTime != 0 && enemyChanged) { limitFPS(animTime); }
         }
-        
-        for(int y = 0; y < BG_YSIZE - FIGHTSCREEN_Y_PADDING - enemySpriteRows[charIndex[enemiesInEncounter-1]]; y++) { putchar('\n'); }
-        SetColor(15);
+
+        enemyChanged = false; // Enemies have had their changes applied already, so set this flag as false until needed
+
+        for(unsigned char y = 0; y < BG_YSIZE - FIGHTSCREEN_Y_PADDING - enemySpriteRows[charIndex[enemiesInEncounter-1]]; y++) { putchar('\n'); }
+        SetColor(WHITE);
+
+        allEnemiesKilled = true;
+        for(unsigned char enemyIndex = 0; enemyIndex < enemiesInEncounter; enemyIndex++) 
+        {
+            if(Enemy[enemyIndex].current_HP > 0) { allEnemiesKilled = false; }
+        }
+
+        if(allEnemiesKilled) { break; }
+
         attackedEnemy = renderPlayerCombatEnemyMenu();
 
         if(Enemy[attackedEnemy].current_HP <= 0)
@@ -224,32 +268,27 @@ void renderEnemyCharacters(int charIndex[3], bool isBoss[3])
             
             snprintf(combatText, COMBAT_TEXT_MAXLEN, " '%s' was defeated! Party gained %d XP points and +%d gold!", Enemy[attackedEnemy].name, Enemy[attackedEnemy].XP_given, Enemy[attackedEnemy].gold_given);
             renderMainPartyStats(true, combatText);
-            printf("\x1B[10A");
+            moveCursorUpBy(10);
             character[0].current_XP += Enemy[attackedEnemy].XP_given;
             character[0].gold += Enemy[attackedEnemy].gold_given;
             limitFPS(1000);
+            enemyChanged = true;
         }
         else if(character[0].current_HP <= 0)
         {
             char combatText[COMBAT_TEXT_MAXLEN];
             snprintf(combatText, COMBAT_TEXT_MAXLEN, "%s died...", character[0].name);
             renderMainPartyStats(true, combatText);
-            printf("\x1B[10A");
+            moveCursorUpBy(10);
             break;
         }
 
         enemyAction();
 
-        allEnemiesKilled = true;
-        for(char enemyIndex = 0; enemyIndex < enemiesInEncounter; enemyIndex++) 
-        {
-            if(Enemy[enemyIndex].current_HP > 0) { allEnemiesKilled = false; }
-        }
-
         // Clear all player actions from the UI, as this turn is over
-        for(int i = 0; i < partySize; i++) {strcpy(character[i].action,""); }
+        for(unsigned char i = 0; i < partySize; i++) {strcpy(character[i].action,""); }
     } 
-    while (!allEnemiesKilled && character[0].current_HP > 0);
+    
 
     limitFPS(1000);
 }
@@ -257,7 +296,7 @@ void renderEnemyCharacters(int charIndex[3], bool isBoss[3])
 void checkPlayerXP()
 {
     bool leveledUp = false;
-    int leftOver_XP = 0;
+    unsigned short int leftOver_XP = 0;
 
     if(character[0].current_XP >= character[0].next_XP)
     {
@@ -272,7 +311,7 @@ void checkPlayerXP()
     else if(character[0].Level == 10) character[0].current_XP = (character[0].next_XP) - 1;
 }
 
-void characterLeveledUp(char charIndex, int leftOver_XP) 
+void characterLeveledUp(unsigned char charIndex, unsigned short int leftOver_XP) 
 {
     char combatText[COMBAT_TEXT_MAXLEN];
     playSFX("LevelUp");
@@ -285,6 +324,7 @@ void characterLeveledUp(char charIndex, int leftOver_XP)
     character[charIndex].def += 12;
     character[charIndex].inte += 10;
     character[charIndex].luck += 3;
+    character[charIndex].spd += 2;
     character[charIndex].next_XP *= 2;
     character[charIndex].current_XP = 0;
     character[charIndex].current_XP += leftOver_XP;
@@ -360,145 +400,37 @@ void characterLeveledUp(char charIndex, int leftOver_XP)
     }
 
     renderMainPartyStats(true, combatText);
-    printf("\x1B[10A");
+    moveCursorUpBy(10);
     limitFPS(1500);
-}
-
-void applyColorPalette(char check)
-{
-
-    // Same color Background and text
-    if(check == '&')
-    {
-        textcolor(LIGHTGREEN);
-        textbackground(LIGHTGREEN);
-    }
-    else if(check == '@')
-    {
-        textcolor(BROWN);
-        textbackground(BROWN);
-    }
-    else if(check == '#')
-    {
-        textcolor(GREEN);
-        textbackground(GREEN);
-    }
-    else if(check == '.')
-    {
-        textbackground(BLACK);
-        textcolor(BLACK);
-    }
-    else if(check == 'W')
-    {
-        textcolor(WHITE);
-        textbackground(WHITE);
-    }
-    else if(check == '0')
-    {
-        textcolor(DARKGRAY);
-        textbackground(DARKGRAY);
-    }
-    else if(check == 'M')
-    {
-        textcolor(MAGENTA);
-        textbackground(MAGENTA);
-    }
-    else if(check == 'P')
-    {
-        textcolor(LIGHTMAGENTA);
-        textbackground(LIGHTMAGENTA);
-    }
-    else if(check == 'L')
-    {
-        textcolor(LIGHTRED);
-        textbackground(LIGHTRED);
-    }
-    else if(check == 'R')
-    {
-        textcolor(RED);
-        textbackground(RED);
-    }
-    else if(check == 'B')
-    {
-        textcolor(BLUE);
-        textbackground(BLUE);
-    }
-    else if(check == 'K')
-    {
-        textcolor(YELLOW);
-        textbackground(YELLOW);
-    }
-    else if (check == 'V')
-    {
-        textcolor(LIGHTBLUE);
-        textbackground(LIGHTBLUE);
-    }
-    else if (check == '$')
-    {
-        textcolor(LIGHTCYAN);
-        textbackground(LIGHTCYAN);
-    }
-    if(check == 'C')
-    {
-        textcolor(CYAN);
-        textbackground(CYAN);
-    }
-    if(check == '+')
-    {
-        textcolor(LIGHTGRAY);
-        textbackground(LIGHTGRAY);
-    }
-
-    // Different color background and text
-    else if(check == '|')
-    {
-        textcolor(RED);
-        textbackground(BLACK);
-    }
-    else if (check == '`')
-    {
-        textcolor(BLACK);
-        textbackground(BROWN);
-    }
-    else if (check == ':')
-    {
-        textcolor(BROWN);
-        textbackground(LIGHTGREEN);
-    }
-    else if (check == ';')
-    {
-        textcolor(LIGHTGREEN);
-        textbackground(BROWN);
-    }
-    
 }
 
 
 // TODO: Also make this commonize all area BGs later on
-void renderArea1BG() 
+void renderArea1BG(int animTime) 
 {
-    for(short int y = 0; y <37; y++)
+    for(unsigned char y = 0; y <37; y++)
+    {
+        unsigned char xmax = strlen(Area1_BG[y]);
+
+        for(unsigned char x = 0; x < xmax; x++)
         {
-            int xmax = strlen(Area1_BG[y]);
+            applyColorPalette(Area1_BG[y][x]);
 
-            for(int x = 0; x < xmax; x++)
-                {
-                    applyColorPalette(Area1_BG[y][x]);
-
-                    putchar(Area1_BG[y][x]);
-                    textcolor(WHITE);
-                    textbackground(BLACK);
-                }
-                putchar('\n');
+            putchar(Area1_BG[y][x]);
         }
-    printf("\x1B[%dA", BG_YSIZE-FIGHTSCREEN_Y_PADDING);
+        putchar('\n');
+        if(animTime != 0) { limitFPS(animTime*2); }
+    }
+    textcolor(WHITE);
+    textbackground(BLACK);
+    moveCursorUpBy(BG_YSIZE-FIGHTSCREEN_Y_PADDING);
 }
 
 void renderEnemyCombatStat()
 {
-    short int lifepercent; // enemy life bar percentage calculus.
-    SetColor(15);
-    printf("\x1B[1m");
+    char lifepercent; // enemy life bar percentage calculus.
+    SetColor(WHITE);
+    useBoldConsoleText();
     printf("\t\t\t┌────────────────────────────────────────────────────────────────────────────────┐\n");
 
     // Enemy Names
@@ -511,21 +443,30 @@ void renderEnemyCombatStat()
             for(char j = 0; j < 26; j++) { putchar(' '); }
             printf("│");
         } 
-
-        SetColor(14);
+        
         for(char j = 0; j < (26 - strlen(Enemy[enemyIndex].name))/2; j++) { putchar(' '); }
+
+        if(Enemy[enemyIndex].current_HP <= 0) 
+        { 
+            SetColor(DARKGRAY);
+            useStrikeThroughConsoleText();
+        }
+        else { SetColor(YELLOW); }
         printf("%s", Enemy[enemyIndex].name);
+
+        restoreConsoleText();
+        useBoldConsoleText();
 
         for(char j = 0; j < (26 - strlen(Enemy[enemyIndex].name))/2; j++) { putchar(' '); }
         if(strlen(Enemy[enemyIndex].name) % 2 == 1) { putchar(' '); } // Correction for when names aren't even in length
-        SetColor(15);
+        SetColor(WHITE);
         printf("│");
 
         // If we have two enemies, the center area of the life bars has to be empty (there's only a left and right enemy)
         // Additionally, if there's only one enemy, its stats will be shown on the center, so pad the right area as well.
         if(enemiesInEncounter % 2 == 0 && enemyIndex == 0 || enemiesInEncounter == 1) 
         { 
-            for(char j = 0; j < 26; j++) { putchar(' '); } 
+            for(unsigned char j = 0; j < 26; j++) { putchar(' '); } 
             printf("│");
         }
     }
@@ -538,27 +479,27 @@ void renderEnemyCombatStat()
 
         if(enemiesInEncounter == 1) 
         { 
-            for(char j = 0; j < 26; j++) { putchar(' '); }
+            for(unsigned char j = 0; j < 26; j++) { putchar(' '); }
             printf("│");
         } 
         printf(" HP:(");
-        lifepercent = (int) (((float)Enemy[enemyIndex].current_HP / (float)Enemy[enemyIndex].max_HP) * 18);
+        lifepercent = (char) (((float)Enemy[enemyIndex].current_HP / (float)Enemy[enemyIndex].max_HP) * 18);
         if(lifepercent < 0) { lifepercent = 0; } 
 
-        printf("\x1B[0m");
+        restoreConsoleText();
         textbackground(RED);
         textcolor(RED);
-        for(unsigned short int i = 0; i < lifepercent; i++) { printf("+"); }
-        printf("\x1B[1m");
+        for(unsigned char i = 0; i < lifepercent; i++) { printf("+"); }
+        useBoldConsoleText();
         textbackground(BLACK);
         textcolor(WHITE);
 
-        for(short int i = 20 - lifepercent - 2; i > 0; i--) { printf(" "); }
+        for(unsigned char i = 20 - lifepercent - 2; i > 0; i--) { printf(" "); }
 
         printf(")  │");
         if(enemiesInEncounter % 2 == 0 && enemyIndex == 0 || enemiesInEncounter == 1) 
         { 
-            for(char j = 0; j < 26; j++) { putchar(' '); } 
+            for(unsigned char j = 0; j < 26; j++) { putchar(' '); } 
             printf("│");
         }
     }
@@ -566,37 +507,37 @@ void renderEnemyCombatStat()
 
     
     printf("\t\t\t└────────────────────────────────────────────────────────────────────────────────┘\n");
-    printf("\x1B[0m");
+    restoreConsoleText();
 }
 
-int selectEnemy() 
+unsigned char selectEnemy() 
 {
-    int selIndex = 0;
+    unsigned char selIndex = 0;
 
     bool enemyIsSelectable[3] = { false, false, false };
 
     // Start by having all generated enemies be selectable. If any have their HP below zero, they'll be ruled out below
-    for(char enemyIndex = 0; enemyIndex < enemiesInEncounter; enemyIndex++) { enemyIsSelectable[enemyIndex] = true; }
+    for(unsigned char enemyIndex = 0; enemyIndex < enemiesInEncounter; enemyIndex++) { enemyIsSelectable[enemyIndex] = true; }
 
     while(true) 
     {
         renderMainPartyStats(true, "");
-        SetColor(15);
-        printf("\x1B[1m");
+        SetColor(WHITE);
+        useBoldConsoleText();
         printf("\t\t\t┌────────────────────────────────SELECT YOUR FOE─────────────────────────────────┐\n");
 
         // Enemy Names
-        for(char enemyIndex = 0; enemyIndex < enemiesInEncounter; enemyIndex++) 
-        {            
+        for(unsigned char enemyIndex = 0; enemyIndex < enemiesInEncounter; enemyIndex++) 
+        {
             if(enemyIndex == 0) { printf("\t\t\t│"); }
             // If there's only one enemy, show its name and lifebar on the center
             if(enemiesInEncounter == 1) 
             { 
-                for(char j = 0; j < 26; j++) { putchar(' '); }
+                for(unsigned char j = 0; j < 26; j++) { putchar(' '); }
                 printf("│");
             }
 
-            if(Enemy[enemyIndex].current_HP < 0) 
+            if(Enemy[enemyIndex].current_HP <= 0) 
             {
                 enemyIsSelectable[enemyIndex] = false;
                 if(enemyIsSelectable[selIndex] == false) { selIndex++; }
@@ -604,30 +545,39 @@ int selectEnemy()
             
             if (selIndex == enemyIndex) 
             { 
-                SetColor(14);
+                SetColor(YELLOW);
                 printf(" ┼─ "); 
+                useUnderlineConsoleText();
             }
             else { printf("    "); }
-            for(char j = 0; j < (22 - strlen(Enemy[enemyIndex].name))/2; j++) { putchar(' '); }
+            for(unsigned char j = 0; j < (22 - strlen(Enemy[enemyIndex].name))/2; j++) { putchar(' '); }
             
-            if(Enemy[enemyIndex].current_HP < 0) { SetColor(8); }
+            if(Enemy[enemyIndex].current_HP <= 0) 
+            { 
+                SetColor(DARKGRAY); 
+                useStrikeThroughConsoleText(); 
+            }
             printf("%s", Enemy[enemyIndex].name); 
 
-            for(char j = 0; j < (22 - strlen(Enemy[enemyIndex].name))/2; j++) { putchar(' '); }
+            restoreConsoleText();
+            useBoldConsoleText();
+
+            for(unsigned char j = 0; j < (22 - strlen(Enemy[enemyIndex].name))/2; j++) { putchar(' '); }
             if(strlen(Enemy[enemyIndex].name) % 2 == 1) { putchar(' '); } // Correction for when names aren't even in length
-            SetColor(15);
+            SetColor(WHITE);
             printf("│");
 
             if(enemiesInEncounter % 2 == 0 && enemyIndex == 0 || enemiesInEncounter == 1) 
             { 
-                for(char j = 0; j < 26; j++) { putchar(' '); } 
+                for(unsigned char j = 0; j < 26; j++) { putchar(' '); } 
                 printf("│");
             }
         }
+        useBoldConsoleText();
         printf("\n");
         printf("\t\t\t└────────────────────────────────────────────────────────────────────────────────┘\n\n");
-        printf("\x1B[0m");
-        printf("\x1B[14A");
+        restoreConsoleText();
+        moveCursorUpBy(14);
         limitFPS(150);
 
         while(true)
@@ -667,48 +617,48 @@ int selectEnemy()
     }
 }
 
-int renderPlayerCombatEnemyMenu()
+unsigned char renderPlayerCombatEnemyMenu()
 {
     bool atksel = true;
     bool spellsel = false;
     bool actsel = false; // TODO: Unused, as AP skills aren't implemented yet
     bool undosel = false; // TODO: Unused, as there has to be more than one character in the party
     char enemyAttacked = -1;
-    int curcharacter = 0; // Only one character for now
+    unsigned char curCharacter = 0; // Only one character for now
 
     while(true)
     {
         renderMainPartyStats(true, "");
 
-        SetColor(15);
-        printf("\x1B[1m");
+        SetColor(WHITE);
+        useBoldConsoleText();
         printf("\t\t\t┌────────────────────────────────────────────────────────────────────────────────┐\n");
         printf("\t\t\t┌──────────────────────────────SELECT YOUR COMMAND───────────────────────────────┐\n");
         printf("\t\t\t│ ");
-        if(atksel) { SetColor(10); }
+        if(atksel) { SetColor(LIGHTGREEN); }
         printf("%s", (atksel ? "┼─" : "  "));
         printf(" BASIC ATTACK    ");
-        SetColor(15);
+        SetColor(WHITE);
         printf("│ ");
-        if(spellsel) { SetColor(9); }
+        if(spellsel) { SetColor(LIGHTBLUE); }
         printf("%s", (spellsel ? "┼─" : "  "));
         printf(" MAGIC SPELL    ");
-        SetColor(15);
+        SetColor(WHITE);
         printf("│ ");
-        if(actsel) { SetColor(14); }
+        if(actsel) { SetColor(YELLOW); }
         printf("%s", (actsel ? "┼─" : "  "));
         printf(" CLASS SKILL    ");
-        SetColor(15);
+        SetColor(WHITE);
         printf("│ ");
-        if(undosel) { SetColor(11); }
-        else if(curcharacter == 0) { SetColor(8); }
+        if(undosel) { SetColor(LIGHTCYAN); }
+        else if(curCharacter == 0) { SetColor(DARKGRAY); }
         printf("%s", (undosel ? "┼─" : "  "));
         printf(" UNDO LAST      ");
-        SetColor(15);
+        SetColor(WHITE);
         printf("│");
         printf("\n\t\t\t└────────────────────────────────────────────────────────────────────────────────┘\n");
-        printf("\x1B[0m");
-        printf("\x1B[14A");
+        restoreConsoleText();
+        moveCursorUpBy(14);
         while(true)
         {
             if(GetAsyncKeyState (VK_LEFT) != 0)
@@ -777,14 +727,14 @@ int renderPlayerCombatEnemyMenu()
 void renderMainPartyStats(bool showCombatActions, char *combatText)
 {
     char charAt = 0;
-    SetColor(15);
-    printf("\x1B[1m");
+    SetColor(WHITE);
+    useBoldConsoleText();
 
     if(showCombatActions) 
     {
         printf("\t\t\t┌────────────────────────────────────────────────────────────────────────────────┐\n");
         printf("\t\t\t│ %s", combatText);
-        for(int pad = 0; pad < COMBAT_TEXT_MAXLEN - strlen(combatText); pad++) { printf(" "); }
+        for(unsigned char pad = 0; pad < COMBAT_TEXT_MAXLEN - strlen(combatText); pad++) { printf(" "); }
         printf("│\n");
         printf("\t\t\t└────────────────────────────────────────────────────────────────────────────────┘\n");
 
@@ -793,9 +743,9 @@ void renderMainPartyStats(bool showCombatActions, char *combatText)
     printf("\t\t\t┌───────────────┬────────────────┬────────────────┬────────────────%s\n", (showCombatActions ? "┬─────────────┐" : "┐"));
     
     // Names
-    for(char i = 0; i < MAX_PARTY_SIZE; i++) 
+    for(unsigned char i = 0; i < MAX_PARTY_SIZE; i++) 
     {
-        SetColor(15);
+        SetColor(WHITE);
         if(i == 0) { printf("\t\t\t│ "); }
         if(i < partySize) 
         {
@@ -805,56 +755,56 @@ void renderMainPartyStats(bool showCombatActions, char *combatText)
                 putchar(character[i].name[charAt]); 
                 charAt++; 
             }
-            for(char i = 14 - (charAt+1); i > 0; i--) { printf(" "); }
+            for(unsigned char i = 14 - (charAt+1); i > 0; i--) { printf(" "); }
         }
         else { printf(" ──────────────"); }
-        SetColor(15);
+        SetColor(WHITE);
         printf(" │");
     }
     if(showCombatActions) { printf(" KEY ACTIONS │"); }
     
     printf("\n");
 
-    SetColor(15);
+    SetColor(WHITE);
     printf("\t\t\t├───────────────┼────────────────┼────────────────┼────────────────%s\n", (showCombatActions ? "┼─────────────┤" : "┤"));
 
     // HP Stats
-    for(char i = 0; i < MAX_PARTY_SIZE; i++) 
+    for(unsigned char i = 0; i < MAX_PARTY_SIZE; i++) 
     {
         if(i == 0) { printf("\t\t\t│"); }
 
-        SetColor(10);
+        SetColor(LIGHTGREEN);
         if(i < partySize)  { printf(" HP: %4d/%4d ",character[i].current_HP, character[i].max_HP); }
         else { printf(" ────────────── "); }
-        SetColor(15);
+        SetColor(WHITE);
         printf("│");
     }
     if(showCombatActions) { printf(" <^v> - MOVE │"); }
     printf("\n");
 
     // MP Stats
-    for(char i = 0; i < MAX_PARTY_SIZE; i++) 
+    for(unsigned char i = 0; i < MAX_PARTY_SIZE; i++) 
     {
         if(i == 0) { printf("\t\t\t│"); }
         
-        SetColor(9);
+        SetColor(LIGHTBLUE);
         if(i < partySize)  { printf(" MP: %4d/%4d ",character[i].current_MP, character[i].max_MP); }
         else { printf(" ────────────── "); }
-        SetColor(15);
+        SetColor(WHITE);
         printf("│");
     }
     if(showCombatActions) { printf("CTRL - SELECT│"); }
     printf("\n");
 
     // AP Stats
-    for(char i = 0; i < MAX_PARTY_SIZE; i++) 
+    for(unsigned char i = 0; i < MAX_PARTY_SIZE; i++) 
     {
         if(i == 0) { printf("\t\t\t│"); }
         
-        SetColor(14);
+        SetColor(YELLOW);
         if(i < partySize)  { printf(" AP: %3d/%d   ", 0, 100); } // character[0].current_AP, character[0].max_AP); // AP not implemented yetcharacter[i].current_AP, character[i].max_AP); }
         else { printf(" ────────────── "); }
-        SetColor(15);
+        SetColor(WHITE);
         printf("│");
     }
     if(showCombatActions) { printf("SHFT - RETURN│"); }
@@ -862,129 +812,66 @@ void renderMainPartyStats(bool showCombatActions, char *combatText)
 
     
     printf("\t\t\t└──────%s──────┴────────────────┴────────────────┴────────────────%s\n", (strcmp(character[0].action, "") != 0 ? character[0].action : "───"), (showCombatActions ? "┴─────────────┘" : "┘"));
-    printf("\x1B[0m");
+    restoreConsoleText();
 }
 
-int renderPlayerMagicSpellMenu()
+unsigned char renderPlayerMagicSpellMenu()
 {
-    char spellsel = 0;
-    char enemyIndex = 0;
+    unsigned char spellsel = 0;
+    unsigned char enemyIndex = 0;
 
     while(true)
     {
         renderMainPartyStats(true, "");
-        SetColor(15);
-        printf("\x1B[1m");
+        SetColor(WHITE);
+        useBoldConsoleText();
         printf("\t\t\t┌────────────────────────────────SELECT THE SPELL────────────────────────────────┐\n");
+
+        for(unsigned char spellIdx = 0; spellIdx < MAGIC_SPELLS_PER_LINE*2; spellIdx++) 
+        {
+            if(spellIdx == 0) { printf("\t\t\t│"); }
+            if(spellIdx == 4) { printf("\n\t\t\t│");  } // 4 magic spells per line (will be the same for class skils)
+            
+            if(!findSkill(character[0].magtree, availableSpells[character[0].spellIndices[spellIdx]])) 
+            { 
+                if(spellIdx != 3 && spellIdx != 7) { printf("                   "); } // Last indices of a row need to be 1 space longer
+                else { printf("                    "); }
+            }
+            else 
+            {
+                if(spellsel == spellIdx) 
+                { 
+                    SetColor(LIGHTGREEN);
+                    printf(" ┼─");
+                    useUnderlineConsoleText();
+                }
+                else { printf("   "); }
+                
+                printf(" %s", availableSpells[character[0].spellIndices[spellIdx]]);
+
+                restoreConsoleText();
+                useBoldConsoleText();
+
+                if(spellIdx != 3 && spellIdx != 7) // Same for padding, last indices of a row need to be 1 space longer
+                { 
+                    for(unsigned char pad = 0; pad < 15-strlen(availableSpells[character[0].spellIndices[spellIdx]]); pad++) { putchar(' '); }
+                }
+                else 
+                {
+                    for(unsigned char pad = 0; pad < 16-strlen(availableSpells[character[0].spellIndices[spellIdx]]); pad++) { putchar(' '); } 
+                }
+            }
         
-        // Max text len = 15
-        //printf("\x1B[4B");
-        printf("\t\t\t│");
-
-        if(spellsel == 0) { SetColor(10); }
-        if(findSkill(character[0].magtree, availableSpells[character[0].spellIndices[0]], false) == false) { printf("                    "); }
-        else 
-        {
-            printf(" %s", (spellsel == 0 && character[0].learnedSpells > 0 ? "┼─" : "  "));
-            printf(" %s", availableSpells[character[0].spellIndices[0]]);
-            for(int pad = 0; pad < 16-strlen(availableSpells[character[0].spellIndices[0]]); pad++) { putchar(' '); }
+            SetColor(WHITE);
+            printf("│");
         }
-        
-        SetColor(15);
-        printf("│");
-
-        if(spellsel == 1) { SetColor(10); }
-        if(findSkill(character[0].magtree, availableSpells[character[0].spellIndices[1]], false) == false) { printf("                   "); }
-        else 
-        {
-            printf(" %s", (spellsel == 1 && character[0].learnedSpells > 1 ? "┼─" : "  "));
-            printf(" %s", availableSpells[character[0].spellIndices[1]]);
-            for(int pad = 0; pad < 15-strlen(availableSpells[character[0].spellIndices[1]]); pad++) { putchar(' '); }
-        }
-
-        SetColor(15);
-        printf("│");
-
-        if(spellsel == 2) { SetColor(10); }
-        if(findSkill(character[0].magtree, availableSpells[character[0].spellIndices[2]], false) == false) { printf("                   "); }
-        else 
-        {
-            printf(" %s", (spellsel == 2 && character[0].learnedSpells > 2 ? "┼─" : "  "));
-            printf(" %s", availableSpells[character[0].spellIndices[2]]);
-            for(int pad = 0; pad < 15-strlen(availableSpells[character[0].spellIndices[2]]); pad++) { putchar(' '); }
-        }
-
-        SetColor(15);
-        printf("│");
-
-        if(spellsel == 3) { SetColor(10); }
-        if(findSkill(character[0].magtree, availableSpells[character[0].spellIndices[3]], false) == false) { printf("                   "); }
-        else 
-        {
-            printf(" %s", (spellsel == 3 && character[0].learnedSpells > 3 ? "┼─" : "  "));
-            printf(" %s", availableSpells[character[0].spellIndices[3]]);
-            for(int pad = 0; pad < 15-strlen(availableSpells[character[0].spellIndices[3]]); pad++) { putchar(' '); }
-        }
-
-        SetColor(15);
-        printf("│");
-
-        printf("\n\t\t\t│"); // 4 magic spells per line (will be the same for class skils)
-
-        if(spellsel == 4) { SetColor(10); }
-        if(findSkill(character[0].magtree, availableSpells[character[0].spellIndices[4]], false) == false) { printf("                    "); }
-        else 
-        {
-            printf(" %s", (spellsel == 4 && character[0].learnedSpells > 4 ? "┼─" : "  "));
-            printf(" %s", availableSpells[character[0].spellIndices[4]]);
-            for(int pad = 0; pad < 16-strlen(availableSpells[character[0].spellIndices[4]]); pad++) { putchar(' '); }
-        }
-
-        SetColor(15);
-        printf("│");
-
-        if(spellsel == 5) { SetColor(10); }
-        if(findSkill(character[0].magtree, availableSpells[character[0].spellIndices[5]], false) == false) { printf("                   "); }
-        else 
-        {
-            printf(" %s", (spellsel == 5 && character[0].learnedSpells > 5 ? "┼─" : "  "));
-            printf(" %s", availableSpells[character[0].spellIndices[5]]);
-            for(int pad = 0; pad < 15-strlen(availableSpells[character[0].spellIndices[5]]); pad++) { putchar(' '); }
-        }
-
-        SetColor(15);
-        printf("│");
-
-        if(spellsel == 6) { SetColor(10); }
-        if(findSkill(character[0].magtree, availableSpells[character[0].spellIndices[6]], false) == false) { printf("                   "); }
-        else 
-        {
-            printf(" %s", (spellsel == 6 && character[0].learnedSpells > 6 ? "┼─" : "  "));
-            printf(" %s", availableSpells[character[0].spellIndices[6]]);
-            for(int pad = 0; pad < 15-strlen(availableSpells[character[0].spellIndices[6]]); pad++) { putchar(' '); }
-        }
-
-        SetColor(15);
-        printf("│");
-
-        if(spellsel == 7) { SetColor(10); }
-        if(findSkill(character[0].magtree, availableSpells[character[0].spellIndices[7]], false) == false) { printf("                   "); }
-        else 
-        {
-            printf(" %s", (spellsel == 7 && character[0].learnedSpells > 7 ? "┼─" : "  "));
-            printf(" %s", availableSpells[character[0].spellIndices[7]]);
-            for(int pad = 0; pad < 15-strlen(availableSpells[character[0].spellIndices[7]]); pad++) { putchar(' '); }
-        }
-
-        SetColor(15);
-        printf("│");
         
 
         // TODO: We can have up to 8 spells here, there's just not that many yet
 
         printf("\n\t\t\t└────────────────────────────────────────────────────────────────────────────────┘\n");
-        printf("\x1B[0m");
-        printf("\x1B[14A");
+        restoreConsoleText();
+        moveCursorUpBy(14);
         limitFPS(150);
         
         while(true)
@@ -1039,42 +926,21 @@ int renderPlayerMagicSpellMenu()
 
             if(GetAsyncKeyState (VK_LCONTROL) != 0)
             {
-                if(character[0].learnedSpells == 0) { break; } // Also only select spells if there are any available
+                // Only select spells if there are any available, and it doesn't require more MP than available
+                if(character[0].learnedSpells == 0 && character[0].current_MP < findSkillMPUsage(character[0].magtree, availableSpells[character[0].spellIndices[spellsel]])) 
+                {
+                    playSFX("ReturnFromMenu");
+                    break; 
+                }
                 limitFPS(150);
                 playSFX("CombatCursorSelect");
                 enemyIndex = selectEnemy();
                 if(enemyIndex == -1) { limitFPS(150); break; }
 
                 strcpy(character[0].action,"MAG");            
-                if(spellsel == 0)
-                {
-                    playerUseSpell(availableSpells[character[0].spellIndices[0]], enemyIndex);
-                    return enemyIndex;
-                }
-
-                if(spellsel == 1)
-                {
-                    playerUseSpell(availableSpells[character[0].spellIndices[1]], enemyIndex);
-                    return enemyIndex;
-                }
-
-                if(spellsel == 2)
-                {
-                    playerUseSpell(availableSpells[character[0].spellIndices[2]], enemyIndex);
-                    return enemyIndex;
-                }
-
-                if(spellsel == 3)
-                {
-                    playerUseSpell(availableSpells[character[0].spellIndices[3]], enemyIndex);
-                    return enemyIndex;
-                }
-
-                if(spellsel == 4)
-                {
-                    playerUseSpell(availableSpells[character[0].spellIndices[4]], enemyIndex);
-                    return enemyIndex;
-                }
+                
+                playerUseSpell(availableSpells[character[0].spellIndices[spellsel]], enemyIndex);
+                return enemyIndex;
             }
 
             if(GetAsyncKeyState (VK_LSHIFT) != 0)
@@ -1088,9 +954,9 @@ int renderPlayerMagicSpellMenu()
 
 }
 
-int playerAttackEnemy(char enemyIndex)
+unsigned char playerAttackEnemy(unsigned char enemyIndex)
 {
-    int damage = (character[0].atk - Enemy[enemyIndex].def);
+    short int damage = (character[0].atk - Enemy[enemyIndex].def);
     char combatText[COMBAT_TEXT_MAXLEN];
     bool gotCriticalHit = calculateCriticalHitChance(character[0].luck);
 
@@ -1106,12 +972,12 @@ int playerAttackEnemy(char enemyIndex)
         Enemy[enemyIndex].current_HP -= damage;
         snprintf(combatText, COMBAT_TEXT_MAXLEN, "%s attacks... %s causes %d damage to '%s'.", character[0].name, (gotCriticalHit ? "CRITICAL HIT!!!" : "and"), damage, Enemy[enemyIndex].name);
         renderMainPartyStats(true, combatText);
-        printf("\x1B[10A");
+        moveCursorUpBy(10);
         limitFPS(1000);
     }
 }
 
-bool calculateCriticalHitChance(int luck) 
+bool calculateCriticalHitChance(unsigned short int luck) 
 {
     float luckStat = (float)(luck - 100) / (999 - 100);
     float criticalHitChance = 0.025f + (luckStat * (0.325f - 0.025f));
@@ -1127,35 +993,35 @@ bool calculateCriticalHitChance(int luck)
 }
 
 // TODO: These should also be commonized. Tons of duplicated code...
-bool playerUseSpell(char *spell, char enemyIndex)
+bool playerUseSpell(char *spell, unsigned char enemyIndex)
 {
-    int damage = (character[0].atk - Enemy[enemyIndex].def);
+    short int damage = (character[0].atk - Enemy[enemyIndex].def);
     char combatText[COMBAT_TEXT_MAXLEN];
 
     damage *= (character[0].inte/100);
 
-    playSFX("AquaStorm");
     if(strcmp(Enemy[enemyIndex].weakness, spell) == 0) damage *= 2;
     else if (strcmp(Enemy[enemyIndex].resists, spell) == 0) damage *= 0.7;
 
     if(damage > 0)
     {
+        playSFX(spell);
         Enemy[enemyIndex].current_HP -= damage;
         snprintf(combatText, COMBAT_TEXT_MAXLEN, "%s used %s... and caused %d damage to '%s'.", character[0].name, spell, damage, Enemy[enemyIndex].name);
         renderMainPartyStats(true, combatText);
-        printf("\x1B[10A");
+        moveCursorUpBy(10);
         limitFPS(1000);
     }
 
-    character[0].current_MP -=30;
+    character[0].current_MP -= findSkillMPUsage(character[0].magtree, spell);
 
     return true;
 }
 
 // TODO: Attacking party characters, though we need more than a party member for that
-void enemyAttackPlayer(char enemyIndex, char charIndex)
+void enemyAttackPlayer(unsigned char enemyIndex, unsigned char charIndex)
 {
-    int damage = (Enemy[enemyIndex].atk - character[charIndex].def);
+    short int damage = (Enemy[enemyIndex].atk - character[charIndex].def);
     char combatText[COMBAT_TEXT_MAXLEN];
 
     playSFX("PlayerHit");
@@ -1164,17 +1030,17 @@ void enemyAttackPlayer(char enemyIndex, char charIndex)
         character[charIndex].current_HP -= damage;
         snprintf(combatText, COMBAT_TEXT_MAXLEN, "%s attacks... it caused %d damage to '%s'.", Enemy[enemyIndex].name, damage, character[charIndex].name);
         renderMainPartyStats(true, combatText);
-        printf("\x1B[10A");
+        moveCursorUpBy(10);
         limitFPS(1000);
     }
 }
 
-void enemyDozesOff(char enemyIndex)
+void enemyDozesOff(unsigned char enemyIndex)
 {
     char combatText[COMBAT_TEXT_MAXLEN];
     snprintf(combatText, COMBAT_TEXT_MAXLEN, "%s enemy dozed off...", Enemy[enemyIndex].name);
     renderMainPartyStats(true, combatText);
-    printf("\x1B[10A");
+    moveCursorUpBy(10);
     limitFPS(1000);
 }
 
@@ -1184,7 +1050,7 @@ void enemyAction()
     {
         if(Enemy[enemyIndex].current_HP > 0) 
         {
-            short int randaction = rand() % 100;
+            unsigned char randaction = rand() % 100;
             if(randaction <= 75) { enemyAttackPlayer(enemyIndex, 0); }
             else { enemyDozesOff(enemyIndex); }
         }

@@ -2,8 +2,8 @@
 #include "../Combat/Combat.h"
 #include "../TAD_DialogHash/Dialogs_PlayerLines.h"
 #include "../TAD_DialogHash/DialogsNPC.h"
-#include "Area1_NavigationScreens.h"
 #include "Minimaps.h"
+#include "Area1_NavigationScreens.h"
 
 void talkToMerchant();
 void talkToNPC2();
@@ -11,119 +11,16 @@ void talkToNPC3();
 void talkToNPC4();
 void talkToNPC5();
 void talkToNPC6();
-void renderAreaNavigation(int areaIndex, int navIndex, int *playerX, int *playerY);
-
-char logo[39][150] =
-{
-"================================================================================================================================================",
-"                                      ######################################################################                                    ",
-"                                 ######################################################################################                         ",
-"                             ##################################################################################################                 ",
-"              ################################################################################################################                  ",
-"                     ######################################################################################################                     ",
-"         ############################################################################################################################           ",
-"       ##################################################################################################################################       ",
-" #########  ________  _______   ________  ________         ______   ________        _______   _______    ______   ______   ______   #######     ",
-"#########  |        ;|       ; |        ;|        ;       /      ; |        ;      |       ; |       ;  /      ; |      ; /      ;    #######   ",
-"  ######    ;########| #######;| ########| ########      |  ######;| ########      | #######;| #######;|  ######; ;######|  ######;    #######  ",
-"########      | ##   | ##__| ##| ##__    | ##__          | ##  | ##| ##__          | ##__/ ##| ##__| ##| ##__| ##  | ##  | ##__| ##     ######  ",
-"########      | ##   | ##    ##| ##  ;   | ##  ;         | ##  | ##| ##  ;         | ##    ##| ##    ##| ##    ##  | ##  | ##    ##     ########",
-" #######      | ##   | #######;| #####   | #####         | ##  | ##| #####         | #######;| #######;| ########  | ##  | ########     ########",
-"#########     | ##   | ##  | ##| ##_____ | ##_____       | ##__/ ##| ##            | ##__/ ##| ##  | ##| ##  | ## _| ##_ | ##  | ##    ######## ",
-"  ########    | ##   | ##  | ##| ##     ;| ##     ;       ;##    ##| ##            | ##    ##| ##  | ##| ##  | ##|   ## ;| ##  | ##   ######### ",
-"    #######    ;##    ;##   ;## ;######## ;########        ;######  ;##             ;#######  ;##   ;## ;##   ;## ;###### ;##   ;##  #########  ",
-"     #######                                                                                                                         ########## ",
-"          ####                                    ######################################                                            ############",
-"            ######################################                                      ##############################################          ",
-"               ####################################################################################################################             ",
-"                                              ################################################################                                  ",
-"                                ##########################################################################################                      ",
-"                                                   ###########################################################                                  ",
-"                                        ###########################################################                                             ",
-"                                                                 (||||||||||)                                                                   ",
-"                                                                 (|||||||||)                                                                    ",
-"                                                                 (||||||||)                                                                     ",
-"                                                                 (||||||||)                                                                     ",
-"                                                                 (||||||||)                                                                     ",
-"                                                                 (||||||||)                                                                     ",
-"                                                                 (||||||||)              >>  PRESS CTRL TO START THE GAME                       ",
-"                                                                 (|||||||||)                                                                    ",
-"                                                                 (||||||||||)                                                                   ",
-"                                                                 (||||||||||||)                                                                 ",
-"                                                                 (|||||||||||||)                                                                ",
-"                                                                 (||||||||||||||)                                                               ",
-"                                                                 (||||||||||||||||)                                                             ",
-"================================================================================================================================================"
-};
-
-char credits[80][60] =
-{
-"",
-"",
-"",
-"",
-"               DEVELOPED BY BRAIA SOFTWORKS",
-"",
-"",
-"",
-"                      LEAD DEVELOPERS",
-"",
-"             Paulo Sousa      Game Designer                ",
-"           Matheus Rondon      Game Designer               ",
-"                                                           ",
-"                           WRITING                         ",
-"",
-"            Kaio Nascimento    Main Writer                 ",
-"            Paulo Sousa        Secondary Writer            ", ///////
-"            Matheus Rondon     Secondary Writer            ",
-"",
-"                           ART",
-"",
-"           Matheus Rondon      Lead Artist                 ",
-"            Paulo Sousa       Secondary Artist             ",
-"           Wisley Kilder      Secondary Artist             ",
-"                                                           ",
-"                       PROGRAMMING",
-"",
-"            Paulo Sousa       Lead Programmer              ",
-"            Matheus Rondon   Secondary Programmer          ",
-"",
-"                         TESTING",
-"                                   ",
-"             Tulio Estrela      Main playthrough tester    ",
-"             Wisley Kilder      Main gameplay tester       ",
-"             Kaio Nascimento    Secondary gameplay tester  ",
-"",
-"                    SOUND ENGINEERING",
-"                                   ",
-"             Paulo Sousa    Main Sound Developer     ",
-"             Matheus Rondon    Secondary Sound Developer   ",
-"             Matheus Rondon    Audio Engineer",
-"",
-"                    TAD DEVELOPMENT",
-"                                   ",
-"             Paulo Sousa    Main TAD Developer     ",
-"             Matheus Rondon    Secondary TAD Developer    ",
-"             Tulio Estrela   Main TAD Tester",
-"             Kaio Nascimento Secondary TAD Tester",
-};
+void renderAreaNavigation(unsigned char areaIndex, unsigned char navIndex, unsigned char *playerX, unsigned char *playerY);
 
 void showLogo();
-void hub();
-void area1();
-void area1_int();
-int area2();
-void area3();
+unsigned char enterArea();
 void ending();
 
 bool drawSelectMenu();
 
-short int thread;
-
-Hash *playerDialogs = NULL; //InsertHashData();
-Hash_NPC *NPCDialogs = NULL; //InsertHashDataNPC();
-
-
+Hash *playerDialogs = NULL;
+Hash_NPC *NPCDialogs = NULL;
 
 void showLogo()
 {
@@ -131,540 +28,138 @@ void showLogo()
 
     while(!start)
         {
-#ifdef __linux__
-            system("clear");
-#elif _WIN32
-            system("cls");
-#endif
-            for(short int y = 0; y <39; y++)
+            clearConsoleScreen();
+            for(unsigned char y = 0; y <49; y++)
             {
-                int xmax = strlen(logo[y]);
+                unsigned char xmax = strlen(Title_BG[y]);
 
-                for(int x = 0; x < xmax; x++)
+                for(unsigned char x = 0; x < xmax; x++)
                     {
-                        if (logo[y][x] == '#')
-                        {
-                            textcolor(GREEN);
-                            textbackground(GREEN);
-                        }
-                        if (logo[y][x] == '|')
-                            {
-                                textcolor(BROWN);
-                                textbackground(BROWN);
-                            }
-                        if (logo[y][x] == '(')
-                            {
-                                textcolor(BROWN);
-                                textbackground(BROWN);
-                            }
-                        if (logo[y][x] == ';')
-                            {
-                                textcolor(BROWN);
-                                textbackground(BROWN);
-                            }
-                        if (logo[y][x] == '/')
-                            {
-                                textcolor(BROWN);
-                                textbackground(BROWN);
-                            }
-                        if (logo[y][x] == '_')
-                            {
-                                textcolor(BROWN);
-                                textbackground(BROWN);
-                            }
-                        if (logo[y][x] == ')')
-                            {
-                                textcolor(BROWN);
-                                textbackground(BROWN);
-                            }
-
-                        if (logo[y][x] == '>') textcolor(BLUE);
-                        if (logo[y][x] == 'P') textcolor(RED);
-                        if (logo[y][x] == 'R') textcolor(RED);
-                        if (logo[y][x] == 'E') textcolor(RED);
-                        if (logo[y][x] == 'S') textcolor(RED);
-                        if (logo[y][x] == 'C') textcolor(RED);
-                        if (logo[y][x] == 'T') textcolor(RED);
-                        if (logo[y][x] == 'L') textcolor(RED);
-                        if (logo[y][x] == 'O') textcolor(RED);
-                        if (logo[y][x] == 'A') textcolor(RED);
-                        if (logo[y][x] == 'H') textcolor(RED);
-                        if (logo[y][x] == 'G') textcolor(RED);
-                        if (logo[y][x] == 'M') textcolor(RED);
-                        if (logo[y][x] == 'E') textcolor(RED);
-                        putchar(logo[y][x]);
-
-                        textcolor(WHITE);
-                        textbackground(BLACK);
+                        applyColorPalette(Title_BG[y][x]);
+                        putchar(Title_BG[y][x]);
                     }
                     putchar('\n');
             }
 
-            while(1)
+            textcolor(LIGHTBLUE);
+            useBoldConsoleText();
+            moveCursorUpBy((48 / 2 + 35 / 2));
+            limitFPS(1000);
+            for(unsigned char y = 0; y <29; y++)
+            {
+                unsigned char xmax = strlen(Title[y]);
+                bool skipDraw = true;
+
+                limitFPS(-TARGET_TIME/2500);
+
+                if(y == 25) { limitFPS(1500);}
+                for(unsigned char x = 0; x < xmax; x++)
                 {
-                    if(GetAsyncKeyState (VK_LCONTROL) != 0)
-                    {
-                        return;
-                    }
+                    //  '.' chars are delimiters for when the title should be drawn with its black BG, we should not draw them, only check
+                    if(Title[y][x] == '.' && !skipDraw) { skipDraw = true; continue; }
+
+                    if(skipDraw) { moveCursorRightBy(1); }
+                    else { putchar(Title[y][x]); }
+
+                    fflush(stdout);
+
+                    if(Title[y][x] == '.' && skipDraw) { skipDraw = false; }
+
+                    if(y >= 25 && !skipDraw) { textcolor(YELLOW); limitFPS(-TARGET_TIME/1200); }
                 }
+                
+                putchar('\n');
+            }
+            moveCursorDownBy(12);
+            
+            for(unsigned char y = 0; y <5; y++) // "Press Ctrl" will be below the title's graphics, so no need to do any BG checks
+            {
+                unsigned char xmax = strlen(pressCtrl[y]);
+
+                for(unsigned char x = 0; x < xmax; x++)
+                {
+                    putchar(pressCtrl[y][x]);
+                }
+                putchar('\n');
+            }
+            
+            textcolor(WHITE);
+            textbackground(BLACK);
+
+            unsigned char colorPalette = 0;
+            while(1)
+            {
+                moveCursorUpBy(5);
+                textcolor(colorPalette++);
+                if(colorPalette > 15) { colorPalette = 0; }
+                for(unsigned char y = 0; y <5; y++) // "Press Ctrl" will be below the title's graphics, so no need to do any BG checks
+                {
+                    unsigned char xmax = strlen(pressCtrl[y]);
+
+                    for(unsigned char x = 0; x < xmax; x++)
+                    {
+                        putchar(pressCtrl[y][x]);
+                    }
+                    putchar('\n');
+                }
+                if(GetAsyncKeyState (VK_LCONTROL) != 0)
+                {
+                    restoreConsoleText();
+                    return;
+                }
+                limitFPS(150);
+            }
         }
 }
 
-void hub()
+unsigned char enterArea(char *areaName) 
 {
-    playerDialogs = InsertHashData();
-    NPCDialogs = InsertHashDataNPC();
-    bool moved = false;
-    limitFPS(100);
-    
-    playBGM("HubWorld");
-    while(1)
-        {
-#ifdef __linux__
-            system("clear");
-#elif _WIN32
-            system("cls");
-#endif
-            for(short int y = 0; y <28; y++)
-            {
-                moved = false;
-                int xmax = strlen(HUB[y]);
+    bool moved = false;    
+    unsigned char encounterChance = 0, levelCap = 9, navIndex = 0, navIndexTmp = 0, areaIndex = 0, playerX = 0, playerY = 0;
 
-                for(int x = 0; x < xmax; x++)
-                    {
-                        if (HUB[y][x] == '#')
-                        {
-                            textcolor(LIGHTGREEN);
-                            textbackground(LIGHTGREEN);
-                        }
-                        if (HUB[y][x] == 'P')
-                        {
-                            textcolor(CYAN);
-                        }
-                        if (HUB[y][x] == 'F')
-                        {
-                            textcolor(RED);
-                        }
-                        if (HUB[y][x] == '|')
-                        {
-                            textcolor(BLACK);
-                            textbackground(BROWN);
-                        }
-                        if (HUB[y][x] == '`')
-                        {
-                            textcolor(BROWN);
-                            textbackground(BROWN);
-                        }
-                        if (HUB[y][x] == '+')
-                        {
-                            textcolor(RED);
-                            textbackground(RED);
-                        }
-                        if (HUB[y][x] == '-')
-                        {
-                            textcolor(WHITE);
-                            textbackground(WHITE);
-                        }
-                        if (HUB[y][x] == 'v')
-                        {
-                            textcolor(BLUE);
-                        }
-                        if (HUB[y][x] == '^')
-                        {
-                            textcolor(BLUE);
-                        }
-                        if (HUB[y][x] == 'w')
-                        {
-                            textcolor(RED);
-                        }
-                        if (HUB[y][x] == '*')
-                        {
-                            textcolor(LIGHTRED);
-                            textbackground(LIGHTRED);
-                        }
-                        if (HUB[y][x] == ';')
-                        {
-                            textcolor(GREEN);
-                        }
-                        if (HUB[y][x] == 'x')
-                        {
-                            textcolor(BROWN);
-                            textbackground(BROWN);
-                        }
-                        if (HUB[y][x] == ':')
-                        {
-                            textcolor(GREEN);
-                            textbackground(GREEN);
-                        }
-                        if (HUB[y][x] == 'R')
-                        {
-                            textcolor(LIGHTGREEN);
-                        }
-                        if (HUB[y][x] == '?')
-                        {
-                            textcolor(LIGHTRED);
-                            textbackground(YELLOW);
-                        }
-                        if (HUB[y][x] == '~')
-                        {
-                            textcolor(WHITE);
-                            textbackground(CYAN);
-                        }
-                        if (HUB[y][x] == 'E')
-                        {
-                            textcolor(DARKGRAY);
-                        }
-                        if (HUB[y][x] == '=')
-                        {
-                            textbackground(WHITE);
-                        }
-                        if (HUB[y][x] == '/')
-                        {
-                            textbackground(WHITE);
-                        }
-                        if(HUB[y][x] == '1')
-                        {
-                            textcolor(LIGHTCYAN);
-                        }
-                        if(HUB[y][x] == '2')
-                        {
-                            textcolor(LIGHTCYAN);
-                        }
-                        if(HUB[y][x] == '3')
-                        {
-                            textcolor(LIGHTCYAN);
-                        }
-                        if(HUB[y][x] == '4')
-                        {
-                            textcolor(LIGHTCYAN);
-                        }
-                        if(HUB[y][x] == '5')
-                        {
-                            textcolor(LIGHTCYAN);
-                        }
-                        if(HUB[y][x] == '6')
-                        {
-                            textcolor(LIGHTCYAN);
-                        }
+    for(unsigned char BGM = 0; BGM < NUM_AREAS; BGM++) { stopBGM(AreaNames[BGM]); }
+    playBGM(areaName);
 
-
-                        putchar(HUB[y][x]);
-                        textcolor(WHITE);
-                        textbackground(BLACK);
-                    }
-                putchar('\n');
-            }
-
-            renderMainPartyStats(false, "");
-
-            while (!moved) {
-
-            for(short int y = 0; y < 28; y++)
-            {
-                for(short int x = 0; x < 100; x++)
-                    {
-                        switch(HUB[y][x])
-                        {
-                            case 'P':
-                            {
-                                 if(GetAsyncKeyState (VK_UP) != 0)
-                                    {
-                                        playBGM("FootStep");
-                                        short int y2 = (y - 1);
-                                        switch(HUB[y2][x])
-                                        {
-                                            case ':': case ';': case '.': case ' ':
-                                            {
-                                                 HUB[y][x] = HUB[y2][x];
-                                                 y -=1;
-                                                 HUB[y2][x] = 'P';
-                                                 moved = true;
-                                            } break;
-                                            case 'F':
-                                            {
-                                                area2();
-                                            } break;
-                                            case '?':
-                                            {
-                                                moved = true;
-                                                printf("%s GOT A HP POTION!", character[0].name);
-                                                limitFPS(1000);
-                                                HUB[y-1][x] = ' ';
-                                                character[0].it.HPpotion += 1;
-                                            }
-                                            case '1' :
-                                            {
-                                                moved = true;
-                                                talkToMerchant();
-                                            } break;
-
-                                            case '2' :
-                                            {
-                                                    moved = true;
-                                                    talkToNPC2();
-                                            } break;
-
-                                            case '3' :
-                                            {
-                                                    moved = true;
-                                                    talkToNPC3();
-                                            } break;
-
-                                            case '4' :
-                                            {
-                                                    moved = true;
-                                                    talkToNPC4();
-                                            } break;
-
-                                            case '5' :
-                                            {
-                                                    moved = true;
-                                                    talkToNPC5();
-                                            } break;
-
-                                            case '6' :
-                                            {
-                                                    moved = true;
-                                                    talkToNPC6();
-                                            } break;
-
-                                        }
-                                    }
-
-                                if(GetAsyncKeyState (VK_DOWN) != 0)
-                                    {
-                                        playBGM("FootStep");
-                                        short int y2 = (y + 1);
-                                        switch(HUB[y2][x])
-                                        {
-                                            case ':': case ';': case '.': case ' ':
-                                            {
-                                                HUB[y][x] = HUB[y2][x];
-                                                 y +=1;
-                                                 HUB[y2][x] = 'P';
-                                                 moved = true;
-                                            } break;
-                                            case 'F':
-                                            {
-                                                area2();
-                                            } break;
-                                            case '?':
-                                            {
-                                                moved = true;
-                                                printf("%s GOT A HP POTION!", character[0].name);
-                                                limitFPS(1000);
-                                                HUB[y+1][x] = ' ';
-                                                character[0].it.HPpotion += 1;
-                                            }
-                                            case '1' :
-                                            {
-                                                moved = true;
-                                                talkToMerchant();
-                                            } break;
-
-                                            case '2' :
-                                            {
-                                                    moved = true;
-                                                    talkToNPC2();
-                                            } break;
-
-                                            case '3' :
-                                            {
-                                                    moved = true;
-                                                    talkToNPC3();
-                                            } break;
-
-                                            case '4' :
-                                            {
-                                                    moved = true;
-                                                    talkToNPC4();
-                                            } break;
-
-                                            case '5' :
-                                            {
-                                                    moved = true;
-                                                    talkToNPC5();
-                                            } break;
-
-                                            case '6' :
-                                            {
-                                                    moved = true;
-                                                    talkToNPC6();
-                                            } break;
-
-                                        }
-                                    }
-
-                                if(GetAsyncKeyState (VK_LEFT) != 0)
-                                    {
-                                        playBGM("FootStep");
-                                        int x2 = (x - 1);
-                                        switch(HUB[y][x2])
-                                        {
-                                            case ':': case ';': case '.': case ' ':
-                                            {
-                                                HUB[y][x] = HUB[y][x2];
-                                                 x -=1;
-                                                 HUB[y][x2] = 'P';
-                                                 moved = true;
-                                            } break;
-                                            case 'F':
-                                            {
-                                                area2();
-                                            } break;
-                                            case '?':
-                                            {
-                                                moved = true;
-                                                printf("%s GOT A HP POTION!", character[0].name);
-                                                limitFPS(1000);
-                                                HUB[y][x-1] = ' ';
-                                                character[0].it.HPpotion += 1;
-                                            }
-                                            case '1' :
-                                            {
-                                                moved = true;
-                                                talkToMerchant();
-                                            } break;
-
-                                            case '2' :
-                                            {
-                                                    moved = true;
-                                                    talkToNPC2();
-                                            } break;
-
-                                            case '3' :
-                                            {
-                                                    moved = true;
-                                                    talkToNPC3();
-                                            } break;
-
-                                            case '4' :
-                                            {
-                                                    moved = true;
-                                                    talkToNPC4();
-                                            } break;
-
-                                            case '5' :
-                                            {
-                                                    moved = true;
-                                                    talkToNPC5();
-                                            } break;
-
-                                            case '6' :
-                                            {
-                                                    moved = true;
-                                                    talkToNPC6();
-                                            } break;
-
-                                        }
-                                    }
-
-                                if(GetAsyncKeyState (VK_RIGHT) != 0)
-                                    {
-                                        playBGM("FootStep");
-                                        int x2 = (x + 1);
-                                        switch(HUB[y][x2])
-                                        {
-                                            case ':': case ';': case '.': case ' ':
-                                            {
-                                                HUB[y][x] = HUB[y][x2];
-                                                 x +=1;
-                                                 HUB[y][x2] = 'P';
-                                                 moved = true;
-                                            } break;
-                                            case 'F':
-                                            {
-                                                area2();
-                                            } break;
-                                            case '?':
-                                            {
-                                                moved = true;
-                                                printf("%s GOT A HP POTION!", character[0].name);
-                                                limitFPS(1000);
-                                                HUB[y][x+1] = ' ';
-                                                character[0].it.HPpotion += 1;
-                                            }
-                                            case '1' :
-                                            {
-                                                moved = true;
-                                                talkToMerchant();
-                                            } break;
-
-                                            case '2' :
-                                            {
-                                                    moved = true;
-                                                    talkToNPC2();
-                                            } break;
-
-                                            case '3' :
-                                            {
-                                                    moved = true;
-                                                    talkToNPC3();
-                                            } break;
-
-                                            case '4' :
-                                            {
-                                                    moved = true;
-                                                    talkToNPC4();
-                                            } break;
-
-                                            case '5' :
-                                            {
-                                                    moved = true;
-                                                    talkToNPC5();
-                                            } break;
-
-                                            case '6' :
-                                            {
-                                                    moved = true;
-                                                    talkToNPC6();
-                                            } break;
-
-                                        }
-                                    }
-                                    if(GetAsyncKeyState (VK_LCONTROL) != 0)
-                                        {
-                                            playSFX("OpenMenu");
-                                            moved = true;
-                                            openInventory();
-                                        }
-
-                                    if(GetAsyncKeyState (VK_LSHIFT) != 0)
-                                        {
-                                            playSFX("OpenMenu");
-                                            moved = true;
-                                            renderPlayerSkillMenu();
-                                        }
-
-                            }
-                        }
-
-                    }
-            }
-
-        } // Ends the Move function
+    for(unsigned char area = 0; area < NUM_AREAS; area++) 
+    {
+        if(strcmp(AreaNames[area], areaName) == 0) 
+        { 
+            areaIndex = area; 
+            break; 
+        }
     }
 
-}
+    if(areaIndex == 0) // Hub Town is the only one with NPCs right now.
+    {
+        playerDialogs = InsertHashData();
+        NPCDialogs = InsertHashDataNPC();
+    }
 
+    // Update party map position before drawing anything, as their position dictates the minimap area to be shown
+    unsigned char areaY = AreaSize[areaIndex] / sizeof(Areas[areaIndex][0]);
+    
+    for(unsigned char y = 0; y < areaY; y++)
+    {
+        unsigned char xmax = strlen(Areas[areaIndex][y]);
 
+        for(unsigned char x = 0; x < xmax; x++)
+        {
+            if (Areas[areaIndex][y][x] == '^' ||
+                Areas[areaIndex][y][x] == 'v' ||
+                Areas[areaIndex][y][x] == '<' ||
+                Areas[areaIndex][y][x] == '>')
+            {
+                playerX = x;
+                playerY = y;
+            }
+        }
+    }
 
-void area1()
-{
-    short int encounterChance = 0;
-    bool moved = false;
-    int levelCap = 9, navIndex = 0, navIndexTmp = 0;
-    int playerX = 0, playerY = 0;
-    playBGM("Area1");
     while(1)
     {
-#ifdef __linux__
-        system("clear");
-#elif _WIN32
-        system("cls");
-#endif
+        clearConsoleScreen();
 
-        renderAreaNavigation(0, navIndex, &playerX, &playerY);
+        renderAreaNavigation(areaIndex, navIndex, &playerX, &playerY);
         putchar('\n');
 
         renderMainPartyStats(false, "");
@@ -678,29 +173,40 @@ void area1()
                 playBGM("FootStep");
                 encounterChance = rand() % 100;
 
-                switch(MAP_1[playerY-1][playerX])
+                char dirY = 0, dirX = 0;
+
+                if(Areas[areaIndex][playerY][playerX] == '^')      { dirY = -1; }
+                else if(Areas[areaIndex][playerY][playerX] == '<') { dirX = -1; }
+                else if(Areas[areaIndex][playerY][playerX] == 'v') { dirY = 1;  }
+                else if(Areas[areaIndex][playerY][playerX] == '>') { dirX = 1;  }
+
+                switch(Areas[areaIndex][playerY+dirY][playerX+dirX])
                 {
-                    case ':': case ';': case '.': case ' ':
+                    case '`': case ':': case ';': case '.': case ' ':
                     {
-                        if(encounterChance >= 87)
+                        if(encounterChance >= 87 && areaIndex != 0) // Area 0 is the hub. Shouldn't have enemy encounters
                             {
                                 limitFPS(0);
                                 enemyEncounter(levelCap-9,levelCap);
-                                playBGM("Area1"); 
+                                playBGM(areaName); 
                             }
-                            MAP_1[playerY][playerX] = MAP_1[playerY-1][playerX];
-                            MAP_1[--playerY][playerX] = 'P';
+                            // TODO: Check if there's any special characters close to the party, like a wall, an entrance, etc
+                            char tmpchar = Areas[areaIndex][playerY][playerX];
+                            Areas[areaIndex][playerY][playerX] = Areas[areaIndex][playerY+dirY][playerX+dirX];
+                            Areas[areaIndex][playerY+dirY][playerX+dirX] = tmpchar;
+                            playerX += dirX;
+                            playerY += dirY;
                             moved = true;
                             do
                             {
                                 navIndexTmp = rand() % 3;
                             } while (navIndexTmp == navIndex);
                             navIndex = navIndexTmp;
+                            limitFPS(50);
                     } break;
-                    case 'F':
+                    case 'G': // Gate
                     {
-                        if(character[0].key)
-                            hub();
+                        if(character[0].key) { /* TODO */ }
                         else
                         {
                             SetColor(4);
@@ -709,9 +215,28 @@ void area1()
                             limitFPS(1500);
                         }
                     } break;
-                    case 'E':
+                    case 'E': // Entrance
                     {
-                        area1_int();
+                        return areaIndex + 1; // On the area indices, the first interior is always directly after the area it's located in
+                    }break;
+                    case 'O': // Outside
+                    {
+                        return areaIndex - 1;
+                    }break;
+                    case 'H': // Path to Hub Town
+                    {
+                        return 0;
+                    }break;
+                    case 'R':
+                    {
+                        moved = true;
+                        playSFX("HealSpot");
+                        for(unsigned char heal = 0; heal < partySize; heal++) 
+                        {
+                            character[heal].current_HP = character[heal].max_HP;
+                            character[heal].current_MP = character[heal].max_MP;
+                        }
+                        limitFPS(1000);
                     }break;
                     case '?':
                     {
@@ -719,10 +244,54 @@ void area1()
 
                         printf("%s GOT A HP POTION!", character[0].name);
                         limitFPS(1000);
-                        MAP_1[--playerY][playerX] = ' ';
+                        Areas[areaIndex][playerY+dirY][playerX+dirX] = ' ';
                         character[0].it.HPpotion += 1;
                     }
+                    case 'b' :
+                    {
+                            moved = true;
+                            talkToNPC2();
+                    } break;
 
+                    case 'c' :
+                    {
+                            moved = true;
+                            talkToNPC3();
+                    } break;
+
+                    case 'd' :
+                    {
+                            moved = true;
+                            talkToNPC4();
+                    } break;
+
+                    case 'e' :
+                    {
+                            moved = true;
+                            talkToNPC5();
+                    } break;
+
+                    case 'f' :
+                    {
+                            moved = true;
+                            talkToNPC6();
+                    } break;
+                    case 'm' :
+                    {
+                        moved = true;
+                        talkToMerchant();
+                    } break;
+
+
+                    // Area entry/exit
+                    case '1' :
+                    {
+                        return 1; // Area 1
+                    } break;
+                    case '2' :
+                    {
+                        return 3; // Area 2
+                    } break;
                 }
             }
 
@@ -731,50 +300,38 @@ void area1()
                 playBGM("FootStep");
                 encounterChance = rand() % 100;
 
-                switch(MAP_1[playerY+1][playerX])
+                char dirY = 0, dirX = 0;
+
+                if(Areas[areaIndex][playerY][playerX] == '^')      { dirY = 1; }
+                else if(Areas[areaIndex][playerY][playerX] == '<') { dirX = 1; }
+                else if(Areas[areaIndex][playerY][playerX] == 'v') { dirY = -1;  }
+                else if(Areas[areaIndex][playerY][playerX] == '>') { dirX = -1;  }
+
+                switch(Areas[areaIndex][playerY+dirY][playerX+dirX])
                 {
-                    case ':': case ';': case '.': case ' ':
+                    case '`': case ':': case ';': case '.': case ' ':
                     {
-                        if(encounterChance >= 87)
+                        if(encounterChance >= 87 && areaIndex != 0) // Area 0 is the hub. Shouldn't have enemy encounters
                             {
                                 limitFPS(0);
                                 enemyEncounter(levelCap-9,levelCap);
-                                playBGM("Area1");
+                                playBGM(areaName);
                             }
-                            MAP_1[playerY][playerX] = MAP_1[playerY+1][playerX];
-                            MAP_1[++playerY][playerX] = 'P';
+                            // TODO: Check if there's any special characters close to the party, like a wall, an entrance, etc
+                            char tmpchar = Areas[areaIndex][playerY][playerX];
+                            Areas[areaIndex][playerY][playerX] = Areas[areaIndex][playerY+dirY][playerX+dirX];
+                            Areas[areaIndex][playerY+dirY][playerX+dirX] = tmpchar;
+                            playerX += dirX;
+                            playerY += dirY;
                             moved = true;
                             do
                             {
                                 navIndexTmp = rand() % 3;
                             } while (navIndexTmp == navIndex);
                             navIndex = navIndexTmp;
+                            limitFPS(50);
                     } break;
-                    case 'F':
-                    {
-                        if(character[0].key)
-                            hub();
-                        else
-                        {
-                            SetColor(4);
-                            printf("\nYou have not found the key yet!");
-                            SetColor(15);
-                            limitFPS(1500);
-                        }
-                    } break;
-                    case 'E':
-                    {
-                        area1_int();
-                    }
-                    case '?':
-                    {
-                        moved = true;
-                        printf("%s GOT A HP POTION!", character[0].name);
-                        limitFPS(1000);
-                        MAP_1[++playerY][playerX] = ' ';
-                        character[0].it.HPpotion += 1;
-                    }
-
+                    // Moving back shall not trigger any interactions, as the player can't see the object
                 }
             }
 
@@ -783,103 +340,41 @@ void area1()
                 playBGM("FootStep");
                 encounterChance = rand() % 100;
 
-                switch(MAP_1[playerY][playerX-1])
-                {
-                    case ':': case ';': case '.': case ' ':
-                    {
-                        if(encounterChance >= 87)
-                            {
-                                limitFPS(0);
-                                enemyEncounter(levelCap-9,levelCap);
-                                playBGM("Area1");
-                            }
-                            MAP_1[playerY][playerX] = MAP_1[playerY][playerX-1];
-                            MAP_1[playerY][--playerX] = 'P';
-                            moved = true;
-                            do
-                            {
-                                navIndexTmp = rand() % 3;
-                            } while (navIndexTmp == navIndex);
-                            navIndex = navIndexTmp;
-                    } break;
-                    case 'F':
-                    {
-                        if(character[0].key)
-                            hub();
-                        else
-                        {
-                            SetColor(4);
-                            printf("\nYou have not found the key yet!");
-                            SetColor(15);
-                            limitFPS(1500);
-                        }
-                    } break;
-                    case 'E':
-                    {
-                        area1_int();
-                    }
-                    case '?':
-                    {
-                        moved = true;
-                        printf("%s GOT A HP POTION!", character[0].name);
-                        limitFPS(1000);
-                        MAP_1[playerY][--playerX] = ' ';
-                        character[0].it.HPpotion += 1;
-                    }
+                char dirY = 0, dirX = 0;
 
-                }
+                if(Areas[areaIndex][playerY][playerX] == '^')      { Areas[areaIndex][playerY][playerX] = '<'; dirX = -1; }
+                else if(Areas[areaIndex][playerY][playerX] == '<') { Areas[areaIndex][playerY][playerX] = 'v'; dirY = 1;  }
+                else if(Areas[areaIndex][playerY][playerX] == 'v') { Areas[areaIndex][playerY][playerX] = '>'; dirX = 1;  }
+                else if(Areas[areaIndex][playerY][playerX] == '>') { Areas[areaIndex][playerY][playerX] = '^'; dirY = -1; }
+
+                // TODO: Check if there's any special characters close to the party, like a wall, an entrance, etc
+                moved = true;
+                do
+                {
+                    navIndexTmp = rand() % 3;
+                } while (navIndexTmp == navIndex);
+                navIndex = navIndexTmp;
+                limitFPS(100);
             }
 
             else if(GetAsyncKeyState (VK_RIGHT) != 0)
             {
                 playBGM("FootStep");
-                encounterChance = rand() % 100;
 
-                switch(MAP_1[playerY][playerX+1])
+                char dirY = 0, dirX = 0;
+                if(Areas[areaIndex][playerY][playerX] == '^')      { Areas[areaIndex][playerY][playerX] = '>'; dirX = 1;  }
+                else if(Areas[areaIndex][playerY][playerX] == '>') { Areas[areaIndex][playerY][playerX] = 'v'; dirY = 1;  }
+                else if(Areas[areaIndex][playerY][playerX] == 'v') { Areas[areaIndex][playerY][playerX] = '<'; dirX = -1; }
+                else if(Areas[areaIndex][playerY][playerX] == '<') { Areas[areaIndex][playerY][playerX] = '^'; dirY = -1; }
+
+                // TODO: Check if there's any special characters close to the party, like a wall, an entrance, etc
+                moved = true;
+                do
                 {
-                    case ':': case ';': case '.': case ' ':
-                    {
-                        if(encounterChance >= 87)
-                            {
-                                limitFPS(0);
-                                enemyEncounter(levelCap-9,levelCap);
-                                playBGM("Area1");
-                            }
-                            MAP_1[playerY][playerX] = MAP_1[playerY][playerX+1];
-                            MAP_1[playerY][++playerX] = 'P';
-                            moved = true;
-                            do
-                            {
-                                navIndexTmp = rand() % 3;
-                            } while (navIndexTmp == navIndex);
-                            navIndex = navIndexTmp;
-                    } break;
-                    case 'F':
-                    {
-                        if(character[0].key)
-                            hub();
-                        else
-                        {
-                            SetColor(4);
-                            printf("\nYou have not found the key yet!");
-                            SetColor(15);
-                            limitFPS(1500);
-                        }
-                    } break;
-                    case 'E':
-                    {
-                        area1_int();
-                    }
-                    case '?':
-                    {
-                        moved = true;
-                        printf("%s GOT A HP POTION!", character[0].name);
-                        limitFPS(1000);
-                        MAP_1[playerY][++playerX] = ' ';
-                        character[0].it.HPpotion += 1;
-                    }
-
-                }
+                    navIndexTmp = rand() % 3;
+                } while (navIndexTmp == navIndex);
+                navIndex = navIndexTmp;
+                limitFPS(100);
             }
             else if(GetAsyncKeyState (VK_LCONTROL) != 0)
             {
@@ -898,790 +393,6 @@ void area1()
         } // Ends the Move function
     }
 }
-
-void area1_int() // TODO: Progression temporarily blocked here. The KEY interaction should start a boss fight.
-{
-    short int encounterChance = 0;
-    bool moved = false;
-    int levelCap = 9, playerX, playerY;
-
-    while(1)
-        {
-#ifdef __linux__
-        system("clear");
-#elif _WIN32
-        system("cls");
-#endif
-        for(short int y = 0; y <12; y++)
-        {
-            moved = false;
-            short int xmax = strlen(MAP_1_int[y]);
-
-            for(short int x = 0; x < xmax; x++)
-            {
-                if (MAP_1_int[y][x] == '#')
-                    {
-                        textcolor(GREEN);
-                        textbackground(GREEN);
-                    }
-                if (MAP_1_int[y][x] == 'P') 
-                { 
-                    textcolor(CYAN);
-                    playerX = x;
-                    playerY = y;
-                }
-                if (MAP_1_int[y][x] == '|')
-                {
-                    textcolor(BROWN);
-                    textbackground(BROWN);
-                }
-                if (MAP_1_int[y][x] == 'E') textcolor(DARKGRAY);
-
-                if (MAP_1_int[y][x] == 'K') textcolor(LIGHTMAGENTA);
-
-                if (MAP_1_int[y][x] == '-')
-                {
-                    textcolor(BROWN);
-                    textbackground(BROWN);
-                }
-
-                if (MAP_1_int[y][x] == '?')
-                {
-                    textcolor(BLUE);
-                    textbackground(YELLOW);
-                }
-
-                putchar(MAP_1_int[y][x]);
-                textcolor(WHITE);
-                textbackground(BLACK);
-            }
-            putchar('\n');
-        }
-
-        renderMainPartyStats(false, "");
-
-        while (!moved) 
-        {
-            if(GetAsyncKeyState (VK_UP) != 0)
-            {
-                playBGM("FootStep");
-                encounterChance = rand() % 100;
-                
-                switch(MAP_1[playerY-1][playerX])
-                {
-                    case ':': case ';': case '.': case ' ':
-                    {
-                        if(encounterChance >= 87)
-                            {
-                                enemyEncounter(levelCap-9,levelCap);
-                                playBGM("Area1"); 
-                            }
-                            MAP_1[playerY][playerX] = ' ';
-                            MAP_1[--playerY][playerX] = 'P';
-                            moved = true;
-                    } break;
-                    case 'E':
-                    {
-                        return;
-                    }break;
-                    case '?':
-                    {
-                        moved = true;
-                        printf("%s GOT an MP POTION!", character[0].name);
-                        limitFPS(1000);
-                        MAP_1[--playerY][playerX] = ' ';
-                        character[0].it.MPpotion += 1;
-                    }
-
-                }
-            }
-
-            else if(GetAsyncKeyState (VK_DOWN) != 0)
-            {
-                playBGM("FootStep");
-                encounterChance = rand() % 100;
-
-                switch(MAP_1[playerY+1][playerX])
-                {
-                    case ':': case ';': case '.': case ' ':
-                    {
-                        if(encounterChance >= 87)
-                            {
-                                enemyEncounter(levelCap-9,levelCap);
-                                playBGM("Area1");
-                            }
-                            MAP_1[playerY][playerX] = ' ';
-                            MAP_1[++playerY][playerX] = 'P';
-                            moved = true;
-                    } break;
-                    case 'E':
-                    {
-                        return;
-                    }break;
-                    case '?':
-                    {
-                        moved = true;
-                        printf("%s GOT an MP POTION!", character[0].name);
-                        limitFPS(1000);
-                        MAP_1[--playerY][playerX] = ' ';
-                        character[0].it.MPpotion += 1;
-                    }
-
-                }
-            }
-
-            else if(GetAsyncKeyState (VK_LEFT) != 0)
-            {
-                playBGM("FootStep");
-                encounterChance = rand() % 100;
-
-                switch(MAP_1[playerY][playerX-1])
-                {
-                    case ':': case ';': case '.': case ' ':
-                    {
-                        if(encounterChance >= 87)
-                            {
-                                enemyEncounter(levelCap-9,levelCap);
-                                playBGM("Area1");
-                            }
-                            MAP_1[playerY][playerX] = ' ';
-                            MAP_1[playerY][--playerX] = 'P';
-                            moved = true;
-                    } break;
-                    case 'E':
-                    {
-                        return;
-                    }break;
-                    case '?':
-                    {
-                        moved = true;
-                        printf("%s GOT an MP POTION!", character[0].name);
-                        limitFPS(1000);
-                        MAP_1[--playerY][playerX] = ' ';
-                        character[0].it.MPpotion += 1;
-                    }
-
-                }
-            }
-
-            else if(GetAsyncKeyState (VK_RIGHT) != 0)
-            {
-                playBGM("FootStep");
-                encounterChance = rand() % 100;
-
-                switch(MAP_1[playerY][playerX+1])
-                {
-                    case ':': case ';': case '.': case ' ':
-                    {
-                        if(encounterChance >= 87)
-                            {
-                                enemyEncounter(levelCap-9,levelCap);
-                                playBGM("Area1");
-                            }
-                            MAP_1[playerY][playerX] = ' ';
-                            MAP_1[playerY][++playerX] = 'P';
-                            moved = true;
-                    } break;
-                    case 'E':
-                    {
-                        return;
-                    }break;
-                    case '?':
-                    {
-                        moved = true;
-                        printf("%s GOT an MP POTION!", character[0].name);
-                        limitFPS(1000);
-                        MAP_1[--playerY][playerX] = ' ';
-                        character[0].it.MPpotion += 1;
-                    }
-
-                }
-            }
-
-            else if(GetAsyncKeyState (VK_LCONTROL) != 0)
-            {
-                playSFX("OpenMenu");
-                moved = true;
-                openInventory();
-            }
-
-            else if(GetAsyncKeyState (VK_LSHIFT) != 0)
-            {
-                playSFX("OpenMenu");
-                moved = true;
-                renderPlayerSkillMenu();
-            }
-            limitFPS(0);
-        } // Ends the Move function
-    }
-}
-
-int area2()
-{
-    short int encounterChance = 0;
-    bool moved = false;
-    int levelCap = 19, playerX, playerY;
-
-    playBGM("Area2");
-    while (1)
-            {
-#ifdef __linux__
-            system("clear");
-#elif _WIN32
-            system("cls");
-#endif
-                for(short int y = 0; y <28; y++)
-                {
-                    moved = false;
-                    short int xmax = strlen(MAP_2[y]);
-
-                    for(short int x = 0; x < xmax; x++)
-                        {
-                            if (MAP_2[y][x] == '#')
-                        {
-                            textcolor(LIGHTGREEN);
-                            textbackground(LIGHTGREEN);
-                        }
-                        if (MAP_2[y][x] == 'P')
-                        {
-                            textcolor(CYAN);
-                        }
-                        if (MAP_2[y][x] == 'F')
-                        {
-                            textcolor(RED);
-                        }
-                        if (MAP_2[y][x] == '|')
-                        {
-                            textcolor(BLACK);
-                            textbackground(BROWN);
-                        }
-                        if (MAP_2[y][x] == '`')
-                        {
-                            textcolor(BROWN);
-                            textbackground(BROWN);
-                        }
-                        if (MAP_2[y][x] == '?')
-                        {
-                            textcolor(LIGHTRED);
-                            textbackground(YELLOW);
-                        }
-                        if (MAP_2[y][x] == '~')
-                        {
-                            textcolor(WHITE);
-                            textbackground(CYAN);
-                        }
-                        if (MAP_2[y][x] == 'E')
-                        {
-                            textcolor(DARKGRAY);
-                        }
-                        if (MAP_2[y][x] == '=')
-                        {
-                            textbackground(WHITE);
-                        }
-                        if  (MAP_2[y][x] == ';')
-                        {
-                            textcolor(GREEN);
-                        }
-                        if  (MAP_2[y][x] == ':')
-                        {
-                            textbackground(GREEN);
-                            textcolor(BLACK);
-                        }
-                        if  (MAP_2[y][x] == '*')
-                        {
-                            textcolor(GREEN);
-                        }
-                        if  (MAP_2[y][x] == '.')
-                        {
-                            textcolor(YELLOW);
-                        }
-                        if  (MAP_2[y][x] == '-')
-                        {
-                            textbackground(BROWN);
-                            textcolor(BLACK);
-                        }
-                        if (MAP_2[y][x] == 'K') textcolor(LIGHTMAGENTA);
-
-                            putchar(MAP_2[y][x]);
-                            textcolor(WHITE);
-                            textbackground(BLACK);
-                        }
-                        putchar('\n');
-                }
-
-            renderMainPartyStats(false, "");
-
-        while (!moved) 
-        {
-            if(GetAsyncKeyState (VK_UP) != 0)
-            {
-                playBGM("FootStep");
-                encounterChance = rand() % 100;
-
-                switch(MAP_1[playerY-1][playerX])
-                {
-                    case ':': case ';': case '.': case ' ':
-                    {
-                        if(encounterChance >= 87)
-                            {
-                                enemyEncounter(levelCap-9,levelCap);
-                                playBGM("Area2"); 
-                            }
-                            MAP_1[playerY][playerX] = ' ';
-                            MAP_1[--playerY][playerX] = 'P';
-                            moved = true;
-                    } break;
-                    case 'F':
-                    {
-                        area3();
-                        moved = true;
-                        return 1;
-                    }
-                    case 'E':
-                    {
-                        area1_int();
-                    }break;
-                    case '?':
-                    {
-                        moved = true;
-                        printf("%s GOT A HP POTION!", character[0].name);
-                        limitFPS(1000);
-                        MAP_1[--playerY][playerX] = ' ';
-                        character[0].it.HPpotion += 1;
-                    }
-
-                }
-            }
-
-            else if(GetAsyncKeyState (VK_DOWN) != 0)
-            {
-                playBGM("FootStep");
-                encounterChance = rand() % 100;
-
-                switch(MAP_1[playerY+1][playerX])
-                {
-                    case ':': case ';': case '.': case ' ':
-                    {
-                        if(encounterChance >= 87)
-                            {
-                                enemyEncounter(levelCap-9,levelCap);
-                                playBGM("Area2");
-                            }
-                            MAP_1[playerY][playerX] = ' ';
-                            MAP_1[++playerY][playerX] = 'P';
-                            moved = true;
-                    } break;
-                    case 'F':
-                    {
-                        area3();
-                        moved = true;
-                        return 1;
-                    }
-                    case 'E':
-                    {
-                        area1_int();
-                    }
-                    case '?':
-                    {
-                        moved = true;
-                        printf("%s GOT A HP POTION!", character[0].name);
-                        limitFPS(1000);
-                        MAP_1[++playerY][playerX] = ' ';
-                        character[0].it.HPpotion += 1;
-                    }
-
-                }
-            }
-
-            else if(GetAsyncKeyState (VK_LEFT) != 0)
-            {
-                playBGM("FootStep");
-                encounterChance = rand() % 100;
-
-                switch(MAP_1[playerY][playerX-1])
-                {
-                    case ':': case ';': case '.': case ' ':
-                    {
-                        if(encounterChance >= 87)
-                            {
-                                enemyEncounter(levelCap-9,levelCap);
-                                playBGM("Area2");
-                            }
-                            MAP_1[playerY][playerX] = ' ';
-                            MAP_1[playerY][--playerX] = 'P';
-                            moved = true;
-                    } break;
-                    case 'F':
-                    {
-                        area3();
-                        moved = true;
-                        return 1;
-                    }
-                    case 'E':
-                    {
-                        area1_int();
-                    }
-                    case '?':
-                    {
-                        moved = true;
-                        printf("%s GOT A HP POTION!", character[0].name);
-                        limitFPS(1000);
-                        MAP_1[playerY][--playerX] = ' ';
-                        character[0].it.HPpotion += 1;
-                    }
-
-                }
-            }
-
-            else if(GetAsyncKeyState (VK_RIGHT) != 0)
-            {
-                playBGM("FootStep");
-                encounterChance = rand() % 100;
-
-                switch(MAP_1[playerY][playerX+1])
-                {
-                    case ':': case ';': case '.': case ' ':
-                    {
-                        if(encounterChance >= 87)
-                            {
-                                enemyEncounter(levelCap-9,levelCap);
-                                playBGM("Area2");
-                            }
-                            MAP_1[playerY][playerX] = ' ';
-                            MAP_1[playerY][++playerX] = 'P';
-                            moved = true;
-                    } break;
-                    case 'F':
-                    {
-                        area3();
-                        moved = true;
-                        return 1;
-                    }
-                    case 'E':
-                    {
-                        area1_int();
-                    }
-                    case '?':
-                    {
-                        moved = true;
-                        printf("%s GOT A HP POTION!", character[0].name);
-                        limitFPS(1000);
-                        MAP_1[playerY][++playerX] = ' ';
-                        character[0].it.HPpotion += 1;
-                    }
-
-                }
-            }
-            else if(GetAsyncKeyState (VK_LCONTROL) != 0)
-            {
-                playSFX("OpenMenu");
-                moved = true;
-                openInventory();
-            }
-
-            else if(GetAsyncKeyState (VK_LSHIFT) != 0)
-            {
-                playSFX("OpenMenu");
-                moved = true;
-                renderPlayerSkillMenu();
-            }
-            limitFPS(0);
-        } // Ends the Move function
-    }
-}
-
-void area3()
-{
-    short int encounterChance = 0;
-    bool moved = false;
-    int levelCap = 29, playerX, playerY;
-
-    playBGM("Area3");   
-    while (1)
-            {
-#ifdef __linux__
-            system("clear");
-#elif _WIN32
-            system("cls");
-#endif
-                for(short int y = 0; y <28; y++)
-                {
-                    moved = false;
-                    short int xmax = strlen(MAP_3[y]);
-
-                    for(short int x = 0; x < xmax; x++)
-                        {
-                        if (MAP_3[y][x] == '#')
-                        {
-                            textcolor(LIGHTGREEN);
-                            textbackground(LIGHTGREEN);
-                        }
-                        if (MAP_3[y][x] == 'P')
-                        {
-                            textcolor(CYAN);
-                        }
-                        if (MAP_3[y][x] == 'F')
-                        {
-                            textcolor(RED);
-                        }
-                        if (MAP_3[y][x] == '|')
-                        {
-                            textcolor(BLACK);
-                            textbackground(BLUE);
-                        }
-                        if (MAP_3[y][x] == '_')
-                        {
-                            textcolor(BLACK);
-                            textbackground(BLUE);
-                        }
-                        if (MAP_3[y][x] == '`')
-                        {
-                            textcolor(BROWN);
-                            textbackground(BROWN);
-                        }
-                        if (MAP_3[y][x] == '?')
-                        {
-                            textcolor(LIGHTRED);
-                            textbackground(YELLOW);
-                        }
-                        if (MAP_3[y][x] == '~')
-                        {
-                            textcolor(WHITE);
-                            textbackground(CYAN);
-                        }
-                        if (MAP_3[y][x] == 'E')
-                        {
-                            textcolor(DARKGRAY);
-                        }
-                        if (MAP_3[y][x] == '=')
-                        {
-                            textbackground(WHITE);
-                        }
-                        if  (MAP_3[y][x] == ';')
-                        {
-                            textcolor(GREEN);
-                        }
-                        if  (MAP_3[y][x] == ':')
-                        {
-                            textbackground(GREEN);
-                            textcolor(BLACK);
-                        }
-                        if  (MAP_3[y][x] == '*')
-                        {
-                            textcolor(GREEN);
-                        }
-                        if  (MAP_3[y][x] == '.')
-                        {
-                            textcolor(CYAN);
-                        }
-                        if  (MAP_3[y][x] == '-')
-                        {
-                            textbackground(BROWN);
-                            textcolor(BLACK);
-                        }
-                        if (MAP_3[y][x] == 'K') textcolor(LIGHTMAGENTA);
-
-                            putchar(MAP_3[y][x]);
-                            textcolor(WHITE);
-                            textbackground(BLACK);
-                        }
-                        putchar('\n');
-                }
-
-            renderMainPartyStats(false, "");
-
-        while (!moved) 
-        {
-            if(GetAsyncKeyState (VK_UP) != 0)
-            {
-                playBGM("FootStep");
-                encounterChance = rand() % 100;
-
-                switch(MAP_1[playerY-1][playerX])
-                {
-                    case ':': case ';': case '.': case ' ':
-                    {
-                        if(encounterChance >= 87)
-                            {
-                                enemyEncounter(levelCap-9,levelCap);
-                                playBGM("Area3"); 
-                            }
-                            MAP_1[playerY][playerX] = ' ';
-                            MAP_1[--playerY][playerX] = 'P';
-                            moved = true;
-                    } break;
-                    case 'F':
-                    {
-                        fightBoss(30);
-                        limitFPS(4000);
-                        ending();
-                    } break;
-                    case '?':
-                    {
-                        moved = true;
-                        printf("%s GOT A HP POTION!", character[0].name);
-                        limitFPS(1000);
-                        MAP_1[--playerY][playerX] = ' ';
-                        character[0].it.HPpotion += 1;
-                    }
-                    case 'K':
-                    {
-                    printf("\n%s Found the key, but it is being guarded by a Boss!", character[0].name);
-                    limitFPS(800);
-                    fightBoss(20);
-                    character[0].key = true;
-                    MAP_3[--playerY][playerX] = ' ';
-                    }
-
-                }
-            }
-
-            else if(GetAsyncKeyState (VK_DOWN) != 0)
-            {
-                playBGM("FootStep");
-                encounterChance = rand() % 100;
-
-                switch(MAP_1[playerY+1][playerX])
-                {
-                    case ':': case ';': case '.': case ' ':
-                    {
-                        if(encounterChance >= 87)
-                            {
-                                enemyEncounter(levelCap-9,levelCap);
-                                playBGM("Area3");
-                            }
-                            MAP_1[playerY][playerX] = ' ';
-                            MAP_1[++playerY][playerX] = 'P';
-                            moved = true;
-                    } break;
-                    case 'F':
-                    {
-                        fightBoss(30);
-                        limitFPS(4000);
-                        ending();
-                    } break;
-                    case '?':
-                    {
-                        moved = true;
-                        printf("%s GOT A HP POTION!", character[0].name);
-                        limitFPS(1000);
-                        MAP_1[++playerY][playerX] = ' ';
-                        character[0].it.HPpotion += 1;
-                    }
-                    case 'K':
-                    {
-                        printf("\n%s Found the key, but it is being guarded by a Boss!", character[0].name);
-                        limitFPS(800);
-                        fightBoss(20);
-                        character[0].key = true;
-                        MAP_3[++playerY][playerX] = ' ';
-                    }
-                }
-            }
-
-            else if(GetAsyncKeyState (VK_LEFT) != 0)
-            {
-                playBGM("FootStep");
-                encounterChance = rand() % 100;
-
-                switch(MAP_1[playerY][playerX-1])
-                {
-                    case ':': case ';': case '.': case ' ':
-                    {
-                        if(encounterChance >= 87)
-                            {
-                                enemyEncounter(levelCap-9,levelCap);
-                                playBGM("Area3");
-                            }
-                            MAP_1[playerY][playerX] = ' ';
-                            MAP_1[playerY][--playerX] = 'P';
-                            moved = true;
-                    } break;
-                    case 'F':
-                    {
-                        fightBoss(30);
-                        limitFPS(4000);
-                        ending();
-                    } break;
-                    case '?':
-                    {
-                        moved = true;
-                        printf("%s GOT A HP POTION!", character[0].name);
-                        limitFPS(1000);
-                        MAP_1[playerY][--playerX] = ' ';
-                        character[0].it.HPpotion += 1;
-                    }
-                    case 'K':
-                    {
-                        printf("\n%s Found the key, but it is being guarded by a Boss!", character[0].name);
-                        limitFPS(800);
-                        fightBoss(20);
-                        character[0].key = true;
-                        MAP_3[playerY][--playerX] = ' ';
-                    }
-                }
-            }
-
-            else if(GetAsyncKeyState (VK_RIGHT) != 0)
-            {
-                playBGM("FootStep");
-                encounterChance = rand() % 100;
-
-                switch(MAP_1[playerY][playerX+1])
-                {
-                    case ':': case ';': case '.': case ' ':
-                    {
-                        if(encounterChance >= 87)
-                            {
-                                enemyEncounter(levelCap-9,levelCap);
-                                playBGM("Area3");
-                            }
-                            MAP_1[playerY][playerX] = ' ';
-                            MAP_1[playerY][++playerX] = 'P';
-                            moved = true;
-                    } break;
-                    case 'F':
-                    {
-                        fightBoss(30);
-                        limitFPS(4000);
-                        ending();
-                    } break;
-                    case '?':
-                    {
-                        moved = true;
-                        printf("%s GOT A HP POTION!", character[0].name);
-                        limitFPS(1000);
-                        MAP_1[playerY][++playerX] = ' ';
-                        character[0].it.HPpotion += 1;
-                    }
-                    case 'K':
-                    {
-                        printf("\n%s Found the key, but it is being guarded by a Boss!", character[0].name);
-                        limitFPS(800);
-                        fightBoss(20);
-                        character[0].key = true;
-                        MAP_3[playerY][++playerX] = ' ';
-                    }
-                }
-            }
-            else if(GetAsyncKeyState (VK_LCONTROL) != 0)
-            {
-                playSFX("OpenMenu");
-                moved = true;
-                openInventory();
-            }
-
-            else if(GetAsyncKeyState (VK_LSHIFT) != 0)
-            {
-                playSFX("OpenMenu");
-                moved = true;
-                renderPlayerSkillMenu();
-            }
-            limitFPS(0);
-        } // Ends the Move function
-    }
-}
-
 
 void talkToMerchant()
 {
@@ -1840,76 +551,65 @@ bool drawSelectMenu()
 
 void ending()
 {
-    short int ymax = 1;
+    unsigned char ymax = 1;
     while(ymax !=50)
         {
-#ifdef __linux__
-            system("clear");
-#elif _WIN32
-            system("cls");
-#endif
-                for(short int y = 0; y <ymax; y++)
+            clearConsoleScreen();
+                for(unsigned char y = 0; y <ymax; y++)
                 {
-                    int xmax = strlen(credits[y]);
+                    unsigned char xmax = strlen(Credits[y]);
 
-                    for(short int x = 0; x < xmax; x++)
+                    for(unsigned char x = 0; x < xmax; x++)
                         {
-                            putchar(credits[y][x]);
-                            textcolor(WHITE);
-                            textbackground(BLACK);
+                            putchar(Credits[y][x]);   
                         }
                     putchar('\n');
                 }
             ymax++;
         }
+    textcolor(WHITE);
+    textbackground(BLACK);
 }
 
-void renderAreaNavigation(int areaIndex, int navIndex, int *playerX, int *playerY)
+void renderAreaNavigation(unsigned char areaIndex, unsigned char navIndex, unsigned char *playerX, unsigned char *playerY)
 {
-    // Update player map position first
-    for(unsigned char y = 0; y <28; y++)
-    {
-        short int xmax = strlen(MAP_1[y]);
-
-        for(unsigned char x = 0; x < xmax; x++)
-        {
-
-            if (MAP_1[y][x] == 'P')
-            {
-                *playerX = x;
-                *playerY = y;
-            }
-        }
-    }
-    if(areaIndex == 1) { navIndex += 9; }
+    if(areaIndex > 0) { navIndex += numNavAreas[areaIndex-1]; }
     printf("  ┌─────────────────────────────────────────────────────────────────────────────────────────────────────┐\n");
-    for(int y = 0; y < NAVAREA_YSIZE; y++) 
+    for(unsigned char y = 0; y < NAVAREA_YSIZE; y++) 
     {
         printf("  │");
-        for(int x = 0; x < NAVAREA_XSIZE; x++) 
+        for(unsigned char x = 0; x < NAVAREA_XSIZE; x++) 
         {
             char pixelToDraw = navAreas[navIndex][y][x];
             applyColorPalette(pixelToDraw);
             putchar(pixelToDraw);
-            textcolor(WHITE);
-            textbackground(BLACK);
         }
+        textcolor(WHITE);
+        textbackground(BLACK);
         printf("│");
 
         // Draw the mini-map at the side
-        if(y == (NAVAREA_YSIZE/2) - 8) { printf("  ┌─────────────────┐"); }
-        else if(y == (NAVAREA_YSIZE/2) - 7 || y == (NAVAREA_YSIZE/2) + 7) { printf("  │                 │");}
-        else if(y > (NAVAREA_YSIZE/2) - 7 && y < (NAVAREA_YSIZE/2) + 7)
+        if(y == (NAVAREA_YSIZE/2) - 6) 
+        { 
+            printf(" ┌──────"); 
+            useBoldConsoleText();
+            SetColor(9);
+            printf("MINIMAP");
+            SetColor(15);
+            restoreConsoleText();
+            printf("──────┐");
+        }
+
+        else if(y > (NAVAREA_YSIZE/2) - 6 && y < (NAVAREA_YSIZE/2) + 6)
         {
-            printf("  │ ");
-            int minimapY = *playerY - 7 + (y - (NAVAREA_YSIZE/2) + 7);
-            //printf("minimapY:%d", minimapY);
-            for(int minimapX = 0; minimapX < 15; minimapX++) 
+            printf(" │");
+            unsigned char minimapY = *playerY - 6 + (y - (NAVAREA_YSIZE/2) + 6);
+            for(unsigned char minimapX = 0; minimapX < 19; minimapX++) 
             {
-                if(minimapY*(strlen(MAP_1[0])) + *playerX - 7 + minimapX < 0 ||
-                minimapY*(strlen(MAP_1[0])) + *playerX - 7 + minimapX > sizeof(MAP_1) ||
-                *playerX - 7 + minimapX < 0 || minimapY >= sizeof(MAP_1) / sizeof(MAP_1[0]) ||
-                *playerX - 7 + minimapX >= strlen(MAP_1[minimapY]))
+                if(minimapY*(strlen(Areas[areaIndex][0])) + *playerX - 7 + minimapX < 0 ||
+                minimapY*(strlen(Areas[areaIndex][0])) + *playerX - 7 + minimapX > AreaSize[areaIndex] ||
+                *playerX - 7 + minimapX < 0 || minimapY >= AreaSize[areaIndex] / sizeof(Areas[areaIndex][0]) ||
+                *playerX - 7 + minimapX >= strlen(Areas[areaIndex][minimapY]))
                 {
                     textcolor(WHITE);
                     textbackground(BLACK);
@@ -1917,19 +617,19 @@ void renderAreaNavigation(int areaIndex, int navIndex, int *playerX, int *player
                 }
                 else 
                 {
-                    char pixelToDraw = MAP_1[minimapY][*playerX - 7 + minimapX];
+                    char pixelToDraw = Areas[areaIndex][minimapY][*playerX - 7 + minimapX];
                     applyColorPalette(pixelToDraw);
                     putchar(pixelToDraw);
-                    textcolor(WHITE);
-                    textbackground(BLACK);
                 }
             }
-            printf(" │");
+            textcolor(WHITE);
+            textbackground(BLACK);
+            printf("│");
         }
-        else if (y == (NAVAREA_YSIZE/2) + 8) { printf("  └─────────────────┘"); }
-
+        else if (y == (NAVAREA_YSIZE/2) + 6) { printf(" └───────────────────┘"); }
+        textcolor(WHITE);
+        textbackground(BLACK);
         printf("\n");
     }
     printf("  └─────────────────────────────────────────────────────────────────────────────────────────────────────┘");
-
 }

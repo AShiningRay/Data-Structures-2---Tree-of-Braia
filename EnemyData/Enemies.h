@@ -16,19 +16,20 @@ char enemiesInEncounter = 1;
 struct Enemy
 {
     char name[MAX_ENEMY_NAME_SIZE];
-    int gold_given;
-    int max_HP;
-    int current_HP;
-    int atk;
-    int def;
-    int inte;
-    int XP_given;
+    unsigned short int gold_given;
+    short int max_HP;
+    short int current_HP;
+    unsigned short int atk;
+    unsigned short int def;
+    unsigned short int inte;
+    unsigned short int spd;
+    unsigned short int XP_given;
     char weakness[20];
     char resists[20];
 }Enemy[3];
 
 // Bosses have fixed levels, so whenever you don't see enemyLevel multipliers, it means the enemy is a boss
-void generateEnemy(char enemyIndex, char* enemy, int enemyLevel)
+void generateEnemy(unsigned char enemyIndex, char* enemy, int enemyLevel)
 {
 
     if(strcmp(enemy, "YELLOW BLOB") == 0)
@@ -39,6 +40,7 @@ void generateEnemy(char enemyIndex, char* enemy, int enemyLevel)
         Enemy[enemyIndex].atk = 140 + 3*enemyLevel;
         Enemy[enemyIndex].def = 40 + 2*enemyLevel;
         Enemy[enemyIndex].inte = 10 + 2*enemyLevel;
+        Enemy[enemyIndex].spd = 40 + 3*enemyLevel;
         Enemy[enemyIndex].XP_given = 45 + 10*enemyLevel;
         Enemy[enemyIndex].gold_given = 6 + 2*enemyLevel;
         strcpy(Enemy[enemyIndex].weakness,"BLIZZARD");
@@ -52,27 +54,30 @@ void generateEnemy(char enemyIndex, char* enemy, int enemyLevel)
         Enemy[enemyIndex].current_HP = Enemy[enemyIndex].max_HP;
         Enemy[enemyIndex].atk = 150 + 5*enemyLevel;
         Enemy[enemyIndex].def = 45 + 4*enemyLevel;
-        Enemy[enemyIndex].inte = 10 + 2*enemyLevel;
+        Enemy[enemyIndex].inte = 14 + 2*enemyLevel;
+        Enemy[enemyIndex].spd = 45 + 4*enemyLevel;
         Enemy[enemyIndex].XP_given = 65 + 15*enemyLevel;
         Enemy[enemyIndex].gold_given = 8 + 3*enemyLevel;
         strcpy(Enemy[enemyIndex].weakness, "AQUA STORM");
         strcpy(Enemy[enemyIndex].resists, "EARTH SMASH");
     }
-    // TODO: Rework everything from here on, as those current enemies just don't match the new system
-    if(strcmp(enemy, "CURSED ARMOR") == 0)
+    
+    if(strcmp(enemy, "CURSED ARMOR") == 0) // The first boss, meant to be slow, but hit HARD. Speed stat should be implemented into the turn system first.
     {
         snprintf(Enemy[enemyIndex].name, MAX_ENEMY_NAME_SIZE, "%s Lv.%d", enemy, enemyLevel);
         Enemy[enemyIndex].max_HP = 870;
         Enemy[enemyIndex].current_HP = Enemy[enemyIndex].max_HP;
-        Enemy[enemyIndex].atk = 210;
+        Enemy[enemyIndex].atk = 260;
         Enemy[enemyIndex].def = 95;
         Enemy[enemyIndex].inte = 70;
-        Enemy[enemyIndex].XP_given = 640;
+        Enemy[enemyIndex].spd = 45;
+        Enemy[enemyIndex].XP_given = 720;
         Enemy[enemyIndex].gold_given = 260;
         strcpy(Enemy[enemyIndex].weakness, "WIND GUST");
         strcpy(Enemy[enemyIndex].resists, "EARTH SMASH");
     }
 
+    // TODO: Rework everything from here on, as those current enemies just don't match the new system
     if(strcmp(enemy, "C-GUY") == 0)
     {
         snprintf(Enemy[enemyIndex].name, MAX_ENEMY_NAME_SIZE, "%s Lv.%d", enemy, enemyLevel);
@@ -151,7 +156,7 @@ void generateEnemy(char enemyIndex, char* enemy, int enemyLevel)
         Enemy[enemyIndex].atk = 295;
         Enemy[enemyIndex].def = 150;
         Enemy[enemyIndex].inte = 130;
-        Enemy[enemyIndex].XP_given = 99999;
+        Enemy[enemyIndex].XP_given = 65535;
         Enemy[enemyIndex].gold_given = 999;
         strcpy(Enemy[enemyIndex].weakness, "WIND GUST");
         strcpy(Enemy[enemyIndex].resists, "EARTH SMASH");

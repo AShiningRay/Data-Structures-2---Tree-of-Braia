@@ -33,3 +33,130 @@ printf("%s", colorCodes[color]);
       color + (__BACKGROUND << 4));
 #endif
 }
+
+void applyColorPalette(char character)
+{
+
+    // Same color Background and text
+    if(character == '&')
+    {
+        textcolor(LIGHTGREEN);
+        textbackground(LIGHTGREEN);
+    }
+    else if(character == '@')
+    {
+        textcolor(BROWN);
+        textbackground(BROWN);
+    }
+    else if(character == '#')
+    {
+        textcolor(GREEN);
+        textbackground(GREEN);
+    }
+    else if(character == '.')
+    {
+        textbackground(BLACK);
+        textcolor(BLACK);
+    }
+    else if(character == 'W')
+    {
+        textcolor(WHITE);
+        textbackground(WHITE);
+    }
+    else if(character == '0' || character == 'E')
+    {
+        textcolor(DARKGRAY);
+        textbackground(DARKGRAY);
+    }
+    else if(character == 'M')
+    {
+        textcolor(MAGENTA);
+        textbackground(MAGENTA);
+    }
+    else if(character == 'P')
+    {
+        textcolor(LIGHTMAGENTA);
+        textbackground(LIGHTMAGENTA);
+    }
+    else if(character == 'L')
+    {
+        textcolor(LIGHTRED);
+        textbackground(LIGHTRED);
+    }
+    else if(character == 'R')
+    {
+        textcolor(RED);
+        textbackground(RED);
+    }
+    else if(character == 'B' || character == 'H')
+    {
+        textcolor(BLUE);
+        textbackground(BLUE);
+    }
+    else if(character == 'K')
+    {
+        textcolor(YELLOW);
+        textbackground(YELLOW);
+    }
+    else if (character == 'V')
+    {
+        textcolor(LIGHTBLUE);
+        textbackground(LIGHTBLUE);
+    }
+    else if (character == '$')
+    {
+        textcolor(LIGHTCYAN);
+        textbackground(LIGHTCYAN);
+    }
+    if(character == 'C')
+    {
+        textcolor(CYAN);
+        textbackground(CYAN);
+    }
+    if(character == '+')
+    {
+        textcolor(LIGHTGRAY);
+        textbackground(LIGHTGRAY);
+    }
+
+    // Different color background and text
+    else if(character == '|')
+    {
+        textcolor(RED);
+        textbackground(BLACK);
+    }
+    else if (character == '`')
+    {
+        textcolor(BLACK);
+        textbackground(BROWN);
+    }
+    else if (character == ':')
+    {
+        textcolor(BROWN);
+        textbackground(LIGHTGREEN);
+    }
+    else if (character == ';')
+    {
+        textcolor(LIGHTGREEN);
+        textbackground(BROWN);
+    }
+    else if (character == '~')
+    {
+        textcolor(WHITE);
+        textbackground(LIGHTBLUE);
+    }
+
+    else if (character == '=')
+    {
+        textcolor(WHITE);
+        textbackground(BROWN);
+    }
+    
+    // Player's Minimap Indicators
+    else if (character == '>' || character == '<' || character == 'v' || character == '^')
+    {
+        textcolor(BLACK);
+        textbackground(YELLOW);
+    }
+
+}

@@ -19,35 +19,32 @@ void openInventory()
     while (1)
         {
             moved = false;
-#ifdef __linux__
-            system("clear");
-#elif _WIN32
-            system("cls");
-#endif
+            clearConsoleScreen();
+
             showCaracterStats_Inventory();
 
-            SetColor(15);
-            printf("\x1B[1m");
+            SetColor(WHITE);
+            useBoldConsoleText();
             printf("\n\n");
             printf("\t┌───────────────────INVENTORY─────────────────────┐\n");
             printf("\t│");
-            if(HPpotsel) { SetColor(9); }
+            if(HPpotsel) { SetColor(LIGHTBLUE); }
             printf(" %s HP POTION : %d      ", (HPpotsel ? "┼─" : "  "), character[0].it.HPpotion);
-            SetColor(15);
+            SetColor(WHITE);
             printf("│");
-            if(HPincsel) { SetColor(9); }
+            if(HPincsel) { SetColor(LIGHTBLUE); }
             printf(" %s HP MAX BOOSTER : %d   ", (HPincsel ? "┼─" : "  "), character[0].it.HPinc);
-            SetColor(15);
+            SetColor(WHITE);
             printf("│\n");
             printf("\t│                       │                         │\n");
             printf("\t│");
-            if(MPpotsel) { SetColor(9); }
+            if(MPpotsel) { SetColor(LIGHTBLUE); }
             printf(" %s MP POTION : %d      ", (MPpotsel ? "┼─" : "  "), character[0].it.MPpotion);
-            SetColor(15);
+            SetColor(WHITE);
             printf("│");
-            if(MPincsel) { SetColor(9); }
+            if(MPincsel) { SetColor(LIGHTBLUE); }
             printf(" %s MP MAX BOOSTER : %d   ", (MPincsel ? "┼─" : "  "), character[0].it.MPinc);
-            SetColor(15);
+            SetColor(WHITE);
             printf("│\n");
             // End of selectable items
             printf("\t├────────────────────COMMANDS─────────────────────┤\n");
@@ -61,7 +58,7 @@ void openInventory()
             printf("\t│   HP MAX BOOSTER : INCREASES THE MAX HP BY 5%%   │\n");
             printf("\t│   MP MAX BOOSTER : INCREASES THE MAX MP BY 5%%   │\n");
             printf("\t└─────────────────────────────────────────────────┘\n");
-            printf("\x1B[0m");
+            restoreConsoleText();
 
             if(openingInventory)
             {
@@ -150,6 +147,7 @@ void openInventory()
                         playSFX("ReturnFromMenu");
                         moved = true;
                         printf("\n\t\tClosing Inventory...");
+                        SetColor(WHITE);
                         limitFPS(1000);
                         return;
                     }
@@ -234,62 +232,62 @@ void openInventory()
         }
 }
 
-void showCaracterStats_Inventory()
+void showCaracterStats_Inventory() // TODO: Rework this entirely
 {
-    printf("\x1B[1m");
+    useBoldConsoleText();
     
     printf("\t  Player:");
-    SetColor(3);
+    SetColor(CYAN);
     printf("%s",character[0].name);
-    SetColor(15);
+    SetColor(WHITE);
     printf("\n\t  Level:");
-    SetColor(14);
+    SetColor(YELLOW);
     printf("%d", character[0].Level);
-    SetColor(15);
+    SetColor(WHITE);
     printf("  Gold:");
-    SetColor(6);
+    SetColor(BROWN);
     printf("%d", character[0].gold);
-    SetColor(15);
+    SetColor(WHITE);
     printf("  Got Key:");
-    SetColor(2);
+    SetColor(GREEN);
     printf("%s \n", character[0].key ? " Yes" : " No");
-    SetColor(15);
+    SetColor(WHITE);
     printf("\t├───────────────────────────────────────────┤  │\t  STRATEGY GUIDE  \t│\n");
     printf("\t│    cur / max      cur / max       cur/max │  │P-CHAR E-ENTRANCE F-FINISH K-KEY│\n");
     printf("\t│");
-    SetColor(10);
+    SetColor(LIGHTGREEN);
     printf(" HP:%4d/%4d",character[0].current_HP, character[0].max_HP);
-    SetColor(15);
+    SetColor(WHITE);
     printf(" │ ");
-    SetColor(9);
+    SetColor(LIGHTBLUE);
     printf("MP:%4d/%4d ", character[0].current_MP, character[0].max_MP);
-    SetColor(15);
+    SetColor(WHITE);
     printf(" │ ");
-    SetColor(14);
+    SetColor(YELLOW);
     printf("AP:%3d/%d ", 0, 100); // character[0].current_AP, character[0].max_AP); // AP not implemented yet
-    SetColor(15);
+    SetColor(WHITE);
     printf("│  │ B-BOSS ?-ITEM N-NPC M-MERCHANT │\n");
     printf("\t├───────────────────────────────────────────┤  ├────────────COMMANDS────────────┤\n");
     printf("\t│");
-    SetColor(11);
+    SetColor(LIGHTCYAN);
     printf("  atk:%3d",character[0].atk);
-    SetColor(15);
+    SetColor(WHITE);
     printf("│");
-    SetColor(13);
+    SetColor(LIGHTMAGENTA);
     printf("def:%3d", character[0].def);
-    SetColor(15);
+    SetColor(WHITE);
     printf("│");
-    SetColor(1);
+    SetColor(BLUE);
     printf("int:%3d", character[0].inte);
-    SetColor(15);
+    SetColor(WHITE);
     printf("│");
-    SetColor(5);
+    SetColor(MAGENTA);
     printf("lck:%3d", character[0].luck);
-    SetColor(15);
+    SetColor(WHITE);
     printf("│");
-    SetColor(10);
+    SetColor(LIGHTGREEN);
     printf("spd:%3d  ", 0); // character[0].spd); //SPD stat not implemented
-    SetColor(15);
+    SetColor(WHITE);
     printf("│  │  ARROWS-MOVE  LCTRL-INVENTORY  │\n");
 
     printf("\t│XP:(");
@@ -301,16 +299,16 @@ void showCaracterStats_Inventory()
     else
         percent = (int) (((float)character[0].current_XP / (float)character[0].next_XP) * 32);
 
-        SetColor(14);
+        SetColor(YELLOW);
     for(unsigned short int i = 0; i < percent; i++) printf(">");
 
-      SetColor(15);
+      SetColor(WHITE);
 
     for(short int i = 40 - percent - 2; i > 0; i--) { printf(" "); }
 
     printf(")│  │      LSHIFT-OPEN SKILLTREE     │");
 
-    printf("\x1B[0m");
+    restoreConsoleText();
 }
 
 
@@ -322,16 +320,13 @@ void renderPlayerSkillMenu()
     limitFPS(1000);
     while (1)
         {
-#ifdef __linux__
-            system("clear");
-#elif _WIN32
-            system("cls");
-#endif
+            clearConsoleScreen();
+            
             printf("\t┌──────────────────────────────────────────────────────────────────────────┐\n");
             printf("\t│  Player:");
-            SetColor(3);
+            SetColor(CYAN);
             printf("%s\n", character[0].name);
-            SetColor(15);
+            SetColor(WHITE);
             printf("\t│___________________________________________________\n\n");
             print_skillTree((character[0].magtree), 20);
             printf("\n\t(Skills)\n\n");

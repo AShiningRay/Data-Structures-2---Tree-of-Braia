@@ -3,32 +3,33 @@
 #define MAX_PARTY_SIZE 4
 #define MAX_NAME_SIZE 15
 
-char partySize = 0;
+unsigned char partySize = 0;
 
 typedef struct items
 {
-    short int HPpotion;
-    short int MPpotion;
-    short int HPinc;
-    short int MPinc;
+    unsigned char HPpotion;
+    unsigned char MPpotion;
+    unsigned char HPinc;
+    unsigned char MPinc;
 }items;
 
 struct playerChar
 {
     char name[MAX_NAME_SIZE];
     unsigned char Level; // Level will max out at 100.
-    int gold;
-    int max_HP;
-    int current_HP;
-    int max_MP;
-    int current_MP;
-    int atk;
-    int def;
-    int inte;
-    int luck;
+    unsigned short int gold;
+    short int max_HP;
+    short int current_HP;
+    short int max_MP;
+    short int current_MP;
+    unsigned short int atk;
+    unsigned short int def;
+    unsigned short int inte;
+    unsigned short int luck;
+    unsigned short int spd;
     bool key;
-    int current_XP;
-    int next_XP;
+    unsigned short int current_XP;
+    unsigned short int next_XP;
     BinTree* magtree;
     BinTree* phystree;
     items it;
@@ -41,19 +42,14 @@ struct playerChar
     char action[4];
 }character[4];
 
-void insertCharName();
-void createPlayer(int charIndex, char charName[MAX_NAME_SIZE]);
+void createPlayer(unsigned char charIndex, char charName[MAX_NAME_SIZE]);
 
-void insertCharName(int charIndex)
+void insertCharName(unsigned char charIndex)
 {
     char ch;
     char name[MAX_NAME_SIZE];
-    int index = 0;
-#ifdef __linux__
-    system("clear");
-#elif _WIN32
-    system("cls");
-#endif
+    unsigned char index = 0;
+    clearConsoleScreen();
     
     printf("\n\n\n\t\t\t|      BEFORE STARTING THE GAME...       |");
     printf("\n\t\t\t|  PLEASE INSERT YOUR CHARACTER'S NAME:  |");
@@ -82,7 +78,7 @@ void insertCharName(int charIndex)
     createPlayer(charIndex, name);
 }
 
-void createPlayer(int charIndex, char charName[MAX_NAME_SIZE])
+void createPlayer(unsigned char charIndex, char charName[MAX_NAME_SIZE])
 {
     character[charIndex].magtree = generate_BinTree();
     character[charIndex].phystree = generate_BinTree();
@@ -100,6 +96,7 @@ void createPlayer(int charIndex, char charName[MAX_NAME_SIZE])
     character[charIndex].def = 122; // Base 122
     character[charIndex].inte = 102; // Base 102
     character[charIndex].luck = 115; // Base 115
+    character[charIndex].spd = 75; // Base 75
     character[charIndex].current_XP = 0;
     character[charIndex].next_XP = 100;
     character[charIndex].key = false;
@@ -109,13 +106,13 @@ void createPlayer(int charIndex, char charName[MAX_NAME_SIZE])
     character[charIndex].it.MPinc = 0;
 
     character[charIndex].learnedSpells = 0;
-    for(int i = 0; i < NUM_SPELLS-1; i++) 
+    for(unsigned char i = 0; i < NUM_SPELLS-1; i++) 
     {
         character[charIndex].spellIndices[i] = NUM_SPELLS-1;
     }
     
     character[charIndex].learnedSkills = 0;
-    for(int i = 0; i < NUM_SKILLS; i++) 
+    for(unsigned char i = 0; i < NUM_SKILLS; i++) 
     {
         character[charIndex].skillIndices[i] = NUM_SKILLS-1;
     }

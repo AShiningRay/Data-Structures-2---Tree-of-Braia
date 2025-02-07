@@ -25,11 +25,11 @@ char availableSpells[NUM_SPELLS][15] =
     TODO
 }; */
 
-
 struct Node
 {
     char skillName[20];
     bool isLearned;
+    unsigned short int MPused;
     struct Node *left, *right;
 };
 
@@ -38,11 +38,12 @@ typedef struct Node* BinTree;
 BinTree* generate_BinTree();
 void insertMagSkills(BinTree* tree);
 void insertPhysSkills(BinTree* tree);
-int insert_Node(BinTree* root, char skillname[]);
+int insert_Node(BinTree* root, char skillname[], unsigned short int MPused);
 void free_BinTree(BinTree *root);
 int insert_BinTree(BinTree* root, char skillname[]);
 void learnSkill(BinTree *root, char* skilltolearn);
-bool findSkill(BinTree *root, char* skilltofind, bool check);
+bool findSkill(BinTree *root, char* skilltofind);
+unsigned short int findSkillMPUsage(BinTree *root, char* skilltofind);
 void print_skillTree(BinTree* root, int spacing);
 
 BinTree* generate_BinTree()
@@ -65,25 +66,25 @@ int returnSpellIndex(char *spellName)
 
 void insertMagSkills(BinTree* tree)
 {
-    insert_Node(tree, "MAGICAL");
+    insert_Node(tree, "MAGICAL", 0);
 
-    insert_Node(tree, "SCORCH FLAME");
-    insert_Node(tree, "BLIZZARD");
-    insert_Node(tree, "INT BOOST");
-    insert_Node(tree, "WIND GUST");
-    insert_Node(tree, "EARTH SMASH");
-    insert_Node(tree, "AQUA STORM");
+    insert_Node(tree, "SCORCH FLAME", 70);
+    insert_Node(tree, "BLIZZARD", 60);
+    insert_Node(tree, "INT BOOST", 0);
+    insert_Node(tree, "WIND GUST", 50);
+    insert_Node(tree, "EARTH SMASH", 80);
+    insert_Node(tree, "AQUA STORM", 30);
 }
 
 void insertPhysSkills(BinTree* tree)
 {
-    insert_Node(tree, "PHYSICAL");
+    insert_Node(tree, "PHYSICAL", 0);
 
-    insert_Node(tree, "DEF BOOST");
-    insert_Node(tree, "STR BOOST");
+    insert_Node(tree, "DEF BOOST", 0);
+    insert_Node(tree, "STR BOOST", 0);
 }
 
-int insert_Node(BinTree* root, char skillname[20])
+int insert_Node(BinTree* root, char skillname[20], unsigned short int MPused)
 {
     if(root == NULL)
         return 0;
@@ -94,6 +95,7 @@ int insert_Node(BinTree* root, char skillname[20])
         return 0;
     strcpy(newNode->skillName, skillname);
     newNode->isLearned = false;
+    newNode->MPused = MPused;
     newNode->right = NULL;
     newNode->left = NULL;
 
@@ -138,8 +140,7 @@ void freeNode(struct Node* node)
 
 void free_BinTree(BinTree* root)
 {
-    if(root == NULL)
-        return;
+    if(root == NULL) {return;} 
     freeNode(*root); // Frees each of the Tree's nodes.
     free(root); // Frees the root itself (generates a "incompatible pointer" warning)
     printf("\nThe tree has been freed\n");
@@ -147,49 +148,47 @@ void free_BinTree(BinTree* root)
 
 void learnSkill(BinTree *root, char* skilltolearn)
 {
-    if(root == NULL)
-        return;
     if(*root != NULL)
-        {
-            if(strcmp(skilltolearn, (*root)->skillName) == 0)
-                (*root)->isLearned = true;
+    {
+        if(strcmp(skilltolearn, (*root)->skillName) == 0) { (*root)->isLearned = true; }
 
-            learnSkill(&((*root)->left), skilltolearn);
-            learnSkill(&((*root)->right), skilltolearn);
-            //printf("Skill Name: %s\n", (*root)->skillName);
-        }
+        if(&((*root)->left) != NULL) { learnSkill(&((*root)->left), skilltolearn); }
+        if(&((*root)->right) != NULL) { learnSkill(&((*root)->right), skilltolearn); }
+    }
 }
 
-bool findSkill(BinTree *root, char* skilltofind, bool check)
+bool findSkill(BinTree *root, char* skilltofind)
 {
-
-    if(check) return true;
-
-    if(root == NULL)
+    if (*root == NULL) {
         return false;
+    }
 
+    if (strcmp(skilltofind, (*root)->skillName) == 0 && (*root)->isLearned) { return true; }
 
-    if(*root != NULL)
-        {
-            if(!check)
-            {
-                if(strcmp(skilltofind, (*root)->skillName) == 0)
-                    if((*root)->isLearned == true) return true;
+    return findSkill(&((*root)->left), skilltofind) || findSkill(&((*root)->right), skilltofind);
+}
 
-                check = findSkill(&((*root)->left), skilltofind, check);
-                check = findSkill(&((*root)->right), skilltofind, check);
-                //printf("Skill Name: %s\n", (*root)->skillName);
-            }
-        }
+unsigned short int findSkillMPUsage(BinTree *root, char* skilltofind)
+{
+    if (*root == NULL) {
+        return 65535;
+    }
 
-    if (check == true) return true;
-    else return false;
+    if (strcmp(skilltofind, (*root)->skillName) == 0) {
+        return (*root)->MPused;
+    }
+
+    unsigned short int leftUsage = findSkillMPUsage(&((*root)->left), skilltofind);
+    if (leftUsage != 65535) {
+        return leftUsage;
+    }
+
+    return findSkillMPUsage(&((*root)->right), skilltofind);
 }
 
 void print_skillTree(BinTree* root, int spacing)
 {
-    if (*root == NULL)
-        return;
+    if (*root == NULL) { return; }
     // Increase distance between levels
     spacing += 7;
 
@@ -197,7 +196,7 @@ void print_skillTree(BinTree* root, int spacing)
     print_skillTree(&(*root)->right, spacing);
     // Print current node after space
     // count
-    if((*root)->isLearned == true) SetColor(10);
+    if((*root)->isLearned == true) SetColor(LIGHTGREEN);
 
     for (int i = 7; i < spacing; i++)
         {
@@ -205,7 +204,7 @@ void print_skillTree(BinTree* root, int spacing)
             else printf("-");
         }
     printf("(%s)\n\n", (*root)->skillName);
-    SetColor(15);
+    SetColor(WHITE);
 
     // Process left child
     print_skillTree(&(*root)->left, spacing);

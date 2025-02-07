@@ -3,7 +3,7 @@
 #include <process.h>
 #endif
 
-#define NUM_SFX 23 // Current number of SFX files
+#define NUM_SFX 24 // Current number of SFX files
 #define NUM_BGM 8 // Current number of BGM files
 
 #include "miniaudio.h"
@@ -25,11 +25,11 @@ char FXPaths[NUM_SFX][128] =
   "Audio Engine/SFX/UseItem.mp3",
   "Audio Engine/SFX/HitConfirm.mp3",
   "Audio Engine/SFX/CriticalHit.mp3",
-  "Audio Engine/SFX/AquaStorm.mp3",
-  "Audio Engine/SFX/EarthSmash.mp3",
-  "Audio Engine/SFX/WindGust.mp3",
-  "Audio Engine/SFX/ScorchFlame.mp3",
-  "Audio Engine/SFX/Blizzard.mp3",
+  "Audio Engine/SFX/AQUA STORM.mp3",
+  "Audio Engine/SFX/EARTH SMASH.mp3",
+  "Audio Engine/SFX/WIND GUST.mp3",
+  "Audio Engine/SFX/SCORCH FLAME.mp3",
+  "Audio Engine/SFX/BLIZZARD.mp3",
   "Audio Engine/SFX/CloseGame.mp3",
   "Audio Engine/SFX/PlayerHit.mp3",
   "Audio Engine/SFX/OpenChest.mp3",
@@ -38,13 +38,14 @@ char FXPaths[NUM_SFX][128] =
   "Audio Engine/SFX/Speech.mp3",
   "Audio Engine/SFX/BossDefeated.mp3",
   "Audio Engine/SFX/EnemyDefeated.mp3",
+  "Audio Engine/SFX/EnemyEncounter.mp3",
 };
 
 char BGMPaths[NUM_BGM][128] = 
 {
   "Audio Engine/BGM/Intro.mp3",
   "Audio Engine/BGM/NameInput.mp3",
-  "Audio Engine/BGM/HubWorld.mp3",
+  "Audio Engine/BGM/HubTown.mp3",
   "Audio Engine/BGM/Area1.mp3",
   "Audio Engine/BGM/Area2.mp3",
   "Audio Engine/BGM/Area3.mp3",
