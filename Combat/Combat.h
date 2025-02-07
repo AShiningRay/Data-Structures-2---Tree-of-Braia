@@ -184,62 +184,36 @@ void renderEnemyCharacters(short int charIndex[3], bool isBoss[3], int animTime)
 
         for(enemyIndex = 0; enemyIndex < enemiesInEncounter; enemyIndex++) 
         { 
-            if(isBoss[enemyIndex]) { charIndex[enemyIndex] += NUM_ENEMIES; }
+            if(isBoss[enemyIndex]) { charIndex[enemyIndex] += NUM_ENEMIES; } // On the enemy sprite data, bosses are addressed after all normal enemies
         }
 
         char enemyHeight = 0;
         for(unsigned char y = 0; y < BG_YSIZE-FIGHTSCREEN_Y_PADDING; y++)
         {
-            // On the enemy sprite data, bosses are addressed after all normal enemies
-            unsigned char charToRender = charIndex[0];
-
-            unsigned char maxX = (enemiesInEncounter*ENEMY_X_SEPARATOR);
-            unsigned char enemyXArea = maxX + FIGHTSCREEN_X_PADDING - 1;
-            
-            for(unsigned char x = 0; x < enemyXArea; x++) 
+            moveCursorLeftBy(FIGHTSCREEN_X_PADDING);
+            for(unsigned char enemyDrawIdx = 0; enemyDrawIdx < enemiesInEncounter; enemyDrawIdx++) 
             {
-                if(x-FIGHTSCREEN_X_PADDING >= 0)
+                unsigned char charToRender = charIndex[enemyDrawIdx];
+                for(unsigned char x = 0; x < sizeof(enemySprites[charToRender][0]); x++)
                 {
-                    enemyIndex = floor((x-FIGHTSCREEN_X_PADDING)/ENEMY_X_SEPARATOR);
-                    charToRender = charIndex[enemyIndex];
-                    char pixelToDraw = enemySprites[charToRender][y][x-FIGHTSCREEN_X_PADDING-(ENEMY_X_SEPARATOR*enemyIndex)];
-                    if(pixelToDraw != ' ' && Enemy[enemyIndex].current_HP > 0) 
+                    char pixelToDraw = enemySprites[charToRender][y][x];
+                    if(pixelToDraw != ' ' && Enemy[enemyDrawIdx].current_HP > 0) 
                     {
                         applyColorPalette(pixelToDraw);
                         putchar(pixelToDraw); 
                     }
-                    else // if the pixel is out of bounds, OR it's empty/transparent
+                    else // if the enemy is dead/shouldn't be drawn OR the pixel is empty/transparent
                     {
-                        if(enemyIndex > 0) // We might have to draw the previous enemy data instead, if there is one
-                        {
-                            char BGPixelToDraw = enemySprites[enemyIndex-1][y][x-FIGHTSCREEN_X_PADDING-(ENEMY_X_SEPARATOR*(enemyIndex))];
-                            if(BGPixelToDraw != ' ' && Enemy[enemyIndex-1].current_HP > 0) 
-                            {
-                                applyColorPalette(BGPixelToDraw);
-                                putchar(BGPixelToDraw); 
-                            }
-                            else // IF the previous enemy also has a transparent pixel here, draw the BG instead
-                            {
-                                applyColorPalette(Area1_BG[y+FIGHTSCREEN_Y_PADDING][x]);
-                                putchar(Area1_BG[y+FIGHTSCREEN_Y_PADDING][x]);
-                            }
-                        }
-                        else // Or the background
-                        {
-                            applyColorPalette(Area1_BG[y+FIGHTSCREEN_Y_PADDING][x]);
-                            putchar(Area1_BG[y+FIGHTSCREEN_Y_PADDING][x]);
-                        }
+                        moveCursorRightBy(1);
                     }
+
+                    textcolor(WHITE);
+                    textbackground(BLACK);
                 }
-                else
-                {
-                    applyColorPalette(Area1_BG[y+FIGHTSCREEN_Y_PADDING][x]);
-                    putchar(Area1_BG[y+FIGHTSCREEN_Y_PADDING][x]);
-                }
-                
-                textcolor(WHITE);
-                textbackground(BLACK);
+                moveCursorLeftBy(ENEMY_X_SEPARATOR);
             }
+            
+
             putchar('\n');
             enemyHeight += 1;
             if(animTime != 0 && enemyChanged) { limitFPS(animTime); }
@@ -247,7 +221,7 @@ void renderEnemyCharacters(short int charIndex[3], bool isBoss[3], int animTime)
 
         enemyChanged = false; // Enemies have had their changes applied already, so set this flag as false until needed
 
-        for(unsigned char y = 0; y < BG_YSIZE - FIGHTSCREEN_Y_PADDING - enemySpriteRows[charIndex[enemiesInEncounter-1]]; y++) { putchar('\n'); }
+        for(unsigned char y = 0; y < BG_YSIZE - FIGHTSCREEN_Y_PADDING - enemySpriteRows[charIndex[enemiesInEncounter-1]]; y++) { moveCursorDownBy(1); }
         SetColor(WHITE);
 
         allEnemiesKilled = true;

@@ -1,7 +1,7 @@
 #define BG_YSIZE 37
 #define FIGHTSCREEN_Y_PADDING 12
 #define FIGHTSCREEN_X_PADDING 2
-#define ENEMY_X_SEPARATOR 35 // TODO - Separate enemies better, right now they're following their array sizes more than anything else.
+#define ENEMY_X_SEPARATOR 15
 
 char Area1_BG[37][130] = 
 {
